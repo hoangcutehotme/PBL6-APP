@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:pbl6_app/src/screens/signUpScreens/sign_in_screen.dart';
 import 'package:pbl6_app/src/values/app_colors.dart';
 import 'package:pbl6_app/src/values/app_styles.dart';
@@ -16,11 +17,10 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpScreenState extends State<SignUpScreen> {
   String? selectedValue;
 
-  List<String> roles = ['Role 1', 'Role 2', 'Role 3', 'Role 4'];
-
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    bool showSkip = true;
     return Scaffold(
       body: SingleChildScrollView(
         child: Center(
@@ -29,14 +29,42 @@ class _SignUpScreenState extends State<SignUpScreen> {
               const SizedBox(
                 height: 100,
               ),
-              const Text(
-                "Create Account",
-                style: AppStyles.textBold,
+              Text(
+                "Đăng ký",
+                style: AppStyles.textBold.copyWith(color: AppColors.mainColor1),
               ),
               const SizedBox(
-                height: 50,
+                height: 20,
               ),
-              logupForm(context, size)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  RoundedButton(
+                      text: "Người dùng",
+                      size: const Size(150, 30),
+                      press: () {
+                        setState(() {
+                          showSkip = true;
+                        });
+                      }),
+                  const SizedBox(
+                    width: 15,
+                  ),
+                  RoundedButton(
+                      text: "Giao hàng",
+                      background: AppColors.borderGray,
+                      size: const Size(150, 30),
+                      press: () {
+                        setState(() {
+                          showSkip = false;
+                        });
+                      })
+                ],
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              logupForm(context, size, showSkip)
             ],
           ),
         ),
@@ -44,7 +72,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-  Column logupForm(BuildContext context, Size size) {
+  Column logupForm(BuildContext context, Size size, bool hide) {
     return Column(
       children: [
         TextFieldContainer(
@@ -67,11 +95,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
             // controller: authController.loginEmailController,
             decoration: InputDecoration(
               icon: const Icon(
-                Icons.lock_outline_rounded,
+                Icons.phone,
                 color: Colors.black38,
               ),
               contentPadding: const EdgeInsets.symmetric(vertical: 10),
-              hintText: "Password",
+              hintText: "Số điện thoại",
               hintStyle:
                   AppStyles.textMedium.copyWith(color: AppColors.colorTextBlur),
               border: InputBorder.none,
@@ -87,7 +115,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 color: Colors.black38,
               ),
               contentPadding: const EdgeInsets.symmetric(vertical: 10),
-              hintText: "Confirm Password",
+              hintText: "Mật khẩu",
               hintStyle:
                   AppStyles.textMedium.copyWith(color: AppColors.colorTextBlur),
               border: InputBorder.none,
@@ -95,26 +123,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
           ),
         ),
         TextFieldContainer(
-            child: DropdownButtonFormField<String>(
-          decoration: InputDecoration(
-              hintText: 'Select Role',
+          child: TextField(
+            // controller: authController.loginEmailController,
+            decoration: InputDecoration(
+              icon: const Icon(
+                Icons.lock_outline_rounded,
+                color: Colors.black38,
+              ),
+              contentPadding: const EdgeInsets.symmetric(vertical: 10),
+              hintText: "Xác nhận mật khẩu",
               hintStyle:
                   AppStyles.textMedium.copyWith(color: AppColors.colorTextBlur),
-              border: InputBorder.none),
-          alignment: Alignment.center,
-          value: selectedValue,
-          onChanged: (String? newValue) {
-            setState(() {
-              selectedValue = newValue;
-            });
-          },
-          items: roles.map((String value) {
-            return DropdownMenuItem<String>(
-              value: value,
-              child: Text(value),
-            );
-          }).toList(),
-        )),
+              border: InputBorder.none,
+            ),
+          ),
+        ),
+        // selectWiget(),
         const SizedBox(
           height: 20,
         ),
@@ -123,27 +147,33 @@ class _SignUpScreenState extends State<SignUpScreen> {
           alignment: Alignment.center,
           child: RoundedButton(
             press: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) {
-                    return const SignInScreen();
-                  },
-                ),
-              );
+              Get.toNamed("/fillinfo");
             },
-            text: 'Logup',
+            text: 'Đăng ký',
             size: Size(size.width * 0.8, 56),
           ),
         ),
+        Visibility(
+          visible: hide,
+          child: TextButton(
+            onPressed: () {
+              Get.toNamed("/home");
+            },
+            child: Text(
+              "Bỏ qua",
+              style: AppStyles.textBold
+                  .copyWith(fontSize: 16, color: AppColors.mainColor1),
+            ),
+          ),
+        ),
         const SizedBox(
-          height: 15,
+          height: 20,
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text(
-              "Already have account? ",
+              "Đã có tài khoản? ",
               style: AppStyles.textMedium,
             ),
             GestureDetector(
@@ -158,13 +188,37 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   );
                 },
                 child: Text(
-                  "Login",
+                  "Đăng nhập",
                   style: AppStyles.textBold
-                      .copyWith(color: AppColors.mainColorBlue, fontSize: 16),
+                      .copyWith(color: AppColors.mainColor1, fontSize: 16),
                 )),
           ],
         ),
       ],
     );
+  }
+
+  TextFieldContainer selectWiget(List<String> roles) {
+    return TextFieldContainer(
+        child: DropdownButtonFormField<String>(
+      decoration: InputDecoration(
+          hintText: 'Select Role',
+          hintStyle:
+              AppStyles.textMedium.copyWith(color: AppColors.colorTextBlur),
+          border: InputBorder.none),
+      alignment: Alignment.center,
+      value: selectedValue,
+      onChanged: (String? newValue) {
+        setState(() {
+          selectedValue = newValue;
+        });
+      },
+      items: roles.map((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
+    ));
   }
 }

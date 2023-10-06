@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:pbl6_app/src/screens/homeScreen/home_screen.dart';
 import 'package:pbl6_app/src/screens/signUpScreens/sign_up_screen.dart';
+import 'package:pbl6_app/src/values/app_assets.dart';
 import 'package:pbl6_app/src/values/app_colors.dart';
-import 'package:pbl6_app/src/values/app_fonts.dart';
 import 'package:pbl6_app/src/values/app_styles.dart';
 import 'package:pbl6_app/src/widgets/rounded_button.dart';
 import 'package:pbl6_app/src/widgets/text_field_widget.dart';
@@ -27,15 +28,10 @@ class _SignInScreenState extends State<SignInScreen> {
               const SizedBox(
                 height: 100,
               ),
-              const Text(
-                'Login',
-                style: AppStyles.textBold,
+              Text(
+                'Đăng nhập',
+                style: AppStyles.textBold.copyWith(color: AppColors.mainColor1),
               ),
-              Text('Hi,Welcome',
-                  style: AppStyles.textMedium.copyWith(
-                    color: AppColors.colorTextBlur,
-                    fontSize: 24,
-                  )),
               const SizedBox(
                 height: 40,
               ),
@@ -75,7 +71,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 color: Colors.black38,
               ),
               contentPadding: const EdgeInsets.symmetric(vertical: 10),
-              hintText: "Password",
+              hintText: "Mật khẩu",
               hintStyle:
                   AppStyles.textMedium.copyWith(color: AppColors.colorTextBlur),
               border: InputBorder.none,
@@ -86,13 +82,14 @@ class _SignInScreenState extends State<SignInScreen> {
             padding: const EdgeInsets.only(right: 40, top: 10),
             alignment: Alignment.bottomRight,
             child: GestureDetector(
-              onTap: () {},
+              onTap: () {
+                print("click");
+                Get.toNamed("/forgetpassword");
+              },
               child: Text(
-                'Forgot Password?',
-                style: AppStyles.textMedium.copyWith(
-                  decoration: TextDecoration.underline,
-                  color: AppColors.mainColorBlue,
-                ),
+                'Quên mật khẩu?',
+                style: AppStyles.textBold
+                    .copyWith(color: AppColors.mainColor1, fontSize: 16),
               ),
             )),
         // Button Login
@@ -104,16 +101,11 @@ class _SignInScreenState extends State<SignInScreen> {
           alignment: Alignment.center,
           child: RoundedButton(
             press: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) {
-                    return const HomeScreen();
-                  },
-                ),
-              );
+              //check
+              Get.toNamed("/home");
+              
             },
-            text: 'Login',
+            text: 'Đăng nhập',
             size: Size(size.width * 0.8, 56),
           ),
         ),
@@ -124,7 +116,7 @@ class _SignInScreenState extends State<SignInScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text(
-              "Don't have account? ",
+              "Không có tài khoản? ",
               style: AppStyles.textMedium,
             ),
             GestureDetector(
@@ -138,11 +130,36 @@ class _SignInScreenState extends State<SignInScreen> {
                   ),
                 );
               },
-              child: Text("Create account",
-                  style: AppStyles.textBold.copyWith(
-                      color: AppColors.mainColorBlue, fontSize: 16.0)),
+              child: Text("Tạo tài khoản",
+                  style: AppStyles.textBold
+                      .copyWith(color: AppColors.mainColor1, fontSize: 16.0)),
             ),
           ],
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        const Text(
+          "Hoặc",
+          style: AppStyles.textMedium,
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        Container(
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(100),
+              border: Border.all(width: 1, color: AppColors.borderGray)),
+          child: GestureDetector(
+            child: Image.asset(
+              AppAssets.googleImage,
+              width: 60,
+              height: 60,
+            ),
+            onTap: () {
+              Get.to(const HomeScreen());
+            },
+          ),
         ),
       ],
     );

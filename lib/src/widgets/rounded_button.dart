@@ -13,7 +13,7 @@ class RoundedButton extends StatelessWidget {
     required this.text,
     required this.press,
     this.textColor = Colors.white,
-    this.background = AppColors.mainColorBlue,
+    this.background = AppColors.mainColor1,
     this.size = const Size(256, 56),
   });
 
@@ -24,7 +24,7 @@ class RoundedButton extends StatelessWidget {
         onPressed: press,
         style: ElevatedButton.styleFrom(
           backgroundColor: background,
-          padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(60.0)),
           minimumSize: size,
