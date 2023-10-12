@@ -10,7 +10,7 @@ class AppStyles {
       fontWeight: FontWeight.w600);
   static const TextStyle textMedium = TextStyle(
       fontFamily: AppFonts.poppins,
-      fontSize: 16,
+      fontSize: 15,
       color: AppColors.colorTextBold,
       fontWeight: FontWeight.w400);
   static const TextStyle textSmall = TextStyle(

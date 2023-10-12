@@ -3,9 +3,9 @@ import 'package:get/get.dart';
 import 'package:pbl6_app/src/model/food_category_model.dart';
 import 'package:pbl6_app/src/model/food_model.dart';
 import 'package:pbl6_app/src/model/store_model.dart';
-import 'package:pbl6_app/src/values/app_assets.dart';
 import 'package:pbl6_app/src/values/app_styles.dart';
 
+import '../../controller/bottom_navi_bar_controller.dart';
 import '../../values/app_colors.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -16,6 +16,9 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final BottomNavigationBarController _controller =
+      Get.put(BottomNavigationBarController());
+
   List<CategoryModel> categories = [];
   List<StoreModel> stories = [];
   List<FoodModel> foodList = [];
@@ -52,7 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(
               height: 25,
             ),
-            _appBar(),
+            // _appBar(),
             //Address
             _addressSection(),
             const SizedBox(
@@ -268,19 +271,25 @@ class _HomeScreenState extends State<HomeScreen> {
   Padding _searchSection(Size size) {
     return Padding(
       padding: const EdgeInsetsDirectional.symmetric(horizontal: 5),
-      child: Container(
-        width: size.width,
-        height: 45,
-        decoration: const ShapeDecoration(
-            shape: StadiumBorder(), color: AppColors.placeholder),
-        // decoration: BoxDecoration(
-        //     borderRadius: BorderRadius.circular(10),
-        //     border: Border.all(width: 2, color: AppColors.borderGray)),
-        child: const TextField(
-          decoration: InputDecoration(
-              border: InputBorder.none,
-              prefixIcon: Icon(Icons.search_rounded),
-              hintText: 'Tìm kiếm'),
+      child: GestureDetector(
+        onTap: () {
+          print("click");
+          Get.to("/search");
+        },
+        child: Container(
+          width: size.width,
+          height: 45,
+          decoration: const ShapeDecoration(
+              shape: StadiumBorder(), color: AppColors.placeholder),
+          // decoration: BoxDecoration(
+          //     borderRadius: BorderRadius.circular(10),
+          //     border: Border.all(width: 2, color: AppColors.borderGray)),
+          child: const TextField(
+            decoration: InputDecoration(
+                border: InputBorder.none,
+                prefixIcon: Icon(Icons.search_rounded),
+                hintText: 'Tìm kiếm'),
+          ),
         ),
       ),
     );

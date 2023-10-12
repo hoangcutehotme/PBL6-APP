@@ -6,6 +6,7 @@ class FoodModel {
   String id;
   String name;
   String categoryId;
+  String nameCategory;
   String imageFood;
   double averageRating;
   String decription;
@@ -15,12 +16,14 @@ class FoodModel {
     required this.id,
     required this.name,
     required this.categoryId,
+    required this.nameCategory,
     required this.imageFood,
     required this.averageRating,
     required this.decription,
     required this.price,
   });
 
+  
   static List<FoodModel> getFoods() {
     List<FoodModel> listFood = [];
 
@@ -31,7 +34,8 @@ class FoodModel {
         imageFood: AppAssets.getImg("gongcha.png", "images"),
         averageRating: 4.6,
         decription: "Ngon nhứt nách",
-        price: 30000));
+        price: 30000,
+        nameCategory: 'Đồ uống'));
     listFood.add(FoodModel(
         id: "2",
         name: "Ghẹ hấp 3 con",
@@ -39,7 +43,8 @@ class FoodModel {
         imageFood: AppAssets.getImg("ghe.jpg", "images"),
         averageRating: 4.0,
         decription: "Ngon nhứt nách",
-        price: 103000));
+        price: 103000,
+        nameCategory: 'Đồ ăn'));
     listFood.add(FoodModel(
         id: "3",
         name: "Gà rán",
@@ -47,7 +52,8 @@ class FoodModel {
         imageFood: AppAssets.getImg("ga.jpg", "images"),
         averageRating: 4.7,
         decription: "Ngon tới từng miếng xương",
-        price: 30000));
+        price: 30000,
+        nameCategory: 'Đồ ăn'));
     listFood.add(FoodModel(
         id: "4",
         name: "Nem nướng",
@@ -55,7 +61,17 @@ class FoodModel {
         imageFood: AppAssets.getImg("nemnuong.jpg", "images"),
         averageRating: 4.8,
         decription: "Zai zòn ngon ngon",
-        price: 49000));
+        price: 49000,
+        nameCategory: 'Đồ ăn'));
+    listFood.add(FoodModel(
+        id: "5",
+        name: "Bún đậu mắm tôm",
+        categoryId: "2",
+        imageFood: AppAssets.bundauImage,
+        averageRating: 4.8,
+        decription: "Ngon ngon",
+        price: 49000,
+        nameCategory: 'Đồ ăn'));
 
     return listFood;
   }

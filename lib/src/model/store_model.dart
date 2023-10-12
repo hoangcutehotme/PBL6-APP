@@ -13,6 +13,9 @@ class StoreModel {
   double ratingAverage;
   String image;
   List<FoodModel> listFood;
+
+  
+
   StoreModel({
     required this.name,
     required this.id,
@@ -32,6 +35,7 @@ class StoreModel {
 
   static List<StoreModel> getListStore() {
     List<StoreModel> listStore = [];
+    List<FoodModel> listFood1 = FoodModel.getFoods();
 
     listStore.add(StoreModel(
         name: "Bún đậu cô Tiên",
@@ -43,7 +47,7 @@ class StoreModel {
         decription: "Ngon lắm ăn thử đi",
         ratingAverage: 4.7,
         image: AppAssets.bundauImage,
-        listFood: [],
+        listFood: listFood1,
         distance: 1.5));
 
     listStore.add(StoreModel(
