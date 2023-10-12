@@ -40,6 +40,7 @@ dependencies:
   get: ^4.6.5
   #
   flutter_otp_text_field: ^1.1.1
+  badges: ^3.1.2
   # flutter_launcher_icons: "^0.13.1"
 
 
@@ -68,6 +69,7 @@ flutter:
   assets:
     - assets/logo/
     - assets/images/
+    - assets/icons/
 
 
 

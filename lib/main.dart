@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:pbl6_app/src/screens/homeScreen/detail_category.dart';
 import 'package:pbl6_app/src/screens/homeScreen/detail_shop.dart';
 import 'package:pbl6_app/src/screens/homeScreen/home_screen.dart';
+import 'package:pbl6_app/src/screens/navigation/HomeMainPage.dart';
 import 'package:pbl6_app/src/screens/signUpScreens/fill_info.dart';
 import 'package:pbl6_app/src/screens/signUpScreens/forgot_password.dart';
 import 'package:pbl6_app/src/screens/signUpScreens/sign_in_screen.dart';
@@ -33,7 +34,7 @@ class MyApp extends StatelessWidget {
       getPages: [
         GetPage(name: '/', page: () => const SignInScreen()),
         // GetPage(name: '/', page: () => const Verify1()),
-        GetPage(name: '/home', page: () => const HomeScreen()),
+
         GetPage(name: '/signin', page: () => const SignInScreen()),
         GetPage(name: '/signup', page: () => const SignUpScreen()),
         GetPage(name: '/fillinfo', page: () => const FillInfoUserScreen()),
@@ -41,6 +42,9 @@ class MyApp extends StatelessWidget {
         GetPage(name: '/forgetpassword', page: () => const ForgetPassword()),
         GetPage(name: '/detailcategory', page: () => const DetailCategory()),
         GetPage(name: '/detailshop', page: () => const DetailShop()),
+
+        GetPage(name: '/homePage', page: () => const HomeScreen()),
+        GetPage(name: '/home', page: () => HomeMainPage()),
       ],
     );
   }
