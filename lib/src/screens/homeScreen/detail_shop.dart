@@ -130,7 +130,9 @@ class _DetailShopState extends State<DetailShop> {
           Expanded(
               flex: 2,
               child: GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  Get.toNamed("/detailorder");
+                },
                 child: Container(
                   height: 58,
                   alignment: Alignment.center,
