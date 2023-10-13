@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pbl6_app/src/screens/homeScreen/detail_category.dart';
+import 'package:pbl6_app/src/screens/homeScreen/detail_food.dart';
 import 'package:pbl6_app/src/screens/homeScreen/detail_shop.dart';
 import 'package:pbl6_app/src/screens/homeScreen/home_screen.dart';
+import 'package:pbl6_app/src/screens/homeScreen/order_detail.dart';
+import 'package:pbl6_app/src/screens/homeScreen/order_success.dart';
 import 'package:pbl6_app/src/screens/navigation/HomeMainPage.dart';
 import 'package:pbl6_app/src/screens/signUpScreens/fill_info.dart';
 import 'package:pbl6_app/src/screens/signUpScreens/forgot_password.dart';
@@ -44,7 +47,11 @@ class MyApp extends StatelessWidget {
         GetPage(name: '/detailshop', page: () => const DetailShop()),
 
         GetPage(name: '/homePage', page: () => const HomeScreen()),
-        GetPage(name: '/home', page: () => HomeMainPage()),
+        GetPage(name: '/home', page: () => const HomeMainPage()),
+
+        GetPage(name: '/detailfood', page: () => const DetailFood()),
+        GetPage(name: '/detailorder', page: () => const OrderDetail()),
+        GetPage(name: '/ordersuccess', page: () => const OrderSuccess()),
       ],
     );
   }
