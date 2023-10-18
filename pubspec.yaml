@@ -41,7 +41,8 @@ dependencies:
   #
   flutter_otp_text_field: ^1.1.1
   badges: ^3.1.2
-  # flutter_launcher_icons: "^0.13.1"
+  http: ^1.1.0
+  shared_preferences: ^2.2.2
 
 
 dev_dependencies:

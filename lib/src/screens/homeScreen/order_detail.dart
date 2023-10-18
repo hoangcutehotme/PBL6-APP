@@ -264,7 +264,7 @@ class _OrderDetailState extends State<OrderDetail> {
                     height: 70,
                   ),
                   title: Text(
-                    "${orderfood.amount}x${orderfood.food.name}",
+                    "${orderfood.amount} x ${orderfood.food.name}",
                     style: AppStyles.textSmall
                         .copyWith(fontSize: 14, fontWeight: FontWeight.w400),
                   ),
@@ -387,7 +387,7 @@ AppBar _appBar() {
   return AppBar(
     foregroundColor: AppColors.mainColor1,
     backgroundColor: AppColors.mainColorBackground,
-    // shadowColor: Colors.transparent,
+    shadowColor: Colors.transparent,
     title: Text(
       "Xác nhận giao hàng",
       style: AppStyles.textBold

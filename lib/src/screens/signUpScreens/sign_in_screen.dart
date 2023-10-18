@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pbl6_app/src/controller/Authentication/login_controller.dart';
 import 'package:pbl6_app/src/screens/homeScreen/home_screen.dart';
 import 'package:pbl6_app/src/screens/signUpScreens/sign_up_screen.dart';
 import 'package:pbl6_app/src/values/app_assets.dart';
@@ -16,6 +17,7 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
+  LoginController loginController = Get.put(LoginController());
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -48,7 +50,8 @@ class _SignInScreenState extends State<SignInScreen> {
       children: [
         TextFieldContainer(
           child: TextField(
-            // controller: authController.loginEmailController,
+            controller: loginController.emailController,
+            keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
               icon: const Icon(
                 Icons.mail_outline_rounded,
@@ -64,7 +67,7 @@ class _SignInScreenState extends State<SignInScreen> {
         ),
         TextFieldContainer(
           child: TextField(
-            // controller: authController.loginEmailController,
+            controller: loginController.passwordController,
             decoration: InputDecoration(
               icon: const Icon(
                 Icons.lock_outline_rounded,
@@ -83,7 +86,6 @@ class _SignInScreenState extends State<SignInScreen> {
             alignment: Alignment.bottomRight,
             child: GestureDetector(
               onTap: () {
-                print("click");
                 Get.toNamed("/forgetpassword");
               },
               child: Text(
@@ -100,10 +102,9 @@ class _SignInScreenState extends State<SignInScreen> {
           margin: const EdgeInsets.only(top: 29),
           alignment: Alignment.center,
           child: RoundedButton(
-            press: () {
+            press: () async {
               //check
-              Get.toNamed("/home");
-              
+              await loginController.login();
             },
             text: 'Đăng nhập',
             size: Size(size.width * 0.8, 56),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
+  static const black = Colors.black;
   static const mainColor1 = Color.fromRGBO(225, 27, 28, 1);
   static const mainColorBackground = Colors.white;
   static const borderGray = Color.fromRGBO(196, 196, 196, 1);
