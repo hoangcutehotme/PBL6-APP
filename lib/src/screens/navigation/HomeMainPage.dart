@@ -22,7 +22,7 @@ class _HomeMainPageState extends State<HomeMainPage> {
   final List<Widget> _screens = [
     const HomeScreen(),
     const SearchScreen(),
-    OrderScreen(),
+    const OrderScreen(),
     const UserScreen(),
   ];
 

@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:pbl6_app/src/model/food_category_model.dart';
 import 'package:pbl6_app/src/model/food_model.dart';
 import 'package:pbl6_app/src/model/store_model.dart';
+import 'package:pbl6_app/src/screens/orderScreen/order_screen.dart';
 import 'package:pbl6_app/src/values/app_styles.dart';
 
 import '../../controller/bottom_navi_bar_controller.dart';
@@ -18,7 +19,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final BottomNavigationBarController _controller =
       Get.put(BottomNavigationBarController());
-
+  final ScrollController _scrollController = ScrollController();
   List<CategoryModel> categories = [];
   List<StoreModel> stories = [];
   List<FoodModel> foodList = [];
@@ -40,6 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
     getCategories();
     getStories();
     getFoodList();
+
     super.initState();
   }
 
@@ -47,39 +49,42 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      // bottomNavigationBar: BottomNavigationBar(items: const []),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(
-              height: 25,
+      body: CustomScrollView(
+        slivers: <Widget>[
+          SliverAppBar(
+            automaticallyImplyLeading: false,
+            backgroundColor: AppColors.mainColorBackground,
+            shadowColor: Colors.transparent,
+            pinned: true,
+            collapsedHeight: 110,
+            flexibleSpace: Column(children: [
+              const SizedBox(
+                height: 25,
+              ),
+              _addressSection(),
+              const SizedBox(
+                height: 5,
+              ),
+              //Search
+              _searchSection(size),
+            ]),
+          ),
+          SliverToBoxAdapter(
+            child: Column(
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                _categorySection(),
+                // Store
+                _storeSection(),
+                // Food Special
+                _foodSection()
+              ],
             ),
-            // _appBar(),
-            //Address
-            _addressSection(),
-            const SizedBox(
-              height: 5,
-            ),
-            //Search
-            _searchSection(size),
-            // Danh mục
-            _categorySection(),
-            // Store
-            _storeSection(),
-            // Food Special
-            _foodSection()
-          ],
-        ),
+          )
+        ],
       ),
-    );
-  }
-
-  AppBar _appBar() {
-    return AppBar(
-      foregroundColor: AppColors.colorTextBold,
-      backgroundColor: AppColors.mainColorBackground,
-      shadowColor: Colors.transparent,
     );
   }
 
@@ -272,10 +277,6 @@ class _HomeScreenState extends State<HomeScreen> {
     return Padding(
       padding: const EdgeInsetsDirectional.symmetric(horizontal: 5),
       child: GestureDetector(
-        onTap: () {
-          print("click");
-          Get.to("/search");
-        },
         child: Container(
           width: size.width,
           height: 45,
@@ -284,8 +285,12 @@ class _HomeScreenState extends State<HomeScreen> {
           // decoration: BoxDecoration(
           //     borderRadius: BorderRadius.circular(10),
           //     border: Border.all(width: 2, color: AppColors.borderGray)),
-          child: const TextField(
-            decoration: InputDecoration(
+          child: TextField(
+            onTap: () {
+              Get.toNamed("/search");
+              // Get.to(const OrderScreen());
+            },
+            decoration: const InputDecoration(
                 border: InputBorder.none,
                 prefixIcon: Icon(Icons.search_rounded),
                 hintText: 'Tìm kiếm'),
@@ -331,7 +336,7 @@ class _HomeScreenState extends State<HomeScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.all(10.0),
+          padding: const EdgeInsets.only(left: 10, right: 10),
           child: Text(
             "Danh mục",
             style: AppStyles.textBold.copyWith(fontSize: 22),

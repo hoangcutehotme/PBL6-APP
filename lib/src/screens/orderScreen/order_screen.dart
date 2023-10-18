@@ -1,77 +1,50 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
-import 'dart:math' as math;
+import 'package:pbl6_app/src/screens/orderScreen/comming_order.dart';
+import 'package:pbl6_app/src/screens/orderScreen/history_order.dart';
+import 'package:pbl6_app/src/values/app_colors.dart';
+import 'package:pbl6_app/src/values/app_styles.dart';
 
-class OrderScreen extends StatelessWidget {
-  const OrderScreen({Key? key}) : super(key: key);
+class OrderScreen extends StatefulWidget {
+  const OrderScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final scrollController = ScrollController();
-    return MaterialApp(
-      home: Scaffold(
-        body: CustomScrollView(
-          slivers: [
-            const CupertinoSliverNavigationBar(
-              largeTitle: Text('Search'),
-            ),
-            //CupertinoSliverRefreshControl(),
-            SliverPersistentHeader(
-              pinned: true,
-              delegate: _SliverAppBarDelegate(
-                minHeight: 20.0,
-                maxHeight: 30.0,
-                child: Container(
-                    color: Colors.red,
-                    child: const Center(child: Text("red header "))),
-              ),
-            ),
+  State<OrderScreen> createState() => _OrderScreenState();
+}
 
-            SliverList(
-              delegate: SliverChildListDelegate(
-                List.generate(
-                    80,
-                    (index) => Container(
-                          padding: const EdgeInsets.all(5),
-                          color: Colors.blueAccent.shade100,
-                          child: const Text('bar'),
-                        )),
+class _OrderScreenState extends State<OrderScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        body: Column(
+          children: [
+            const SizedBox(height: 25),
+            TabBar(
+              indicatorColor: AppColors.mainColor1,
+              labelColor: AppColors.mainColor1,
+              unselectedLabelColor: AppColors.grayBold,
+              labelStyle:
+                  AppStyles.textMedium.copyWith(fontWeight: FontWeight.w600),
+              
+              tabs: const [
+                Tab(text: "Đang đến"),
+                Tab(
+                  text: "Lịch sử",
+                )
+              ],
+            ),
+            const Expanded(
+              child: TabBarView(
+                children: [
+                  CommingOrderTab(),
+                  HistoryOrderTab(),
+                ],
               ),
             ),
           ],
         ),
       ),
     );
-  }
-}
-
-class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
-  _SliverAppBarDelegate({
-    required this.minHeight,
-    required this.maxHeight,
-    required this.child,
-  });
-
-  final double minHeight;
-  final double maxHeight;
-  final Widget child;
-
-  @override
-  double get minExtent => minHeight;
-
-  @override
-  double get maxExtent => math.max(maxHeight, minHeight);
-
-  @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return SizedBox.expand(child: child);
-  }
-
-  @override
-  bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
-    return maxHeight != oldDelegate.maxHeight ||
-        minHeight != oldDelegate.minHeight ||
-        child != oldDelegate.child;
   }
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart';
+import 'package:pbl6_app/src/controller/Authentication/register_controller.dart';
 import 'package:pbl6_app/src/screens/signUpScreens/sign_in_screen.dart';
 import 'package:pbl6_app/src/values/app_colors.dart';
 import 'package:pbl6_app/src/values/app_styles.dart';
@@ -16,6 +18,8 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   String? selectedValue;
+
+  final RegisterController _registerController = Get.put(RegisterController());
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +81,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       children: [
         TextFieldContainer(
           child: TextField(
-            // controller: authController.loginEmailController,
+            controller: _registerController.emailController,
             decoration: InputDecoration(
               icon: const Icon(
                 Icons.mail_outline_rounded,
@@ -92,7 +96,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ),
         TextFieldContainer(
           child: TextField(
-            // controller: authController.loginEmailController,
+            controller: _registerController.phoneController,
             decoration: InputDecoration(
               icon: const Icon(
                 Icons.phone,
@@ -108,7 +112,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ),
         TextFieldContainer(
           child: TextField(
-            // controller: authController.loginEmailController,
+            controller: _registerController.passwordController,
             decoration: InputDecoration(
               icon: const Icon(
                 Icons.lock_outline_rounded,
@@ -124,7 +128,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ),
         TextFieldContainer(
           child: TextField(
-            // controller: authController.loginEmailController,
+            controller: _registerController.passwordConfirmController,
             decoration: InputDecoration(
               icon: const Icon(
                 Icons.lock_outline_rounded,
@@ -138,7 +142,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
             ),
           ),
         ),
-        // selectWiget(),
         const SizedBox(
           height: 20,
         ),
