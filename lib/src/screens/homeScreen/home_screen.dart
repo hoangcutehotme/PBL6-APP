@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pbl6_app/src/controller/CategoryControler/category_controller.dart';
 import 'package:pbl6_app/src/model/food_category_model.dart';
 import 'package:pbl6_app/src/model/food_model.dart';
 import 'package:pbl6_app/src/model/store_model.dart';
-import 'package:pbl6_app/src/screens/orderScreen/order_screen.dart';
+import 'package:pbl6_app/src/values/app_assets.dart';
 import 'package:pbl6_app/src/values/app_styles.dart';
-
-import '../../controller/bottom_navi_bar_controller.dart';
 import '../../values/app_colors.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -17,16 +16,15 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final BottomNavigationBarController _controller =
-      Get.put(BottomNavigationBarController());
-  final ScrollController _scrollController = ScrollController();
+  final CategoryController _categoryController = Get.put(CategoryController());
+
   List<CategoryModel> categories = [];
   List<StoreModel> stories = [];
   List<FoodModel> foodList = [];
 
-  void getCategories() {
-    categories = CategoryModel.getCategories();
-  }
+  // void getCategories() {
+  //   categories = CategoryModel.getCategories();
+  // }
 
   void getStories() {
     stories = StoreModel.getListStore();
@@ -38,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    getCategories();
+    // getCategories();
     getStories();
     getFoodList();
 
@@ -332,54 +330,62 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Column _categorySection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 10, right: 10),
-          child: Text(
-            "Danh mục",
-            style: AppStyles.textBold.copyWith(fontSize: 22),
-          ),
+    List<CategoryModel> categories = _categoryController.listCategory;
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Padding(
+        padding: const EdgeInsets.only(left: 10, right: 10),
+        child: Text(
+          "Danh mục",
+          style: AppStyles.textBold.copyWith(fontSize: 22),
         ),
-        Container(
+      ),
+      Obx(() {
+        return Container(
             width: double.infinity,
             height: 140,
             padding: const EdgeInsets.only(left: 20),
-            child: ListView.separated(
-              scrollDirection: Axis.horizontal,
-              itemCount: categories.length,
-              separatorBuilder: (BuildContext context, int index) {
-                return const SizedBox(
-                  width: 15,
-                );
-              },
-              itemBuilder: (context, index) {
-                return Container(
-                  width: 120,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: GestureDetector(
-                    onTap: () {
-                      //to detail view
-                      Get.toNamed("/detailcategory");
+            child: _categoryController.isLoading.value
+                ? const Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: categories.length,
+                    separatorBuilder: (BuildContext context, int index) {
+                      return const SizedBox(
+                        width: 15,
+                      );
                     },
-                    child: Column(
-                      children: [
-                        Image.asset(
-                          categories[index].imgPath,
-                          width: 120,
-                          height: 100,
+                    itemBuilder: (context, index) {
+                      return Container(
+                        width: 120,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
                         ),
-                        Text(categories[index].name)
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ))
-      ],
-    );
+                        child: GestureDetector(
+                          onTap: () {
+                            //to detail view
+                            // String encodedCatName =
+                            //     Uri.encodeComponent(categories[index].catName);
+                            Get.toNamed("/detailcategory",
+                                arguments: categories[index]);
+                          },
+                          child: Column(
+                            children: [
+                              // Text(categories[index].id),
+                              Image.asset(
+                                // categories[index].imgPath ??
+                                AppAssets.getImg('food.png', 'images'),
+                                width: 120,
+                                height: 100,
+                              ),
+                              Text(categories[index].catName)
+                            ],
+                          ),
+                        ),
+                      );
+                    }));
+      }),
+    ]);
   }
 }

@@ -6,13 +6,15 @@ class FillLabelText extends StatelessWidget {
     super.key,
     required this.label,
     required this.child,
+    this.size = const Size(256, 56),
   });
   final Widget child;
   final String label;
+  final Size size;
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    // Size size = MediaQuery.of(context).size;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -27,8 +29,8 @@ class FillLabelText extends StatelessWidget {
           margin: const EdgeInsets.only(top: 10),
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
           alignment: Alignment.center,
-          width: size.width * 0.8,
-          height: 56,
+          width: size.width,
+          height: size.height,
           decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(30),

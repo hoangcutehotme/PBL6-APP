@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pbl6_app/src/model/user_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -9,46 +10,76 @@ import 'package:http/http.dart' as http;
 
 class UserController extends GetxController {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  var user = UserModel(role: 'User').obs;
+  var id = ''.obs;
+  var token = ''.obs;
+  var isLoading = false.obs;
 
-  UserModel getDefaultUser() {
-    return UserModel(
-        role: 'User',
-        id: '',
-        firstName: '',
-        lastName: '',
-        email: '',
-        phoneNumber: '',
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-        contact: []);
-  }
-
-  Future<String> getId() async {
+  Future<void> getIdToken() async {
     final SharedPreferences prefs = await _prefs;
-    var id = prefs.getString('id_user') ?? '';
-    return id;
+    id.value = prefs.getString('id_user') ?? '';
+    token.value = prefs.getString('token') ?? '';
+    update();
   }
 
-  Future<UserModel> getInfoUserById(String id) async {
-    UserModel user;
+  Future<void> getInfoUserById() async {
+    isLoading(true);
     try {
-      // String id = await idF;
-      var url = Uri.parse("${ApiEndPoints.baseUrl}/user/$id");
-      final response = await http.get(url);
-
-      if (response.statusCode == 200) {
-        // Map<String, dynamic> userJson = jsonDecode(response.body);
-        UserModel user = UserModel.fromJson(jsonDecode(response.body));
-        print(user);
-
-        return user;
+      await getIdToken();
+      if (id.value == '') {
+        isLoading(false);
+        showDialog(
+            context: Get.context!,
+            builder: (context) {
+              return SimpleDialog(
+                title: const Text("Ban chua dang ky!!!"),
+                children: [
+                  ElevatedButton(
+                      onPressed: () {
+                        Get.toNamed("/signup");
+                      },
+                      child: const Text("Đăng ký"))
+                ],
+                // children: [Text(e.toString())],
+              );
+            });
       } else {
-        user = getUserDefault();
-        return user;
+        var cookies = token.value;
+
+        var headers = {
+          'Cookie': 'jwt=$cookies',
+        };
+        var url = Uri.parse("${ApiEndPoints.baseUrl}/user/${id.value}");
+
+        final response = await http.get(url, headers: headers);
+
+        if (response.statusCode == 200) {
+          // Map<String, dynamic> userJson = jsonDecode(response.body);
+          user.value = UserModel.fromJson(jsonDecode(response.body));
+          update();
+          isLoading(false);
+        } else {
+          isLoading(false);
+          showDialog(
+              context: Get.context!,
+              builder: (context) {
+                return SimpleDialog(
+                  title: const Text("Error"),
+                  children: [Text(response.headers.toString())],
+                );
+              });
+        }
       }
     } catch (e) {
-      user = getUserDefault();
-      return user;
+      isLoading(false);
+      showDialog(
+          context: Get.context!,
+          builder: (context) {
+            return SimpleDialog(
+              title: const Text("Error"),
+              children: [Text(e.toString())],
+            );
+          });
     }
   }
 }

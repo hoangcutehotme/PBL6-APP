@@ -16,6 +16,7 @@ class SignInScreen extends StatefulWidget {
   State<SignInScreen> createState() => _SignInScreenState();
 }
 
+//
 class _SignInScreenState extends State<SignInScreen> {
   LoginController loginController = Get.put(LoginController());
   @override
@@ -23,25 +24,42 @@ class _SignInScreenState extends State<SignInScreen> {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: SingleChildScrollView(
-        child: Center(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(
-                height: 100,
-              ),
-              Text(
-                'Đăng nhập',
-                style: AppStyles.textBold.copyWith(color: AppColors.mainColor1),
-              ),
-              const SizedBox(
-                height: 40,
-              ),
-              loginForm(context, size),
-            ],
-          ),
+          child: Center(
+        child: Obx(
+          () => loginController.isLoading.value
+              ? Opacity(
+                  opacity: 1,
+                  child: Stack(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(top: size.width),
+                        child: Visibility(
+                          visible: loginController.isLoading.value,
+                          child: const CircularProgressIndicator(),
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const SizedBox(
+                      height: 100,
+                    ),
+                    Text(
+                      'Đăng nhập',
+                      style: AppStyles.textBold
+                          .copyWith(color: AppColors.mainColor1),
+                    ),
+                    const SizedBox(
+                      height: 40,
+                    ),
+                    loginForm(context, size),
+                  ],
+                ),
         ),
-      ),
+      )),
     );
   }
 
@@ -68,10 +86,24 @@ class _SignInScreenState extends State<SignInScreen> {
         TextFieldContainer(
           child: TextField(
             controller: loginController.passwordController,
+            obscureText: loginController.isShowPass.value,
             decoration: InputDecoration(
               icon: const Icon(
                 Icons.lock_outline_rounded,
                 color: Colors.black38,
+              ),
+              suffixIcon: Obx(
+                () => IconButton(
+                  splashColor: AppColors.mainColorBackground,
+                  icon: Icon(
+                    loginController.isShowPass.value
+                        ? Icons.visibility
+                        : Icons.visibility_off,
+                  ),
+                  onPressed: () {
+                    loginController.changeShowPass();
+                  },
+                ),
               ),
               contentPadding: const EdgeInsets.symmetric(vertical: 10),
               hintText: "Mật khẩu",

@@ -2,40 +2,33 @@
 
 import 'contact_model.dart';
 
-UserModel getUserDefault() {
-  return UserModel(
-      role: '',
-      id: '',
-      firstName: '',
-      lastName: '',
-      email: '',
-      phoneNumber: '',
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
-      contact: []);
-}
+// UserModel getUserDefault() {
+//   return UserModel(
+//     role: 'User',
+//   );
+// }
 
 class UserModel {
   String role;
-  String id;
-  String firstName;
-  String lastName;
-  String email;
-  String phoneNumber;
+  String? id;
+  String? firstName;
+  String? lastName;
+  String? email;
+  String? phoneNumber;
   DateTime? createdAt;
   DateTime? updatedAt;
-  List<Contact> contact;
+  List<Contact>? contact;
 
   UserModel({
     required this.role,
-    required this.id,
-    required this.firstName,
-    required this.lastName,
-    required this.email,
-    required this.phoneNumber,
+    this.id,
+    this.firstName,
+    this.lastName,
+    this.email,
+    this.phoneNumber,
     this.createdAt,
     this.updatedAt,
-    required this.contact,
+    this.contact,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
@@ -60,6 +53,6 @@ class UserModel {
         "phoneNumber": phoneNumber,
         "createdAt": (createdAt ?? DateTime.now()).toIso8601String(),
         "updatedAt": (updatedAt ?? DateTime.now()).toIso8601String(),
-        "contact": List<dynamic>.from(contact.map((x) => x.toJson())),
+        "contact": List<dynamic>.from(contact ?? [].map((x) => x.toJson())),
       };
 }

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pbl6_app/src/screens/homeScreen/detail_category.dart';
@@ -17,8 +18,19 @@ import 'src/screens/signUpScreens/sign_up_screen.dart';
 import 'src/screens/signUpScreens/verify_otp.dart';
 
 Future<void> main() async {
-  runApp(const MyApp());
-  _init();
+  WidgetsFlutterBinding.ensureInitialized();
+  await EasyLocalization.ensureInitialized();
+
+  runApp(
+    EasyLocalization(
+        supportedLocales: const [Locale('en', 'US'), Locale('vi', 'VN')],
+        path:
+            'assets/translations', // <-- change the path of the translation files
+        fallbackLocale: const Locale('en', 'US'),
+        child: const MyApp()),
+  );
+
+  await _init();
 }
 
 _init() async {
@@ -29,7 +41,7 @@ _init() async {
     print('Token: $token');
     Get.offAllNamed("/home");
   } else {
-    Get.offAllNamed('/signin');
+    Get.offAllNamed('/');
   }
 }
 
@@ -39,13 +51,16 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      // localizationsDelegates: context.localizationDelegates,
+      // supportedLocales: context.supportedLocales,
+      // locale: context.locale,
       title: 'FoodDelivery',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
           primarySwatch: Colors.blueGrey,
           scaffoldBackgroundColor: Colors.white,
           fontFamily: AppFonts.poppins),
-      // home: const SignInScreen(),
+
       // unknownRoute: GetPage(name: '/notfound', page: () => UnknownRoutePage()),
       initialRoute: '/',
       getPages: [
@@ -56,7 +71,11 @@ class MyApp extends StatelessWidget {
         GetPage(name: '/fillinfo', page: () => const FillInfoUserScreen()),
         GetPage(name: '/verifyotp', page: () => const VerifyOTPScreen()),
         GetPage(name: '/forgetpassword', page: () => const ForgetPassword()),
-        GetPage(name: '/detailcategory', page: () => const DetailCategory()),
+        GetPage(
+          name: '/detailcategory',
+          page: () => const DetailCategory(),
+          transition: Transition.native,
+        ),
         GetPage(name: '/detailshop', page: () => const DetailShop()),
 
         GetPage(name: '/homePage', page: () => const HomeScreen()),

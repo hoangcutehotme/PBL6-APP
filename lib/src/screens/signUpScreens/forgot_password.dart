@@ -20,7 +20,12 @@ class _ForgetPasswordState extends State<ForgetPassword> {
         body: SingleChildScrollView(
       child: Column(
         children: [
-          const SizedBox(height: 80),
+          AppBar(
+            foregroundColor: AppColors.colorTextBold,
+            backgroundColor: AppColors.mainColorBackground,
+            shadowColor: Colors.transparent,
+          ),
+          // const SizedBox(height: 80),
           Container(
               padding: const EdgeInsets.only(left: 25),
               alignment: Alignment.center,

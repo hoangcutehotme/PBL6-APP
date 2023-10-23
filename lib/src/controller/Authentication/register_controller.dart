@@ -16,6 +16,32 @@ class RegisterController extends GetxController {
 
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
+  var isShowPass = true.obs;
+  var isShowPassConfirm = false.obs;
+
+  // true is user, false is shipper
+  var isUser = true.obs;
+
+  void changeShowPassConfirm() {
+    isShowPassConfirm.toggle();
+  }
+
+  void changeShowPass() {
+    isShowPass.toggle();
+  }
+
+  void changeRole(String role) {
+    if (role == "user") {
+      isUser.value = true;
+
+      update();
+    } else if (role == "shipper") {
+      isUser.value = false;
+      // isSkip = RxBool(false);
+      update();
+    }
+  }
+
   bool checkPassword() {
     if (passwordConfirmController.text == passwordController.text) {
       return true;
@@ -24,7 +50,7 @@ class RegisterController extends GetxController {
     }
   }
 
-  Future<void> registerEmail() async {
+  Future<void> registerUserEmail() async {
     try {
       var headers = {'Content-Type': 'application/json'};
       var url = Uri.parse("${ApiEndPoints.baseUrl}user");
