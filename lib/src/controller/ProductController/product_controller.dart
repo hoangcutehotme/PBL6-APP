@@ -32,6 +32,7 @@ class ProductController extends GetxController {
   Future<void> fetchProductFromCategory(String name) async {
     isLoading(true);
     try {
+      name = Uri.decodeComponent(name);
       var url = Uri.parse('${ApiEndPoints.baseUrl}/product?catName=$name');
 
       var response = await client.get(url);

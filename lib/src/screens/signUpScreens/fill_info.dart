@@ -93,8 +93,12 @@ class _FillInfoUserScreenState extends State<FillInfoUserScreen> {
                 margin: const EdgeInsets.only(top: 29),
                 alignment: Alignment.center,
                 child: RoundedButton(
-                  press: () {
-                    Get.toNamed("/verifyotp");
+                  press: () async {
+
+                    await Get.find<RegisterController>().registerUserEmail();
+
+                    await Get.toNamed("/verifyotp");
+                    
                   },
                   text: 'Xác nhận',
                   size: Size(size.width * 0.8, 56),

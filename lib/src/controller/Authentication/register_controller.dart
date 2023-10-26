@@ -16,8 +16,30 @@ class RegisterController extends GetxController {
 
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
+  @override
+  void onInit() {
+    // TODO: implement onInit
+    super.onInit();
+  }
+
+  @override
+  void onClose() {
+    // TODO: implement onClose
+    super.onClose();
+    emailController.clear();
+    passwordController.clear();
+    passwordConfirmController.clear();
+    firstnameController.clear();
+    lastnameController.clear();
+    addressController.clear();
+    phoneController.clear();
+  }
+
+  var isLoading = false.obs;
   var isShowPass = true.obs;
-  var isShowPassConfirm = false.obs;
+  var isShowPassConfirm = true.obs;
+
+  var client = http.Client();
 
   // true is user, false is shipper
   var isUser = true.obs;
@@ -53,35 +75,47 @@ class RegisterController extends GetxController {
   Future<void> registerUserEmail() async {
     try {
       var headers = {'Content-Type': 'application/json'};
-      var url = Uri.parse("${ApiEndPoints.baseUrl}user");
+      var url = Uri.parse("${ApiEndPoints.baseUrl}/user");
       Map body = {
-        "firstName": firstnameController.text,
-        "lastName": lastnameController.text,
-        "email": emailController.text,
+        "firstName": firstnameController.text.trim(),
+        "lastName": lastnameController.text.trim(),
+        "email": emailController.text.trim(),
         "password": passwordController.text,
         "passwordConfirm": passwordConfirmController.text,
-        "address": addressController.text,
-        "phoneNumber": phoneController.text,
+        "address": addressController.text.trim(),
+        "phoneNumber": phoneController.text.trim(),
       };
 
-      http.Response response =
-          await http.post(url, body: jsonEncode(body), headers: headers);
-
+      var response =
+          await client.post(url, body: jsonEncode(body), headers: headers);
+      final json = jsonDecode(response.body);
       if (response.statusCode == 200) {
-        final json = jsonDecode(response.body);
-        if (json['message'] == "Token sent to email!") {
-          emailController.clear();
-          passwordController.clear();
-          passwordConfirmController.clear();
-          firstnameController.clear();
-          lastnameController.clear();
-          addressController.clear();
-          phoneController.clear();
+        if (json['message'] == "Mã đã được gửi đến email!") {
+          // emailController.clear();
+          // passwordController.clear();
+          // passwordConfirmController.clear();
+          // firstnameController.clear();
+          // lastnameController.clear();
+          // addressController.clear();
+          // phoneController.clear();
         } else {
-          throw jsonDecode(response.body)['message'];
+          showDialog(
+              context: Get.context!,
+              builder: (context) {
+                return SimpleDialog(
+                  title: const Text("Error"),
+                  children: [Text(json['message'])],
+                );
+              });
         }
       } else {
-        throw jsonDecode(response.body)['message'] ?? "Unknow Error Occured";
+        showDialog(
+            context: Get.context!,
+            builder: (context) {
+              return const SimpleDialog(
+                title: Text("Error"),
+              );
+            });
       }
     } catch (e) {
       // Get.back();
@@ -93,6 +127,52 @@ class RegisterController extends GetxController {
               children: [Text(e.toString())],
             );
           });
+    }
+  }
+
+  verifyOtp(String otp) async {
+    isLoading(true);
+    try {
+      var url = Uri.parse(
+          '${ApiEndPoints.baseUrl}/user/${emailController.text.trim()}');
+
+      var body = {"signUpToken": otp.toString()};
+      var response = await client.post(url, body: body);
+      var json = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        await showDialog(
+            context: Get.context!,
+            builder: (context) {
+              return SimpleDialog(
+                title: const Text("Success"),
+                children: [Text(json['message'])],
+              );
+            });
+        onClose();
+        return 'Success';
+      } else {
+        await showDialog(
+            context: Get.context!,
+            builder: (context) {
+              return SimpleDialog(
+                title: const Text("Error"),
+                children: [Text(json['message'])],
+              );
+            });
+        return 'Error';
+      }
+    } catch (e) {
+      await showDialog(
+          context: Get.context!,
+          builder: (context) {
+            return SimpleDialog(
+              title: const Text("Error"),
+              children: [Text(e.toString())],
+            );
+          });
+      return 'Fail';
+    } finally {
+      isLoading(false);
     }
   }
 }

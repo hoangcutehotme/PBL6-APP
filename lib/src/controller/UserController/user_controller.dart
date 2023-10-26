@@ -15,6 +15,30 @@ class UserController extends GetxController {
   var token = ''.obs;
   var isLoading = false.obs;
 
+  final GlobalKey<FormState> changeInfoKey = GlobalKey<FormState>();
+
+  late TextEditingController firstName,lastname,email,phone;
+
+  // change info user
+  // this.id,
+  //   this.firstName,
+  //   this.lastName,
+  //   this.email,
+  //   this.phoneNumber,
+  //   this.createdAt,
+  //   this.updatedAt,
+  //   this.contact,
+  @override
+  void onInit() {
+    super.onInit();
+    getInfoUserById();
+  }
+  @override
+  void onClose() {
+    // TODO: implement onClose
+    super.onClose();
+  }
+
   Future<void> getIdToken() async {
     final SharedPreferences prefs = await _prefs;
     id.value = prefs.getString('id_user') ?? '';

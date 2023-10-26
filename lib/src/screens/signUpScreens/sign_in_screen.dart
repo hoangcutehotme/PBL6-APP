@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pbl6_app/src/controller/Authentication/login_controller.dart';
-import 'package:pbl6_app/src/screens/homeScreen/home_screen.dart';
 import 'package:pbl6_app/src/screens/signUpScreens/sign_up_screen.dart';
+import 'package:pbl6_app/src/screens/signUpScreens/webview_signin.dart';
 import 'package:pbl6_app/src/values/app_assets.dart';
 import 'package:pbl6_app/src/values/app_colors.dart';
 import 'package:pbl6_app/src/values/app_styles.dart';
@@ -190,7 +190,8 @@ class _SignInScreenState extends State<SignInScreen> {
               height: 60,
             ),
             onTap: () {
-              Get.to(const HomeScreen());
+              // await Get.find<LoginController>().handleSignIn();
+              Get.to(() => const WebViewSignIn());
             },
           ),
         ),

@@ -18,13 +18,12 @@ class CategoryController extends GetxController {
     fetchCategories(); // Fetch categories when the controller is initialized
   }
 
-  @override
-  void onClose() {
-    // TODO: implement onClose
-    super.onClose();
-    listCategory.value = [];
-    
-  }
+  // @override
+  // void onClose() {
+  //   // TODO: implement onClose
+  //   super.onClose();
+  //   listCategory.value = [];
+  // }
 
   void fetchCategories() async {
     isLoading(true);
@@ -36,7 +35,6 @@ class CategoryController extends GetxController {
         // If the server returns a 200 OK response, parse the JSON
         var data = response.body;
         listCategory.value = categoryModelFromJson(data);
-        print(listCategory.value);
 
         update();
         // Assign data to the observable list
@@ -47,7 +45,7 @@ class CategoryController extends GetxController {
             builder: (context) {
               return const SimpleDialog(
                 title: Text("Error"),
-                // children: [Text("not 200")],
+                children: [Text("Not success")],
               );
             });
       }

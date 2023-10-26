@@ -26,11 +26,10 @@ Future<void> main() async {
         supportedLocales: const [Locale('en', 'US'), Locale('vi', 'VN')],
         path:
             'assets/translations', // <-- change the path of the translation files
-        fallbackLocale: const Locale('en', 'US'),
+        fallbackLocale: const Locale('vi', 'VN'),
         child: const MyApp()),
   );
 
-  await _init();
 }
 
 _init() async {
@@ -44,6 +43,7 @@ _init() async {
     Get.offAllNamed('/');
   }
 }
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:pbl6_app/src/model/food_model.dart';
 import 'package:pbl6_app/src/model/store_model.dart';
 import 'package:pbl6_app/src/screens/homeScreen/detail_food.dart';
-import 'package:pbl6_app/src/screens/navigation/HomeMainPage.dart';
 import 'package:pbl6_app/src/values/app_assets.dart';
 import 'package:pbl6_app/src/values/app_colors.dart';
 import 'package:pbl6_app/src/values/app_styles.dart';
@@ -26,20 +25,14 @@ class _DetailShopState extends State<DetailShop> {
   Set<String>? listCategory;
 
   late StoreModel store;
-
-  void getStories() {
-    stories = StoreModel.getListStore();
-    store = stories[0];
-    listfood = store.listFood.reversed.toList();
-    listCategory = listfood.map((food) => food.nameCategory).toSet();
-    print(listCategory);
+  void getFoodList() {
+    listfood = FoodModel.getFoods();
   }
 
   @override
   void initState() {
     super.initState();
 
-    getStories();
     _scrollController = ScrollController();
     _scrollController!.addListener(() {
       if (_scrollController!.offset >= 145) {
@@ -53,6 +46,8 @@ class _DetailShopState extends State<DetailShop> {
       }
     });
   }
+
+  getStories() {}
 
   @override
   Widget build(BuildContext context) {
@@ -195,8 +190,8 @@ class _DetailShopState extends State<DetailShop> {
                 Icons.location_on,
                 color: AppColors.mainColor1,
               ),
-              Text("${stories[0].distance.toString()} km",
-                  style: AppStyles.textMedium),
+              // Text("${stories[0].distance.toString()} km",
+              //     style: AppStyles.textMedium),
               Expanded(child: Container()),
               Container(
                 alignment: Alignment.centerRight,
@@ -314,22 +309,4 @@ class _FlexibleHeadBar extends StatelessWidget {
       ), // Set the height of the app bar when it is expanded
     );
   }
-}
-
-class MyHeaderTitle extends SliverPersistentHeaderDelegate {
-  @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
-    throw UnimplementedError();
-  }
-
-  @override
-  double get maxExtent => throw UnimplementedError();
-
-  @override
-  double get minExtent => throw UnimplementedError();
-
-  @override
-  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>
-      false;
 }

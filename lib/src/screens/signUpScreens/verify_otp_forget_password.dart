@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:pbl6_app/src/controller/Authentication/register_controller.dart';
+import 'package:pbl6_app/src/controller/Authentication/forgot_password.dart';
+import 'package:pbl6_app/src/screens/signUpScreens/fill_new_password.dart';
 import 'package:pbl6_app/src/values/app_colors.dart';
 import 'package:pbl6_app/src/values/app_styles.dart';
 import 'package:pbl6_app/src/widgets/rounded_button.dart';
 
-class VerifyOTPScreen extends StatefulWidget {
-  const VerifyOTPScreen({super.key});
+class VerifyOtpForgetPassword extends StatefulWidget {
+  const VerifyOtpForgetPassword({super.key});
 
   @override
-  State<VerifyOTPScreen> createState() => _VerifyOTPScreenState();
+  State<VerifyOtpForgetPassword> createState() =>
+      _VerifyOtpForgetPasswordState();
 }
 
-class _VerifyOTPScreenState extends State<VerifyOTPScreen> {
-  final RegisterController _registerController = Get.put(RegisterController());
+class _VerifyOtpForgetPasswordState extends State<VerifyOtpForgetPassword> {
+  final ForgotPasswordController _forgotController =
+      Get.put(ForgotPasswordController());
   final List<String> _otpCode = ["", "", "", "", "", ""];
 
   @override
@@ -88,7 +91,11 @@ class _VerifyOTPScreenState extends State<VerifyOTPScreen> {
             Container(
                 alignment: Alignment.center,
                 child: GestureDetector(
-                  onTap: () {},
+                  onTap: () async {
+                    await _forgotController
+                        .forgotPasswordSendToEmail()
+                        .then((value) {});
+                  },
                   child: Text(
                     'Gửi lại',
                     style: AppStyles.textBold
@@ -101,11 +108,13 @@ class _VerifyOTPScreenState extends State<VerifyOTPScreen> {
               child: RoundedButton(
                 press: () async {
                   String otp = _otpCode.join();
-                  var response = await _registerController.verifyOtp(otp);
-
-                  if (response == 'Success') {
-                    Get.toNamed('/signin');
-                  }
+                  await _forgotController
+                      .verifyTokenPassword(otp)
+                      .then((value) {
+                    if (value) {
+                      Get.to(() => const FillNewPassword());
+                    }
+                  });
                 },
                 text: 'Xác thực',
                 size: Size(size.width * 0.8, 56),

@@ -17,7 +17,7 @@ class ProductModel {
   String description;
   String storeId;
   int v;
-  bool isFavoured;
+  // bool isFavoured;
 
   ProductModel({
     required this.category,
@@ -30,7 +30,7 @@ class ProductModel {
     required this.description,
     required this.storeId,
     required this.v,
-    required this.isFavoured,
+    // required this.isFavoured,
   });
 
   factory ProductModel.fromJson(Map<String, dynamic> json) => ProductModel(
@@ -44,7 +44,7 @@ class ProductModel {
         description: json["description"],
         storeId: json["storeId"],
         v: json["__v"],
-        isFavoured: json["isFavoured"],
+        // isFavoured: json["isFavoured"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -58,7 +58,7 @@ class ProductModel {
         "description": description,
         "storeId": storeId,
         "__v": v,
-        "isFavoured": isFavoured,
+        // "isFavoured": isFavoured,
       };
 }
 

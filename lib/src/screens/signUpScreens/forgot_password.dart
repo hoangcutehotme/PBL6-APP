@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pbl6_app/src/controller/Authentication/forgot_password.dart';
 import 'package:pbl6_app/src/values/app_colors.dart';
 import 'package:pbl6_app/src/values/app_styles.dart';
 import 'package:pbl6_app/src/widgets/rounded_button.dart';
 import 'package:pbl6_app/src/widgets/text_field_widget.dart';
+
+import 'verify_otp_forget_password.dart';
 
 class ForgetPassword extends StatefulWidget {
   const ForgetPassword({super.key});
@@ -13,6 +16,8 @@ class ForgetPassword extends StatefulWidget {
 }
 
 class _ForgetPasswordState extends State<ForgetPassword> {
+  final ForgotPasswordController _forgetPassword =
+      Get.put(ForgotPasswordController());
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -39,15 +44,16 @@ class _ForgetPasswordState extends State<ForgetPassword> {
               padding: const EdgeInsets.only(left: 27),
               alignment: Alignment.center,
               child: const Text(
-                "Nhập emai của bạn, mật khẩu mới sẽ được gửi đến email của bạn",
+                "Nhập emai của bạn, mã sẽ được gửi đến email của bạn",
                 style: AppStyles.textMedium,
                 textAlign: TextAlign.center,
               )),
           const SizedBox(height: 30),
-          const TextFieldContainer(
+          TextFieldContainer(
             child: TextField(
-              // controller: authController.resetEmailController,
-              decoration: InputDecoration(
+              controller: _forgetPassword.emailController,
+              keyboardType: TextInputType.emailAddress,
+              decoration: const InputDecoration(
                 icon: Icon(
                   Icons.mail_outline_rounded,
                   color: AppColors.colorTextBlur,
@@ -63,8 +69,11 @@ class _ForgetPasswordState extends State<ForgetPassword> {
             alignment: Alignment.center,
             child: RoundedButton(
               press: () {
-                // authController.resetPassword(context);
-                Get.toNamed("/signin");
+                _forgetPassword.forgotPasswordSendToEmail().then((value) {
+                  if (value) {
+                    Get.to(() => const VerifyOtpForgetPassword());
+                  }
+                });
               },
               text: 'Gửi',
               size: Size(size.width * 0.8, 56),
