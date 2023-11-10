@@ -46,11 +46,14 @@ dependencies:
   easy_localization: ^3.0.3
   google_sign_in: ^6.1.5
   webview_flutter: ^4.4.1
-  # dio: ^5.3.3
-  # cookie_jar: ^4.0.8
-  # dio_cookie_manager: ^3.1.1
-  # loader_overlay: ^2.3.2
-  # flutter_staggered_grid_view: ^0.7.0
+  cached_network_image: ^3.3.0
+  google_maps_flutter: ^2.5.0
+  geolocator: ^10.1.0
+  # geocoding: ^2.1.1
+  # flutter_google_places_sdk: ^0.3.3
+  flutter_typeahead: ^4.8.0
+  geocoding: ^2.1.1
+
 
 
 dev_dependencies:
@@ -58,11 +61,12 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^2.0.0
   flutter_launcher_icons: "^0.13.1"
-
+  
+# flutter pub run flutter_launcher_icons
 flutter_launcher_icons:
     android: true
     ios: true
-    image_path: "assets/images/FoodDelivery-removebg-preview.png"
+    image_path: "assets/logo/Logo-Main-removebg-preview.png"
     adaptive_icon_background : "#ffffff"
 
 

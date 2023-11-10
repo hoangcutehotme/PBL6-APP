@@ -26,22 +26,8 @@ class _SignInScreenState extends State<SignInScreen> {
       body: SingleChildScrollView(
           child: Center(
         child: Obx(
-          () => loginController.isLoading.value
-              ? Opacity(
-                  opacity: 1,
-                  child: Stack(
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(top: size.width),
-                        child: Visibility(
-                          visible: loginController.isLoading.value,
-                          child: const CircularProgressIndicator(),
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-              : Column(
+          () => 
+              Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     const SizedBox(

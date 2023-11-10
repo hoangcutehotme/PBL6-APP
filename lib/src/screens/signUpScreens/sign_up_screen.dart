@@ -24,53 +24,53 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return Scaffold(
       body: SingleChildScrollView(
           child: Center(
-            child: Obx(
-                  () => Column(
-                    children: [
-                      const SizedBox(
-                        height: 100,
-                      ),
-                      Text(
-                        "Đăng ký",
-                        style: AppStyles.textBold.copyWith(color: AppColors.mainColor1),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          RoundedButton(
-                              text: "Người dùng",
-                              size: const Size(150, 30),
-                              background: _registerController.isUser.value
-                                  ? AppColors.mainColor1
-                                  : AppColors.borderGray,
-                              press: () {
-                                _registerController.changeRole("user");
-                              }),
-                          const SizedBox(
-                            width: 15,
-                          ),
-                          RoundedButton(
-                              text: "Giao hàng",
-                              background: _registerController.isUser.value
-                                  ? AppColors.borderGray
-                                  : AppColors.mainColor1,
-                              size: const Size(150, 30),
-                              press: () {
-                                _registerController.changeRole("shipper");
-                              })
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      logupForm(context, size, _registerController.isUser.value)
-                    ],
+        child: Obx(
+          () => Column(
+            children: [
+              const SizedBox(
+                height: 100,
+              ),
+              Text(
+                "Đăng ký",
+                style: AppStyles.textBold.copyWith(color: AppColors.mainColor1),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  RoundedButton(
+                      text: "Người dùng",
+                      size: const Size(150, 30),
+                      background: _registerController.isUser.value
+                          ? AppColors.mainColor1
+                          : AppColors.borderGray,
+                      press: () {
+                        _registerController.changeRole("user");
+                      }),
+                  const SizedBox(
+                    width: 15,
                   ),
-                ),
-          )),
+                  RoundedButton(
+                      text: "Giao hàng",
+                      background: _registerController.isUser.value
+                          ? AppColors.borderGray
+                          : AppColors.mainColor1,
+                      size: const Size(150, 30),
+                      press: () {
+                        _registerController.changeRole("shipper");
+                      })
+                ],
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              logupForm(context, size, _registerController.isUser.value)
+            ],
+          ),
+        ),
+      )),
     );
   }
 
@@ -176,7 +176,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           alignment: Alignment.center,
           child: RoundedButton(
             press: () {
-              Get.toNamed("/fillinfo");
+              _registerController.checkPassword();
             },
             text: 'Đăng ký',
             size: Size(size.width * 0.8, 56),
@@ -186,7 +186,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           visible: hide,
           child: TextButton(
             onPressed: () {
-              Get.toNamed("/home");
+              Get.offAllNamed("/home");
             },
             child: Text(
               "Bỏ qua",

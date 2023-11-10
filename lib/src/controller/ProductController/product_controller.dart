@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pbl6_app/src/model/temp.dart';
+import 'package:pbl6_app/src/model/product_model.dart';
 import 'package:pbl6_app/src/utils/api_endpoints.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -41,7 +41,8 @@ class ProductController extends GetxController {
 
       if (response.statusCode == 200) {
         var data = response.body;
-        list.value = productModelFromJson(jsonEncode(json['data']['data']));
+        list.value = productsModelFromJson(jsonEncode(json['data']['data']));
+        
       } else {
         showDialog(
             context: Get.context!,

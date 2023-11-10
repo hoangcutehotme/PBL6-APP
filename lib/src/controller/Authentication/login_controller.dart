@@ -2,11 +2,15 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:pbl6_app/src/data/api/api_client.dart';
 import 'package:pbl6_app/src/utils/api_endpoints.dart';
 import 'package:http/http.dart' as http;
+import 'package:pbl6_app/src/utils/custome_snackbar.dart';
+import 'package:pbl6_app/src/utils/loading_full_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginController extends GetxController {
+  late ApiClient apiClient;
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   var isShowPass = true.obs;
@@ -106,6 +110,7 @@ class LoginController extends GetxController {
 
   Future<void> login() async {
     isLoading(true);
+    LoadingFullScreen.showLoading();
     try {
       print("login");
       var headers = {'Content-Type': 'application/json'};
@@ -126,122 +131,48 @@ class LoginController extends GetxController {
           final SharedPreferences prefs = await _prefs;
           await prefs.setString('token', token);
 
+          // apiClient.updateHeader(token);
+
           var user = json['data']['user'];
           // await FuncUseful.saveJson('user', user);
           // get id user
           print("id $user['_id]");
           prefs.setString('id_user', user['_id']);
+          LoadingFullScreen.cancelLoading();
 
           emailController.clear();
           passwordController.clear();
 
-          Get.toNamed("/home");
+          CustomeSnackBar.showSuccessSnackBar(
+              context: Get.context,
+              title: "Success",
+              message: "Đăng nhập thành công");
+
+          Get.offAllNamed("/home");
         } else {
-          showDialog(
-              context: Get.context!,
-              builder: (context) {
-                return SimpleDialog(
-                  title: const Text("Error"),
-                  children: [Center(child: Text(json['status'].toString()))],
-                );
-              });
+          LoadingFullScreen.cancelLoading();
+          CustomeSnackBar.showErrorSnackBar(
+              context: Get.context,
+              title: "Error",
+              message: 'Sai tài khoản, mật khẩu');
         }
       } else {
-        showDialog(
-            context: Get.context!,
-            builder: (context) {
-              return const SimpleDialog(
-                title: Center(child: Text("Error")),
-                children: [
-                  Center(child: Text('404')),
-                  // Text(json['message'].toString()),
-                ],
-              );
-            });
+        LoadingFullScreen.cancelLoading();
+        CustomeSnackBar.showErrorSnackBar(
+            context: Get.context,
+            title: "Error",
+            message: json['message'].toString());
       }
     } catch (e) {
       print(e.toString());
-      showDialog(
-          context: Get.context!,
-          builder: (context) {
-            return SimpleDialog(
-              title: const Text("Thông báo"),
-              // children: [Center(child: Text('Chưa nhập email hoặc mật khẩu'))],
-              children: [Center(child: Text(e.toString()))],
-            );
-          });
+      LoadingFullScreen.cancelLoading();
+      CustomeSnackBar.showErrorSnackBar(
+          context: Get.context, title: "Error", message: "");
     } finally {
+      LoadingFullScreen.cancelLoading();
       isLoading(false);
     }
   }
-
-  // Future<void> login() async {
-  //   isLoading(true);
-
-  //   showDialog(
-  //       context: Get.context!,
-  //       builder: (context) {
-  //         return const Center(child: CircularProgressIndicator());
-  //       });
-  //   try {
-  //     print("login");
-  //     var headers = {'Content-Type': 'application/json'};
-  //     var url = Uri.parse("${ApiEndPoints.baseUrl}/auth/login");
-  //     var body = {
-  //       "email": emailController.text.trim().toString(),
-  //       "password": passwordController.text.toString()
-  //     };
-
-  //     http.Response response =
-  //         await http.post(url, body: jsonEncode(body), headers: headers);
-
-  //     if (response.statusCode == 200) {
-  //       print("success");
-  //       final json = jsonDecode(response.body);
-  //       if (json['status'] == "success") {
-  //         var token = json['token'];
-  //         final SharedPreferences prefs = await _prefs;
-  //         await prefs.setString('token', token);
-
-  //         var user = json['data']['user'];
-  //         // await FuncUseful.saveJson('user', user);
-  //         // get id user
-  //         print("id $user['_id]");
-  //         prefs.setString('id_user', user['_id']);
-
-  //         emailController.clear();
-  //         passwordController.clear();
-
-  //         Get.toNamed("/home");
-  //       } else {
-  //         showDialog(
-  //             context: Get.context!,
-  //             builder: (context) {
-  //               return SimpleDialog(
-  //                 title: const Text("Error"),
-  //                 children: [Text(json['message'].toString())],
-  //               );
-  //             });
-  //       }
-  //     } else {
-  //       throw jsonDecode(response.body)['message'] ?? "Unknow Error Occured";
-  //     }
-  //   } catch (e) {
-  //     print(e.toString());
-  //     showDialog(
-  //         context: Get.context!,
-  //         builder: (context) {
-  //           return SimpleDialog(
-  //             title: const Text("Error"),
-  //             children: [Text(e.toString())],
-  //           );
-  //         });
-  //   } finally {
-  //     isLoading(false);
-  //     // Get.back();
-  //     // Navigator.of(Get.context!).pop();
-  //   }
-  // }
 
   Future<void> logout() async {
     // Get.bot

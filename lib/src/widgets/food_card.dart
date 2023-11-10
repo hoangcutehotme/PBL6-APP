@@ -30,6 +30,7 @@ class FoodCard extends StatelessWidget {
         child: Stack(
           alignment: Alignment.topCenter,
           children: [
+            // ImageLoadingNetwork(image: food.imageFood, size: Size(160, 140)),
             ClipRRect(
               borderRadius: BorderRadius.circular(2),
               child: Image.asset(
@@ -37,8 +38,6 @@ class FoodCard extends StatelessWidget {
                 width: 160,
                 height: 140,
                 fit: BoxFit.fill,
-
-                // color: AppColors.borderGray,
               ),
             ),
             Positioned(

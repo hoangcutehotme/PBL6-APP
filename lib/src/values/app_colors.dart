@@ -10,4 +10,5 @@ class AppColors {
   static const colorTextBlur = Colors.black26;
   static const placeholder = Color.fromRGBO(243, 244, 244, 1);
   static const grayBold = Color.fromRGBO(144, 138, 138, 1);
+  static const colorSuccess = Color.fromARGB(255, 11, 181, 99);
 }

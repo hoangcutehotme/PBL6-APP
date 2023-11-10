@@ -4,6 +4,7 @@ import 'package:pbl6_app/src/controller/CategoryControler/category_controller.da
 import 'package:pbl6_app/src/controller/StoreController/store_controller.dart';
 import 'package:pbl6_app/src/model/food_category_model.dart';
 import 'package:pbl6_app/src/model/food_model.dart';
+import 'package:pbl6_app/src/screens/searchScreen/seach_section.dart';
 import 'package:pbl6_app/src/values/app_styles.dart';
 import '../../model/store_model.dart';
 import '../../values/app_colors.dart';
@@ -123,28 +124,34 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         Container(
-            // color: Colors.amber,
             width: double.infinity,
             height: 240,
             padding: const EdgeInsets.only(left: 20),
             child: Obx(
-              () => ListView.separated(
-                scrollDirection: Axis.horizontal,
-                itemCount: stories.length,
-                separatorBuilder: (BuildContext context, int index) {
-                  return const SizedBox(
-                    width: 20,
-                  );
-                },
-                itemBuilder: (context, index) {
-                  return StoreCard(
-                    storie: stories[index],
-                    press: () {
-                      Get.toNamed('/detailshop', arguments: stories[index]);
-                    },
-                  );
-                },
-              ),
+              () => storeController.isLoading.value
+                  ? Container(
+                      child: const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    )
+                  : ListView.separated(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: stories.length,
+                      separatorBuilder: (BuildContext context, int index) {
+                        return const SizedBox(
+                          width: 20,
+                        );
+                      },
+                      itemBuilder: (context, index) {
+                        return StoreCard(
+                          storie: stories[index],
+                          press: () {
+                            Get.toNamed('/detailshop',
+                                arguments: stories[index].id);
+                          },
+                        );
+                      },
+                    ),
             ))
       ],
     );
@@ -154,18 +161,22 @@ class _HomeScreenState extends State<HomeScreen> {
     return Padding(
       padding: const EdgeInsetsDirectional.symmetric(horizontal: 5),
       child: GestureDetector(
+        // onTap: () {
+        //   showSearch(context: context, delegate: SearchSection());
+        // },
         child: Container(
           width: size.width,
           height: 45,
           decoration: const ShapeDecoration(
-              shape: StadiumBorder(), color: AppColors.placeholder),
+            shape: StadiumBorder(),
+            color: AppColors.placeholder,
+          ),
           // decoration: BoxDecoration(
           //     borderRadius: BorderRadius.circular(10),
           //     border: Border.all(width: 2, color: AppColors.borderGray)),
           child: TextField(
             onTap: () {
-              Get.toNamed("/search");
-              // Get.to(const OrderScreen());
+              showSearch(context: context, delegate: SearchSection());
             },
             decoration: const InputDecoration(
                 border: InputBorder.none,
@@ -200,7 +211,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
             onTap: () {
-              // Show search location
+              Get.toNamed('/changeaddress');
             },
           ),
         ),

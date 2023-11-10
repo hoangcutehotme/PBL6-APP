@@ -38,44 +38,37 @@ class _FillInfoUserScreenState extends State<FillInfoUserScreen> {
                     .copyWith(color: AppColors.mainColor1, fontSize: 24),
               ),
               // fill info
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  FillLabelText(
-                    size: Size(size.width * 0.42, 56),
-                    label: 'Họ ',
-                    child: TextField(
-                      controller: _controller.lastnameController,
-                      decoration: InputDecoration(
-                        contentPadding:
-                            const EdgeInsets.symmetric(vertical: 10),
-                        hintText: "Họ",
-                        hintStyle: AppStyles.textMedium
-                            .copyWith(color: AppColors.colorTextBlur),
-                        border: InputBorder.none,
-                      ),
-                    ),
+              FillLabelText(
+                size: Size(size.width * 0.85, 56),
+                label: 'Họ ',
+                child: TextField(
+                  controller: _controller.lastnameController,
+                  decoration: InputDecoration(
+                    contentPadding: const EdgeInsets.symmetric(vertical: 10),
+                    hintText: "Họ",
+                    hintStyle: AppStyles.textMedium
+                        .copyWith(color: AppColors.colorTextBlur),
+                    border: InputBorder.none,
                   ),
-                  FillLabelText(
-                    size: Size(size.width * 0.42, 56),
-                    label: 'Tên',
-                    child: TextField(
-                      controller: _controller.firstnameController,
-                      decoration: InputDecoration(
-                        contentPadding:
-                            const EdgeInsets.symmetric(vertical: 10),
-                        hintText: "Tên",
-                        hintStyle: AppStyles.textMedium
-                            .copyWith(color: AppColors.colorTextBlur),
-                        border: InputBorder.none,
-                      ),
-                    ),
+                ),
+              ),
+              FillLabelText(
+                size: Size(size.width * 0.85, 56),
+                label: 'Tên',
+                child: TextField(
+                  controller: _controller.firstnameController,
+                  decoration: InputDecoration(
+                    contentPadding: const EdgeInsets.symmetric(vertical: 10),
+                    hintText: "Tên",
+                    hintStyle: AppStyles.textMedium
+                        .copyWith(color: AppColors.colorTextBlur),
+                    border: InputBorder.none,
                   ),
-                ],
+                ),
               ),
 
               FillLabelText(
+                size: Size(size.width * 0.85, 56),
                 label: 'Địa chỉ',
                 child: TextField(
                   controller: _controller.addressController,
@@ -94,11 +87,9 @@ class _FillInfoUserScreenState extends State<FillInfoUserScreen> {
                 alignment: Alignment.center,
                 child: RoundedButton(
                   press: () async {
-
                     await Get.find<RegisterController>().registerUserEmail();
 
                     await Get.toNamed("/verifyotp");
-                    
                   },
                   text: 'Xác nhận',
                   size: Size(size.width * 0.8, 56),

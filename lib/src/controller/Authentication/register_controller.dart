@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pbl6_app/src/utils/api_endpoints.dart';
 import 'package:http/http.dart' as http;
+import 'package:pbl6_app/src/utils/custome_snackbar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class RegisterController extends GetxController {
@@ -17,14 +18,7 @@ class RegisterController extends GetxController {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
   @override
-  void onInit() {
-    // TODO: implement onInit
-    super.onInit();
-  }
-
-  @override
   void onClose() {
-    // TODO: implement onClose
     super.onClose();
     emailController.clear();
     passwordController.clear();
@@ -66,13 +60,18 @@ class RegisterController extends GetxController {
 
   bool checkPassword() {
     if (passwordConfirmController.text == passwordController.text) {
+      Get.toNamed("/fillinfo");
       return true;
     } else {
+      CustomeSnackBar.showErrorSnackBar(
+          context: Get.context,
+          title: "Error",
+          message: 'Mật khẩu không trùng');
       return false;
     }
   }
 
-  Future<void> registerUserEmail() async {
+  registerUserEmail() async {
     try {
       var headers = {'Content-Type': 'application/json'};
       var url = Uri.parse("${ApiEndPoints.baseUrl}/user");
@@ -80,8 +79,8 @@ class RegisterController extends GetxController {
         "firstName": firstnameController.text.trim(),
         "lastName": lastnameController.text.trim(),
         "email": emailController.text.trim(),
-        "password": passwordController.text,
-        "passwordConfirm": passwordConfirmController.text,
+        "password": passwordController.text.trim(),
+        "passwordConfirm": passwordConfirmController.text.trim(),
         "address": addressController.text.trim(),
         "phoneNumber": phoneController.text.trim(),
       };
@@ -91,42 +90,24 @@ class RegisterController extends GetxController {
       final json = jsonDecode(response.body);
       if (response.statusCode == 200) {
         if (json['message'] == "Mã đã được gửi đến email!") {
-          // emailController.clear();
-          // passwordController.clear();
-          // passwordConfirmController.clear();
-          // firstnameController.clear();
-          // lastnameController.clear();
-          // addressController.clear();
-          // phoneController.clear();
+          CustomeSnackBar.showSuccessSnackBar(
+              context: Get.context, title: "Success", message: json['message']);
+          return true;
         } else {
-          showDialog(
-              context: Get.context!,
-              builder: (context) {
-                return SimpleDialog(
-                  title: const Text("Error"),
-                  children: [Text(json['message'])],
-                );
-              });
+          CustomeSnackBar.showErrorSnackBar(
+              context: Get.context, title: "Error", message: json['message']);
+          return false;
         }
       } else {
-        showDialog(
-            context: Get.context!,
-            builder: (context) {
-              return const SimpleDialog(
-                title: Text("Error"),
-              );
-            });
+        CustomeSnackBar.showErrorSnackBar(
+            context: Get.context, title: "Error", message: '');
+        return false;
       }
     } catch (e) {
       // Get.back();
-      showDialog(
-          context: Get.context!,
-          builder: (context) {
-            return SimpleDialog(
-              title: const Text("Error"),
-              children: [Text(e.toString())],
-            );
-          });
+      CustomeSnackBar.showErrorSnackBar(
+          context: Get.context, title: "Error", message: e.toString());
+      return false;
     }
   }
 
@@ -139,37 +120,22 @@ class RegisterController extends GetxController {
       var body = {"signUpToken": otp.toString()};
       var response = await client.post(url, body: body);
       var json = jsonDecode(response.body);
+
       if (response.statusCode == 200) {
-        await showDialog(
-            context: Get.context!,
-            builder: (context) {
-              return SimpleDialog(
-                title: const Text("Success"),
-                children: [Text(json['message'])],
-              );
-            });
+        CustomeSnackBar.showSuccessSnackBar(
+            context: Get.context, title: 'Success', message: json['message']);
+
         onClose();
         return 'Success';
       } else {
-        await showDialog(
-            context: Get.context!,
-            builder: (context) {
-              return SimpleDialog(
-                title: const Text("Error"),
-                children: [Text(json['message'])],
-              );
-            });
+        CustomeSnackBar.showErrorSnackBar(
+            context: Get.context, title: "Error", message: json['message']);
+        // return false;
         return 'Error';
       }
     } catch (e) {
-      await showDialog(
-          context: Get.context!,
-          builder: (context) {
-            return SimpleDialog(
-              title: const Text("Error"),
-              children: [Text(e.toString())],
-            );
-          });
+      CustomeSnackBar.showErrorSnackBar(
+          context: Get.context, title: "Error", message: e.toString());
       return 'Fail';
     } finally {
       isLoading(false);

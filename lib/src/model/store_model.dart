@@ -10,7 +10,7 @@ String storeModelToJson(List<StoreModel> data) =>
 
 class StoreModel {
   double ratingAverage;
-  String images;
+  String image;
   bool isLocked;
   String id;
   String name;
@@ -26,7 +26,7 @@ class StoreModel {
 
   StoreModel({
     required this.ratingAverage,
-    required this.images,
+    required this.image,
     required this.isLocked,
     required this.id,
     required this.name,
@@ -43,7 +43,7 @@ class StoreModel {
 
   factory StoreModel.fromJson(Map<String, dynamic> json) => StoreModel(
         ratingAverage: json["ratingAverage"]?.toDouble(),
-        images: json["images"],
+        image: json["image"],
         isLocked: json["isLocked"],
         id: json["_id"],
         name: json["name"],
@@ -60,7 +60,7 @@ class StoreModel {
 
   Map<String, dynamic> toJson() => {
         "ratingAverage": ratingAverage,
-        "images": images,
+        "images": image,
         "isLocked": isLocked,
         "_id": id,
         "name": name,
@@ -75,95 +75,5 @@ class StoreModel {
         // "registrationLicense": registrationLicense,
       };
 
-  // static List<StoreModel> getListStore() {
-//     List<StoreModel> listStore = [];
-//     List<FoodModel> listFood1 = FoodModel.getFoods();
-
-//     listStore.add(StoreModel(
-//         name: "Bún đậu cô Tiên",
-//         id: "1",
-//         phonenumber: "0912312312",
-//         address: "51,Đặng Tất, Liên Chiểu, Đà Nẵng",
-//         openAt: '10:20',
-//         closeAt: "22:00",
-//         decription: "Ngon lắm ăn thử đi",
-//         ratingAverage: 4.7,
-//         image: AppAssets.bundauImage,
-//         listFood: listFood1,
-//         distance: 1.5));
-
-//     listStore.add(StoreModel(
-//         name: "Jollibee - Phạm Như Xương",
-//         id: "2",
-//         phonenumber: "0912312334",
-//         address: "10 Phạm Như Xương, P. Hòa Khánh Nam, Đà Nẵng",
-//         openAt: '9:00',
-//         closeAt: "22:00",
-//         decription: "Ngon lắm ăn thử đi",
-//         ratingAverage: 4.7,
-//         image: AppAssets.jolibeImage,
-//         listFood: [],
-//         distance: 2.4));
-//     listStore.add(StoreModel(
-//         name: "Jollibee - Phạm Như Xương",
-//         id: "2",
-//         phonenumber: "0912312334",
-//         address: "10 Phạm Như Xương, P. Hòa Khánh Nam, Đà Nẵng",
-//         openAt: '9:00',
-//         closeAt: "22:00",
-//         decription: "Ngon lắm ăn thử đi",
-//         ratingAverage: 4.7,
-//         image: AppAssets.jolibeImage,
-//         listFood: [],
-//         distance: 2.4));
-//     listStore.add(StoreModel(
-//         name: "Jollibee - Phạm Như Xương",
-//         id: "2",
-//         phonenumber: "0912312334",
-//         address: "10 Phạm Như Xương, P. Hòa Khánh Nam, Đà Nẵng",
-//         openAt: '9:00',
-//         closeAt: "22:00",
-//         decription: "Ngon lắm ăn thử đi",
-//         ratingAverage: 4.7,
-//         image: AppAssets.jolibeImage,
-//         listFood: [],
-//         distance: 2.4));
-//     return listStore;
-//   }
+ 
 }
-
-
-// class StoreModel {
-//   String name;
-//   String id;
-//   String phonenumber;
-//   String address;
-//   String openAt;
-//   String closeAt;
-//   double distance;
-//   String decription;
-//   double ratingAverage;
-//   String image;
-//   List<FoodModel> listFood;
-
-  
-
-//   StoreModel({
-//     required this.name,
-//     required this.id,
-//     required this.phonenumber,
-//     required this.address,
-//     required this.openAt,
-//     required this.closeAt,
-//     required this.distance,
-//     required this.decription,
-//     required this.ratingAverage,
-//     required this.image,
-//     required this.listFood,
-//   });
-
-//   // location to name address
-//   // fake data
-
-// 
-// }

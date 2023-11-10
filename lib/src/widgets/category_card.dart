@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../model/food_category_model.dart';
-import '../values/app_colors.dart';
+import 'image_loading_network.dart';
 
 class CategoryCard extends StatelessWidget {
   const CategoryCard({
@@ -25,34 +25,9 @@ class CategoryCard extends StatelessWidget {
         },
         child: Column(
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(5),
-              child: Image.network(
-                categorie.photo,
-                width: 120,
-                height: 120,
-                // loadingBuilder: (BuildContext context, Widget child,
-                //     ImageChunkEvent? loadingProgress) {
-                //   return const SizedBox(
-                //     width: 120,
-                //     height: 120,
-                //     child: Center(
-                //       child: CircularProgressIndicator(),
-                //     ),
-                //   );
-                // },
-                errorBuilder: (BuildContext context, Object error,
-                    StackTrace? stackTrace) {
-                  return Container(
-                    width: 120,
-                    height: 120,
-                    decoration: BoxDecoration(
-                        color: AppColors.placeholder,
-                        borderRadius: BorderRadius.circular(7)),
-                    child: const Icon(Icons.error_outline),
-                  ); // Widget to display when the image fails to load
-                },
-              ),
+            ImageLoadingNetwork(
+              image: categorie.photo,
+              size: const Size(120, 120),
             ),
             Text(categorie.catName)
           ],

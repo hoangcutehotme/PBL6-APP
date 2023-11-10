@@ -18,12 +18,19 @@ class CategoryController extends GetxController {
     fetchCategories(); // Fetch categories when the controller is initialized
   }
 
-  // @override
-  // void onClose() {
-  //   // TODO: implement onClose
-  //   super.onClose();
-  //   listCategory.value = [];
-  // }
+  @override
+  void onReady() {
+    // TODO: implement onReady
+    super.onReady();
+    fetchCategories();
+  }
+
+  @override
+  void onClose() {
+    // TODO: implement onClose
+    super.onClose();
+    listCategory.value = [];
+  }
 
   void fetchCategories() async {
     isLoading(true);
@@ -51,6 +58,7 @@ class CategoryController extends GetxController {
       }
     } catch (e) {
       // Handle any errors that occurred during the API call
+      print(e.toString());
       showDialog(
           context: Get.context!,
           builder: (context) {

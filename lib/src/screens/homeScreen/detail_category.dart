@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pbl6_app/src/controller/ProductController/product_controller.dart';
-import 'package:pbl6_app/src/model/temp.dart';
+import 'package:pbl6_app/src/model/product_model.dart';
 import 'package:pbl6_app/src/values/app_colors.dart';
 import 'package:pbl6_app/src/values/app_styles.dart';
+import 'package:pbl6_app/src/widgets/image_loading_network.dart';
 
 // ignore: must_be_immutable
 class DetailCategory extends StatefulWidget {
@@ -44,6 +45,7 @@ class _DetailCategoryState extends State<DetailCategory> {
                   crossAxisSpacing: 0,
                   mainAxisSpacing: 10,
                   crossAxisCount: 2,
+                  childAspectRatio: 0.8,
                 ),
                 itemCount: _productController.list.length,
                 itemBuilder: (context, index) {
@@ -67,53 +69,27 @@ class ProductWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: press,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Expanded(
-            child: Image.network(
-              // product.images
-              'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=3160&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', // Replace this URL with the actual URL of the image you want to load
-              loadingBuilder: (BuildContext context, Widget child,
-                  ImageChunkEvent? loadingProgress) {
-                if (loadingProgress == null) {
-                  return child;
-                } else {
-                  return Center(
-                    child: CircularProgressIndicator(
-                      value: loadingProgress.expectedTotalBytes != null
-                          ? loadingProgress.cumulativeBytesLoaded /
-                              (loadingProgress.expectedTotalBytes ?? 1)
-                          : null,
-                    ),
-                  );
-                }
-              },
-              errorBuilder:
-                  (BuildContext context, Object error, StackTrace? stackTrace) {
-                return Container(
-                  width: 160,
-                  height: 160,
-                  decoration: BoxDecoration(
-                      color: AppColors.placeholder,
-                      borderRadius: BorderRadius.circular(7)),
-                  child: const Icon(Icons.error_outline),
-                ); // Widget to display when the image fails to load
-              },
+    return SizedBox(
+      height: 300,
+      child: GestureDetector(
+        onTap: press,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            ImageLoadingNetwork(
+                image: product.images.isEmpty ? "" : product.images[0],
+                size: const Size(160, 160)),
+            Text(
+              product.name,
+              style: AppStyles.textMedium.copyWith(fontWeight: FontWeight.w600),
             ),
-          ),
-          Text(
-            product.name,
-            style: AppStyles.textMedium.copyWith(fontWeight: FontWeight.w600),
-          ),
-          Text(
-            "${product.price}đ",
-            style: AppStyles.textMedium.copyWith(
-                fontWeight: FontWeight.w600, color: AppColors.mainColor1),
-          ),
-        ],
+            Text(
+              "${product.price}đ",
+              style: AppStyles.textMedium.copyWith(
+                  fontWeight: FontWeight.w600, color: AppColors.mainColor1),
+            ),
+          ],
+        ),
       ),
     );
   }
