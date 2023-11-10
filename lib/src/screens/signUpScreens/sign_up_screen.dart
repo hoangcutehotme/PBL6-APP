@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart';
 import 'package:pbl6_app/src/controller/Authentication/register_controller.dart';
 import 'package:pbl6_app/src/screens/signUpScreens/sign_in_screen.dart';
 import 'package:pbl6_app/src/values/app_colors.dart';
@@ -17,18 +16,16 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  String? selectedValue;
-
   final RegisterController _registerController = Get.put(RegisterController());
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    bool showSkip = true;
     return Scaffold(
       body: SingleChildScrollView(
-        child: Center(
-          child: Column(
+          child: Center(
+        child: Obx(
+          () => Column(
             children: [
               const SizedBox(
                 height: 100,
@@ -46,33 +43,34 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   RoundedButton(
                       text: "Người dùng",
                       size: const Size(150, 30),
+                      background: _registerController.isUser.value
+                          ? AppColors.mainColor1
+                          : AppColors.borderGray,
                       press: () {
-                        setState(() {
-                          showSkip = true;
-                        });
+                        _registerController.changeRole("user");
                       }),
                   const SizedBox(
                     width: 15,
                   ),
                   RoundedButton(
                       text: "Giao hàng",
-                      background: AppColors.borderGray,
+                      background: _registerController.isUser.value
+                          ? AppColors.borderGray
+                          : AppColors.mainColor1,
                       size: const Size(150, 30),
                       press: () {
-                        setState(() {
-                          showSkip = false;
-                        });
+                        _registerController.changeRole("shipper");
                       })
                 ],
               ),
               const SizedBox(
                 height: 10,
               ),
-              logupForm(context, size, showSkip)
+              logupForm(context, size, _registerController.isUser.value)
             ],
           ),
         ),
-      ),
+      )),
     );
   }
 
@@ -110,35 +108,63 @@ class _SignUpScreenState extends State<SignUpScreen> {
             ),
           ),
         ),
-        TextFieldContainer(
-          child: TextField(
-            controller: _registerController.passwordController,
-            decoration: InputDecoration(
-              icon: const Icon(
-                Icons.lock_outline_rounded,
-                color: Colors.black38,
+        Obx(
+          () => TextFieldContainer(
+            child: TextField(
+              controller: _registerController.passwordController,
+              obscureText: _registerController.isShowPass.value,
+              decoration: InputDecoration(
+                icon: const Icon(
+                  Icons.lock_outline_rounded,
+                  color: Colors.black38,
+                ),
+                suffixIcon: IconButton(
+                  splashColor: AppColors.mainColorBackground,
+                  icon: Icon(
+                    _registerController.isShowPass.value
+                        ? Icons.visibility
+                        : Icons.visibility_off,
+                  ),
+                  onPressed: () {
+                    _registerController.changeShowPass();
+                  },
+                ),
+                contentPadding: const EdgeInsets.symmetric(vertical: 10),
+                hintText: "Mật khẩu",
+                hintStyle: AppStyles.textMedium
+                    .copyWith(color: AppColors.colorTextBlur),
+                border: InputBorder.none,
               ),
-              contentPadding: const EdgeInsets.symmetric(vertical: 10),
-              hintText: "Mật khẩu",
-              hintStyle:
-                  AppStyles.textMedium.copyWith(color: AppColors.colorTextBlur),
-              border: InputBorder.none,
             ),
           ),
         ),
-        TextFieldContainer(
-          child: TextField(
-            controller: _registerController.passwordConfirmController,
-            decoration: InputDecoration(
-              icon: const Icon(
-                Icons.lock_outline_rounded,
-                color: Colors.black38,
+        Obx(
+          () => TextFieldContainer(
+            child: TextField(
+              controller: _registerController.passwordConfirmController,
+              obscureText: _registerController.isShowPassConfirm.value,
+              decoration: InputDecoration(
+                icon: const Icon(
+                  Icons.lock_outline_rounded,
+                  color: Colors.black38,
+                ),
+                suffixIcon: IconButton(
+                  splashColor: AppColors.mainColorBackground,
+                  icon: Icon(
+                    _registerController.isShowPassConfirm.value
+                        ? Icons.visibility
+                        : Icons.visibility_off,
+                  ),
+                  onPressed: () {
+                    _registerController.changeShowPassConfirm();
+                  },
+                ),
+                contentPadding: const EdgeInsets.symmetric(vertical: 10),
+                hintText: "Xác nhận mật khẩu",
+                hintStyle: AppStyles.textMedium
+                    .copyWith(color: AppColors.colorTextBlur),
+                border: InputBorder.none,
               ),
-              contentPadding: const EdgeInsets.symmetric(vertical: 10),
-              hintText: "Xác nhận mật khẩu",
-              hintStyle:
-                  AppStyles.textMedium.copyWith(color: AppColors.colorTextBlur),
-              border: InputBorder.none,
             ),
           ),
         ),
@@ -150,7 +176,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           alignment: Alignment.center,
           child: RoundedButton(
             press: () {
-              Get.toNamed("/fillinfo");
+              _registerController.checkPassword();
             },
             text: 'Đăng ký',
             size: Size(size.width * 0.8, 56),
@@ -160,7 +186,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           visible: hide,
           child: TextButton(
             onPressed: () {
-              Get.toNamed("/home");
+              Get.offAllNamed("/home");
             },
             child: Text(
               "Bỏ qua",
@@ -199,29 +225,5 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ),
       ],
     );
-  }
-
-  TextFieldContainer selectWiget(List<String> roles) {
-    return TextFieldContainer(
-        child: DropdownButtonFormField<String>(
-      decoration: InputDecoration(
-          hintText: 'Select Role',
-          hintStyle:
-              AppStyles.textMedium.copyWith(color: AppColors.colorTextBlur),
-          border: InputBorder.none),
-      alignment: Alignment.center,
-      value: selectedValue,
-      onChanged: (String? newValue) {
-        setState(() {
-          selectedValue = newValue;
-        });
-      },
-      items: roles.map((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
-        );
-      }).toList(),
-    ));
   }
 }

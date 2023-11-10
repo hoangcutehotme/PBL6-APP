@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pbl6_app/src/controller/UserController/user_controller.dart';
-import 'package:pbl6_app/src/model/user_model.dart';
 import 'package:pbl6_app/src/screens/userScreen/change_address_user.dart';
 import 'package:pbl6_app/src/screens/userScreen/change_user_info.dart';
 import 'package:pbl6_app/src/values/app_colors.dart';
@@ -18,10 +17,8 @@ class UserScreen extends StatefulWidget {
 }
 
 class _UserScreenState extends State<UserScreen> {
-  final LoginController _controller = LoginController();
-  final UserController _userController = UserController();
-
-  UserModel? user;
+  final LoginController _controller = Get.put(LoginController());
+  final UserController _userController = Get.put(UserController());
 
   @override
   void initState() {
@@ -30,15 +27,7 @@ class _UserScreenState extends State<UserScreen> {
   }
 
   _initializeUser() async {
-    var id = await _userController.getId();
-    print(id);
-    if (id != "") {
-      await _userController.getInfoUserById(id).then((value) => user = value);
-      print(user);
-    } else {
-      user = _userController.getDefaultUser();
-      print(user);
-    }
+    await _userController.getInfoUserById();
   }
 
   @override
@@ -148,12 +137,19 @@ class _UserScreenState extends State<UserScreen> {
                 const SizedBox(
                   width: 10,
                 ),
-                Text(
-                  user == null
-                      ? 'Người dùng'
-                      : "${user?.lastName} ${user?.firstName}",
-                  style: AppStyles.textBold.copyWith(
-                      color: AppColors.mainColorBackground, fontSize: 20),
+                Obx(
+                  () => _userController.isLoading.value
+                      ? const CircularProgressIndicator(
+                          color: AppColors.borderGray,
+                        )
+                      : Text(
+                          _userController.id.value == ''
+                              ? 'Người dùng'
+                              : "${_userController.user.value.lastName ?? ''} ${_userController.user.value.firstName ?? ''}",
+                          style: AppStyles.textBold.copyWith(
+                              color: AppColors.mainColorBackground,
+                              fontSize: 20),
+                        ),
                 )
               ],
             ),

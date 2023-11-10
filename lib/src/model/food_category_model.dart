@@ -1,28 +1,45 @@
-import 'package:pbl6_app/src/values/app_assets.dart';
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:convert';
+
+List<CategoryModel> categoryModelFromJson(String str) =>
+    List<CategoryModel>.from(
+        json.decode(str).map((x) => CategoryModel.fromJson(x)));
+
+String categoryModelToJson(List<CategoryModel> data) =>
+    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class CategoryModel {
-  String name;
-  String imgPath;
+  String id;
+  String catName;
+  String photo;
 
   CategoryModel({
-    required this.name,
-    required this.imgPath,
+    required this.id,
+    required this.catName,
+    required this.photo,
   });
 
-  static List<CategoryModel> getCategories() {
-    List<CategoryModel> categories = [];
-    
-    categories.add(CategoryModel(name: 'Đồ ăn', imgPath: AppAssets.foodImage));
-    categories
-        .add(CategoryModel(name: 'Đồ uống', imgPath: AppAssets.milkteaImage));
+  factory CategoryModel.fromJson(Map<String, dynamic> json) => CategoryModel(
+        id: json["_id"],
+        catName: json["catName"],
+        photo: json["photo"],
+      );
 
-    categories
-        .add(CategoryModel(name: 'Đồ ăn nhanh', imgPath: AppAssets.foodImage));
-    categories
-        .add(CategoryModel(name: 'Đồ chay', imgPath: AppAssets.foodImage));
-
-    return categories;
-  }
-
-  
+  Map<String, dynamic> toJson() =>
+      {"_id": id, "catName": catName, "photo": photo};
 }
+
+//   // static List<CategoryModel> getCategories() {
+//   //   List<CategoryModel> categories = [];
+
+//   //   categories.add(CategoryModel(name: 'Đồ ăn', imgPath: AppAssets.foodImage, id: ''));
+//   //   categories
+//   //       .add(CategoryModel(name: 'Đồ uống', imgPath: AppAssets.milkteaImage, id: ''));
+
+//   //   categories
+//   //       .add(CategoryModel(name: 'Đồ ăn nhanh', imgPath: AppAssets.foodImage, id: ''));
+//   //   categories
+//   //       .add(CategoryModel(name: 'Đồ chay', imgPath: AppAssets.foodImage, id: ''));
+
+//   //   return categories;
+//   // }

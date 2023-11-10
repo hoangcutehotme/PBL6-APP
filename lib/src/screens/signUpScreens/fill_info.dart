@@ -5,6 +5,8 @@ import 'package:pbl6_app/src/values/app_styles.dart';
 import 'package:pbl6_app/src/widgets/fill_label_text.dart';
 import 'package:pbl6_app/src/widgets/rounded_button.dart';
 
+import '../../controller/Authentication/register_controller.dart';
+
 class FillInfoUserScreen extends StatefulWidget {
   const FillInfoUserScreen({super.key});
 
@@ -13,6 +15,7 @@ class FillInfoUserScreen extends StatefulWidget {
 }
 
 class _FillInfoUserScreenState extends State<FillInfoUserScreen> {
+  final RegisterController _controller = Get.find<RegisterController>();
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -21,6 +24,8 @@ class _FillInfoUserScreenState extends State<FillInfoUserScreen> {
       body: SingleChildScrollView(
         child: Center(
           child: Column(
+            // mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               AppBar(
                 foregroundColor: AppColors.colorTextBold,
@@ -34,12 +39,27 @@ class _FillInfoUserScreenState extends State<FillInfoUserScreen> {
               ),
               // fill info
               FillLabelText(
-                label: 'Họ và tên',
+                size: Size(size.width * 0.85, 56),
+                label: 'Họ ',
                 child: TextField(
-                  // controller: authController.loginEmailController,
+                  controller: _controller.lastnameController,
                   decoration: InputDecoration(
                     contentPadding: const EdgeInsets.symmetric(vertical: 10),
-                    hintText: "Họ và tên",
+                    hintText: "Họ",
+                    hintStyle: AppStyles.textMedium
+                        .copyWith(color: AppColors.colorTextBlur),
+                    border: InputBorder.none,
+                  ),
+                ),
+              ),
+              FillLabelText(
+                size: Size(size.width * 0.85, 56),
+                label: 'Tên',
+                child: TextField(
+                  controller: _controller.firstnameController,
+                  decoration: InputDecoration(
+                    contentPadding: const EdgeInsets.symmetric(vertical: 10),
+                    hintText: "Tên",
                     hintStyle: AppStyles.textMedium
                         .copyWith(color: AppColors.colorTextBlur),
                     border: InputBorder.none,
@@ -48,37 +68,28 @@ class _FillInfoUserScreenState extends State<FillInfoUserScreen> {
               ),
 
               FillLabelText(
-                label: 'Ảnh đại diện',
+                size: Size(size.width * 0.85, 56),
+                label: 'Địa chỉ',
                 child: TextField(
-                  // controller: authController.loginEmailController,
+                  controller: _controller.addressController,
                   decoration: InputDecoration(
                     contentPadding: const EdgeInsets.symmetric(vertical: 10),
-                    hintText: "Ảnh đại diện",
+                    hintText: "Điạ chỉ",
                     hintStyle: AppStyles.textMedium
                         .copyWith(color: AppColors.colorTextBlur),
                     border: InputBorder.none,
                   ),
                 ),
               ),
-              FillLabelText(
-                label: 'Họ và tên',
-                child: TextField(
-                  // controller: authController.loginEmailController,
-                  decoration: InputDecoration(
-                    contentPadding: const EdgeInsets.symmetric(vertical: 10),
-                    hintText: "Họ và tên",
-                    hintStyle: AppStyles.textMedium
-                        .copyWith(color: AppColors.colorTextBlur),
-                    border: InputBorder.none,
-                  ),
-                ),
-              ),
+
               Container(
                 margin: const EdgeInsets.only(top: 29),
                 alignment: Alignment.center,
                 child: RoundedButton(
-                  press: () {
-                    Get.toNamed("/verifyotp");
+                  press: () async {
+                    await Get.find<RegisterController>().registerUserEmail();
+
+                    await Get.toNamed("/verifyotp");
                   },
                   text: 'Xác nhận',
                   size: Size(size.width * 0.8, 56),

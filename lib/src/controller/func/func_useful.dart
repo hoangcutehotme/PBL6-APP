@@ -1,5 +1,6 @@
 import 'dart:convert';
-import 'package:pbl6_app/src/model/user_model.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class FuncUseful {
@@ -17,5 +18,15 @@ class FuncUseful {
     var data = jsonDecode(temp.toString());
 
     return data;
+  }
+
+  static void showLoading(bool loading) {
+    loading
+        ? showDialog(
+            context: Get.context!,
+            builder: (context) {
+              return const Center(child: CircularProgressIndicator());
+            })
+        : Get.back();
   }
 }

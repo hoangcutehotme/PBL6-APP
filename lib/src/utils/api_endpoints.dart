@@ -1,5 +1,7 @@
 class ApiEndPoints {
-  static const String baseUrl = "http://10.0.2.2:3000/api";
+  static const String baseUrl = "https://falth.vercel.app/api";
 }
 
-
+class LocalString {
+  static const String API_KEY_GOOGLE = 'AIzaSyCjRh1g1zkKOqoquBIGprT2dM6Eje8OwAA';
+}

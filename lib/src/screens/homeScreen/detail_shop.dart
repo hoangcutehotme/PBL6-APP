@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pbl6_app/src/controller/StoreController/store_controller.dart';
 import 'package:pbl6_app/src/model/food_model.dart';
 import 'package:pbl6_app/src/model/store_model.dart';
-import 'package:pbl6_app/src/screens/homeScreen/detail_food.dart';
-import 'package:pbl6_app/src/screens/navigation/HomeMainPage.dart';
 import 'package:pbl6_app/src/values/app_assets.dart';
 import 'package:pbl6_app/src/values/app_colors.dart';
 import 'package:pbl6_app/src/values/app_styles.dart';
+import 'package:pbl6_app/src/widgets/image_loading_network.dart';
+
 import '../../widgets/food_cell.dart';
+import 'detail_food.dart';
 
 class DetailShop extends StatefulWidget {
   const DetailShop({super.key});
@@ -21,25 +23,22 @@ class _DetailShopState extends State<DetailShop> {
   bool showCart = false;
   int count = 0;
   ScrollController? _scrollController;
-  List<StoreModel> stories = [];
+  String? storeId;
   List<FoodModel> listfood = [];
   Set<String>? listCategory;
 
-  late StoreModel store;
-
-  void getStories() {
-    stories = StoreModel.getListStore();
-    store = stories[0];
-    listfood = store.listFood.reversed.toList();
-    listCategory = listfood.map((food) => food.nameCategory).toSet();
-    print(listCategory);
+  void getFoodList() {
+    listfood = FoodModel.getFoods();
   }
 
   @override
   void initState() {
     super.initState();
 
-    getStories();
+    storeId = Get.arguments;
+
+    getFoodList();
+
     _scrollController = ScrollController();
     _scrollController!.addListener(() {
       if (_scrollController!.offset >= 145) {
@@ -56,44 +55,66 @@ class _DetailShopState extends State<DetailShop> {
 
   @override
   Widget build(BuildContext context) {
+    StoreController storeController = Get.put(StoreController());
     return Scaffold(
       bottomNavigationBar: showCart ? _showCartOrder() : null,
-      body: CustomScrollView(
-        controller: _scrollController,
-        slivers: <Widget>[
-          _FlexibleHeadBar(showTitle: showTitle),
-          _InfoShop(),
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (BuildContext context, int index) {
-                return GestureDetector(
-                  onTap: () {
-                    Get.to(() => const DetailFood());
-                  },
-                  child: FoodInfoCell(
-                    food: listfood[index],
-                    count: 0,
-                    pressPlus: () {
-                      setState(() {
-                        count++;
-                        showCart = count > 0 ? true : false;
-                      });
-                    },
-                    pressMinus: () {
-                      setState(() {
-                        count--;
-                        showCart = count > 0 ? true : false;
-                      });
-                    },
+      body: FutureBuilder<StoreModel?>(
+          future: storeController.getStoreFromId(storeId),
+          builder: (context, snapshot) {
+            if (snapshot.hasError || snapshot.data == null) {
+              return const Center(
+                  child:
+                      // Future.delayed(Duration(seconds: 5)).then((value) {
+
+                      // },)
+                      Center(child: CircularProgressIndicator()));
+            } else if (snapshot.hasError) {
+              return const Center(
+                child: Text('Some thing wrong'),
+              );
+            } else {
+              var store = snapshot.data;
+              return CustomScrollView(
+                controller: _scrollController,
+                slivers: <Widget>[
+                  _FlexibleHeadBar(
+                    showTitle: showTitle,
+                    store: store!,
                   ),
-                );
-              },
-              childCount:
-                  listfood.length, // Set the number of items in your list
-            ),
-          ),
-        ],
-      ),
+                  _InfoShop(store),
+                  SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      (BuildContext context, int index) {
+                        return GestureDetector(
+                          onTap: () {
+                            Get.to(() => const DetailFood());
+                          },
+                          child: FoodInfoCell(
+                            food: listfood[index],
+                            count: 0,
+                            pressPlus: () {
+                              setState(() {
+                                count++;
+                                showCart = count > 0 ? true : false;
+                              });
+                            },
+                            pressMinus: () {
+                              setState(() {
+                                count--;
+                                showCart = count > 0 ? true : false;
+                              });
+                            },
+                          ),
+                        );
+                      },
+                      childCount: listfood
+                          .length, // Set the number of items in your list
+                    ),
+                  ),
+                ],
+              );
+            }
+          }),
     );
   }
 
@@ -149,7 +170,7 @@ class _DetailShopState extends State<DetailShop> {
     );
   }
 
-  SliverToBoxAdapter _InfoShop() {
+  SliverToBoxAdapter _InfoShop(StoreModel store) {
     return SliverToBoxAdapter(
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Padding(
@@ -170,7 +191,7 @@ class _DetailShopState extends State<DetailShop> {
                 width: 10,
               ),
               Text(
-                "Bún đậu cô Tiên",
+                store.name,
                 style: AppStyles.textBold.copyWith(fontSize: 18),
               ),
             ],
@@ -182,7 +203,7 @@ class _DetailShopState extends State<DetailShop> {
             children: [
               const Icon(Icons.star_outlined, color: Colors.amber),
               Text(
-                stories[0].ratingAverage.toString(),
+                store.ratingAverage.toString(),
                 style: AppStyles.textMedium,
               ),
               const Text(" (100+ Bình luận)", style: AppStyles.textMedium),
@@ -191,12 +212,13 @@ class _DetailShopState extends State<DetailShop> {
                 style: AppStyles.textMedium
                     .copyWith(fontSize: 20, color: AppColors.borderGray),
               ),
-              const Icon(
-                Icons.location_on,
-                color: AppColors.mainColor1,
-              ),
-              Text("${stories[0].distance.toString()} km",
-                  style: AppStyles.textMedium),
+              // const Icon(
+              //   Icons.location_on,
+              //   color: AppColors.mainColor1,
+              // ),
+              // Text(
+              //     "${stories!.openAt.toString()} - ${stories!.closeAt.toString()}",
+              //     style: AppStyles.textMedium),
               Expanded(child: Container()),
               Container(
                 alignment: Alignment.centerRight,
@@ -234,10 +256,10 @@ class _DetailShopState extends State<DetailShop> {
 class _FlexibleHeadBar extends StatelessWidget {
   const _FlexibleHeadBar({
     required this.showTitle,
+    required this.store,
   });
-
   final bool showTitle;
-
+  final StoreModel store;
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
@@ -305,31 +327,10 @@ class _FlexibleHeadBar extends StatelessWidget {
               )
             : null,
         background: Opacity(
-          opacity: 1,
-          child: Image.asset(
-            AppAssets.bundauImage,
-            fit: BoxFit.fill,
-          ),
-        ),
+            opacity: 1,
+            child: ImageLoadingNetwork(
+                image: store.image, size: Size(context.width, 200))),
       ), // Set the height of the app bar when it is expanded
     );
   }
-}
-
-class MyHeaderTitle extends SliverPersistentHeaderDelegate {
-  @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
-    throw UnimplementedError();
-  }
-
-  @override
-  double get maxExtent => throw UnimplementedError();
-
-  @override
-  double get minExtent => throw UnimplementedError();
-
-  @override
-  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>
-      false;
 }

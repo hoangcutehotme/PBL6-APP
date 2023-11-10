@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pbl6_app/src/controller/CategoryControler/category_controller.dart';
+import 'package:pbl6_app/src/controller/StoreController/store_controller.dart';
 import 'package:pbl6_app/src/model/food_category_model.dart';
 import 'package:pbl6_app/src/model/food_model.dart';
-import 'package:pbl6_app/src/model/store_model.dart';
-import 'package:pbl6_app/src/screens/orderScreen/order_screen.dart';
+import 'package:pbl6_app/src/screens/searchScreen/seach_section.dart';
 import 'package:pbl6_app/src/values/app_styles.dart';
-
-import '../../controller/bottom_navi_bar_controller.dart';
+import '../../model/store_model.dart';
 import '../../values/app_colors.dart';
+import '../../widgets/category_card.dart';
+import '../../widgets/food_card.dart';
+import '../../widgets/store_card.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -17,20 +20,9 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final BottomNavigationBarController _controller =
-      Get.put(BottomNavigationBarController());
-  final ScrollController _scrollController = ScrollController();
-  List<CategoryModel> categories = [];
-  List<StoreModel> stories = [];
+  // final CategoryController _categoryController = Get.put(CategoryController());
+
   List<FoodModel> foodList = [];
-
-  void getCategories() {
-    categories = CategoryModel.getCategories();
-  }
-
-  void getStories() {
-    stories = StoreModel.getListStore();
-  }
 
   void getFoodList() {
     foodList = FoodModel.getFoods();
@@ -38,8 +30,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    getCategories();
-    getStories();
     getFoodList();
 
     super.initState();
@@ -112,69 +102,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 );
               },
               itemBuilder: (context, index) {
-                return Container(
-                  width: 180,
-
-                  // padding: const EdgeInsets.only(right: 10),
-                  decoration: const BoxDecoration(
-                      // color: AppColors.mainColor1,
-                      // borderRadius: BorderRadius.circular(10),
-                      ),
-                  child: GestureDetector(
-                    onTap: () {
-                      //to detail view
-                      Get.toNamed("/detailshop");
-                    },
-                    child: Stack(
-                      alignment: Alignment.topCenter,
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(2),
-                          child: Image.asset(
-                            foodList[index].imageFood,
-                            width: 160,
-                            height: 140,
-                            fit: BoxFit.fill,
-
-                            // color: AppColors.borderGray,
-                          ),
-                        ),
-                        Positioned(
-                          top: 130,
-                          left: 5,
-                          child: Container(
-                            decoration: BoxDecoration(
-                                color: Colors.amber,
-                                borderRadius: BorderRadius.circular(5)),
-                            padding: const EdgeInsets.only(right: 8, left: 8),
-                            child: Text(
-                              "Freeship",
-                              style: AppStyles.textBold.copyWith(fontSize: 14),
-                            ),
-                          ),
-                        ),
-                        Positioned(
-                          top: 150,
-                          left: 10,
-                          child: Text(
-                            foodList[index].name,
-                            maxLines: 1,
-                            style: AppStyles.textBold.copyWith(fontSize: 16),
-                          ),
-                        ),
-                        Positioned(
-                          top: 175,
-                          child: Text(
-                            "${foodList[index].price.toInt().toString()}đ",
-                            style: AppStyles.textBold.copyWith(
-                                fontSize: 16, color: AppColors.mainColor1),
-                            // textAlign: TextAlign.center,
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                );
+                return FoodCard(food: foodList[index]);
               },
             ))
       ],
@@ -182,6 +110,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Column _storeSection() {
+    StoreController storeController = Get.put(StoreController());
+    List<StoreModel> stories = storeController.listStore;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -193,81 +124,34 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         Container(
-            // color: Colors.amber,
             width: double.infinity,
             height: 240,
             padding: const EdgeInsets.only(left: 20),
-            child: ListView.separated(
-              scrollDirection: Axis.horizontal,
-              itemCount: stories.length,
-              separatorBuilder: (BuildContext context, int index) {
-                return const SizedBox(
-                  width: 20,
-                );
-              },
-              itemBuilder: (context, index) {
-                return Container(
-                  width: 240,
-                  decoration: const BoxDecoration(
-                      // color: AppColors.mainColor1,
-                      // borderRadius: BorderRadius.circular(10),
+            child: Obx(
+              () => storeController.isLoading.value
+                  ? Container(
+                      child: const Center(
+                        child: CircularProgressIndicator(),
                       ),
-                  child: GestureDetector(
-                    onTap: () {
-                      //to detail view
-                      Get.toNamed("/detailshop");
-                    },
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(5),
-                          child: Image.asset(
-                            stories[index].image,
-                            width: 240,
-                            height: 160,
-                            fit: BoxFit.fill,
-
-                            // color: AppColors.borderGray,
-                          ),
-                        ),
-                        Text(
-                          stories[index].name,
-                          maxLines: 1,
-                          style: AppStyles.textBold.copyWith(fontSize: 18),
-                        ),
-                        Row(
-                          children: [
-                            const Icon(Icons.star_outlined,
-                                color: Colors.amber),
-                            Text(
-                              stories[index].ratingAverage.toString(),
-                              style: AppStyles.textMedium,
-                            ),
-                            Text(
-                              " | ",
-                              style: AppStyles.textMedium.copyWith(
-                                  fontSize: 20, color: AppColors.borderGray),
-                            ),
-                            const Icon(
-                              Icons.location_on,
-                              color: AppColors.mainColor1,
-                            ),
-                            Text("${stories[index].distance.toString()} km",
-                                style: AppStyles.textMedium),
-                            Text(
-                              " | ",
-                              style: AppStyles.textMedium.copyWith(
-                                  fontSize: 20, color: AppColors.borderGray),
-                            ),
-                          ],
-                        ),
-                      ],
+                    )
+                  : ListView.separated(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: stories.length,
+                      separatorBuilder: (BuildContext context, int index) {
+                        return const SizedBox(
+                          width: 20,
+                        );
+                      },
+                      itemBuilder: (context, index) {
+                        return StoreCard(
+                          storie: stories[index],
+                          press: () {
+                            Get.toNamed('/detailshop',
+                                arguments: stories[index].id);
+                          },
+                        );
+                      },
                     ),
-                  ),
-                );
-              },
             ))
       ],
     );
@@ -277,18 +161,22 @@ class _HomeScreenState extends State<HomeScreen> {
     return Padding(
       padding: const EdgeInsetsDirectional.symmetric(horizontal: 5),
       child: GestureDetector(
+        // onTap: () {
+        //   showSearch(context: context, delegate: SearchSection());
+        // },
         child: Container(
           width: size.width,
           height: 45,
           decoration: const ShapeDecoration(
-              shape: StadiumBorder(), color: AppColors.placeholder),
+            shape: StadiumBorder(),
+            color: AppColors.placeholder,
+          ),
           // decoration: BoxDecoration(
           //     borderRadius: BorderRadius.circular(10),
           //     border: Border.all(width: 2, color: AppColors.borderGray)),
           child: TextField(
             onTap: () {
-              Get.toNamed("/search");
-              // Get.to(const OrderScreen());
+              showSearch(context: context, delegate: SearchSection());
             },
             decoration: const InputDecoration(
                 border: InputBorder.none,
@@ -323,7 +211,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
             onTap: () {
-              // Show search location
+              Get.toNamed('/changeaddress');
             },
           ),
         ),
@@ -332,54 +220,38 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Column _categorySection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 10, right: 10),
-          child: Text(
-            "Danh mục",
-            style: AppStyles.textBold.copyWith(fontSize: 22),
-          ),
+    final CategoryController categoryController = Get.put(CategoryController());
+
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Padding(
+        padding: const EdgeInsets.only(left: 10, right: 10),
+        child: Text(
+          "Danh mục",
+          style: AppStyles.textBold.copyWith(fontSize: 22),
         ),
-        Container(
+      ),
+      Obx(() {
+        List<CategoryModel> categories = categoryController.listCategory;
+        return Container(
             width: double.infinity,
-            height: 140,
+            height: 160,
             padding: const EdgeInsets.only(left: 20),
-            child: ListView.separated(
-              scrollDirection: Axis.horizontal,
-              itemCount: categories.length,
-              separatorBuilder: (BuildContext context, int index) {
-                return const SizedBox(
-                  width: 15,
-                );
-              },
-              itemBuilder: (context, index) {
-                return Container(
-                  width: 120,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: GestureDetector(
-                    onTap: () {
-                      //to detail view
-                      Get.toNamed("/detailcategory");
+            child: categoryController.isLoading.value
+                ? const Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: categories.length,
+                    separatorBuilder: (BuildContext context, int index) {
+                      return const SizedBox(
+                        width: 15,
+                      );
                     },
-                    child: Column(
-                      children: [
-                        Image.asset(
-                          categories[index].imgPath,
-                          width: 120,
-                          height: 100,
-                        ),
-                        Text(categories[index].name)
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ))
-      ],
-    );
+                    itemBuilder: (context, index) {
+                      return CategoryCard(categorie: categories[index]);
+                    }));
+      }),
+    ]);
   }
 }

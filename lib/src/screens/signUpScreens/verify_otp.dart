@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:pbl6_app/src/controller/Authentication/register_controller.dart';
 import 'package:pbl6_app/src/values/app_colors.dart';
 import 'package:pbl6_app/src/values/app_styles.dart';
 import 'package:pbl6_app/src/widgets/rounded_button.dart';
@@ -13,19 +14,8 @@ class VerifyOTPScreen extends StatefulWidget {
 }
 
 class _VerifyOTPScreenState extends State<VerifyOTPScreen> {
-  final List<String> _otpCode = ["", "", "", ""];
-
-  bool checkVerifyOTP(List<String> otpCode, String verifyOtp) {
-    String otp = otpCode.join();
-    print("OTP");
-    print(otp);
-    if (otp != verifyOtp) {
-      // check verify
-      return false;
-    }
-
-    return true;
-  }
+  final RegisterController _registerController = Get.put(RegisterController());
+  final List<String> _otpCode = ["", "", "", "", "", ""];
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +42,7 @@ class _VerifyOTPScreenState extends State<VerifyOTPScreen> {
                 child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                for (var i = 0; i < 4; i++)
+                for (var i = 0; i < 6; i++)
                   Container(
                     alignment: Alignment.center,
                     width: 65,
@@ -64,7 +54,7 @@ class _VerifyOTPScreenState extends State<VerifyOTPScreen> {
                     child: TextFormField(
                       onChanged: (value) {
                         _otpCode[i] = value;
-                        if (value.length == 1 && i < 3) {
+                        if (value.length == 1 && i < 6) {
                           FocusScope.of(context).nextFocus();
                         } else if (value.isEmpty && i > 0) {
                           FocusScope.of(context).previousFocus();
@@ -72,7 +62,6 @@ class _VerifyOTPScreenState extends State<VerifyOTPScreen> {
                       },
                       onSaved: (pin) {
                         _otpCode[i] = pin as String;
-                        // print(_otpCode[i]);
                       },
                       style: AppStyles.textMedium.copyWith(fontSize: 20),
                       keyboardType: TextInputType.number,
@@ -110,15 +99,13 @@ class _VerifyOTPScreenState extends State<VerifyOTPScreen> {
               margin: const EdgeInsets.only(top: 20),
               alignment: Alignment.center,
               child: RoundedButton(
-                press: () {
-                  bool isVerified = checkVerifyOTP(_otpCode, "1234");
-                  if (isVerified) {
-                    // OTP is verified, navigate to the next screen
-                    Get.toNamed("/signin");
-                  } else {
-                    Get.toNamed("/signin");
+                press: () async {
+                  String otp = _otpCode.join();
+                  var response = await _registerController.verifyOtp(otp);
+
+                  if (response == 'Success') {
+                    Get.toNamed('/signin');
                   }
-                  // Get.toNamed("/signin");
                 },
                 text: 'Xác thực',
                 size: Size(size.width * 0.8, 56),

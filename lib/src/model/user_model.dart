@@ -1,41 +1,24 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-
 import 'contact_model.dart';
-
-UserModel getUserDefault() {
-  return UserModel(
-      role: '',
-      id: '',
-      firstName: '',
-      lastName: '',
-      email: '',
-      phoneNumber: '',
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
-      contact: []);
-}
 
 class UserModel {
   String role;
-  String id;
-  String firstName;
-  String lastName;
-  String email;
-  String phoneNumber;
+  String? id;
+  String? firstName;
+  String? lastName;
+  String? email;
   DateTime? createdAt;
   DateTime? updatedAt;
-  List<Contact> contact;
+  List<Contact>? contact;
 
   UserModel({
     required this.role,
-    required this.id,
-    required this.firstName,
-    required this.lastName,
-    required this.email,
-    required this.phoneNumber,
+    this.id,
+    this.firstName,
+    this.lastName,
+    this.email,
     this.createdAt,
     this.updatedAt,
-    required this.contact,
+    this.contact,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
@@ -44,7 +27,6 @@ class UserModel {
         firstName: json["firstName"],
         lastName: json["lastName"],
         email: json["email"],
-        phoneNumber: json["phoneNumber"],
         createdAt: DateTime.parse(json["createdAt"]),
         updatedAt: DateTime.parse(json["updatedAt"]),
         contact:
@@ -57,9 +39,8 @@ class UserModel {
         "firstName": firstName,
         "lastName": lastName,
         "email": email,
-        "phoneNumber": phoneNumber,
         "createdAt": (createdAt ?? DateTime.now()).toIso8601String(),
         "updatedAt": (updatedAt ?? DateTime.now()).toIso8601String(),
-        "contact": List<dynamic>.from(contact.map((x) => x.toJson())),
+        "contact": List<dynamic>.from(contact ?? [].map((x) => x.toJson())),
       };
 }
