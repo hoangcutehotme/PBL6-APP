@@ -5,10 +5,11 @@ class ApiClient extends GetConnect implements GetxService {
   final String appBaseUrl;
   late String token;
   late Map<String, String> header;
+
   ApiClient({required this.appBaseUrl}) {
     baseUrl = appBaseUrl;
-    timeout = const Duration(milliseconds: 10);
-    // token = '';
+    timeout = const Duration(seconds: 10);
+    token = 'token';
     header = {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token'
@@ -25,17 +26,44 @@ class ApiClient extends GetConnect implements GetxService {
   //   token = newToken;
   // }
 
-  Future<dynamic> getData(
-    String url,
+
+
+  saveToken(String newToken) {
+    token = newToken;
+  }
+
+  Future<Response> getData(
+    String uri,
   ) async {
-    var client = http.Client();
     try {
-      http.Response response = await client.get(Uri.parse(url));
+      Response response = await get(uri, headers: header);
       return response;
     } catch (e) {
+      print(e);
       return Response(statusCode: 1, statusText: e.toString());
     }
   }
+
+  Future<Response> postData(String uri, dynamic body) async {
+    try {
+      Response response = await post(uri, body, headers: header);
+      return response;
+    } catch (e) {
+      print(e);
+      return Response(statusCode: 1, statusText: e.toString());
+    }
+  }
+
+  Future<Response> putData(String uri, dynamic body) async {
+    try {
+      Response response = await put(uri, body, headers: header);
+      return response;
+    } catch (e) {
+      print(e);
+      return Response(statusCode: 1, statusText: e.toString());
+    }
+  }
+
 
   Future<dynamic> patchData(String url, dynamic body) async {
     var client = http.Client();

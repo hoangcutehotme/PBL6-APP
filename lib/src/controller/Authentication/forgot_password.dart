@@ -7,8 +7,8 @@ import 'package:pbl6_app/src/utils/custome_snackbar.dart';
 import 'package:pbl6_app/src/utils/loading_full_screen.dart';
 
 class ForgotPasswordController extends GetxController {
+  
   TextEditingController emailController = TextEditingController();
-
   TextEditingController passwordController = TextEditingController();
   TextEditingController passwordConfirmController = TextEditingController();
 

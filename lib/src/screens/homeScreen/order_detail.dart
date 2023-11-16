@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pbl6_app/src/model/food_model.dart';
+import 'package:pbl6_app/src/controller/StoreController/cart_controller.dart';
 import 'package:pbl6_app/src/model/order_model.dart';
 import 'package:pbl6_app/src/values/app_colors.dart';
 import 'package:pbl6_app/src/values/app_styles.dart';
+import 'package:pbl6_app/src/widgets/app_bar_default.dart';
+import 'package:pbl6_app/src/widgets/image_loading_network.dart';
 
 import '../../model/order_food_model.dart';
 
@@ -58,7 +60,7 @@ class _OrderDetailState extends State<OrderDetail> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          _appBar(),
+          AppWidget.appBar("Xác nhận giao hàng"),
           // Address Section
           const Divider(
             height: 10,
@@ -75,6 +77,7 @@ class _OrderDetailState extends State<OrderDetail> {
           ),
           // Order Section
           _orderDetail(),
+
           const Divider(
             height: 10,
             color: AppColors.placeholder,
@@ -94,7 +97,7 @@ class _OrderDetailState extends State<OrderDetail> {
     );
   }
 
-  Column _orderOption(Size size) {
+  _orderOption(Size size) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
@@ -228,74 +231,77 @@ class _OrderDetailState extends State<OrderDetail> {
     );
   }
 
-  Column _orderDetail() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 20, top: 20),
-          child: Text(
-            orderDetail!.nameStore,
-            style: AppStyles.textMedium
-                .copyWith(fontSize: 16, fontWeight: FontWeight.w600),
+  GetBuilder<CartController> _orderDetail() {
+    CartController cartController = Get.find();
+    return GetBuilder<CartController>(builder: (_) {
+      var listProducts = cartController.products.values;
+      
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 20, top: 20),
+            child: Text(
+              orderDetail!.nameStore,
+              style: AppStyles.textMedium
+                  .copyWith(fontSize: 16, fontWeight: FontWeight.w600),
+            ),
           ),
-        ),
-        AnimatedContainer(
-          duration: const Duration(milliseconds: 100),
-          height: isListShortened
-              ? widthOrder.toDouble()
-              : orderDetail!.listOrder.length.toDouble() * widthOrder,
-          child: ListView.builder(
-            itemCount: orderDetail?.listOrder.length,
-            itemBuilder: (
-              BuildContext context,
-              int index,
-            ) {
-              OrderFood orderfood = orderDetail!.listOrder[index];
-              if (isListShortened && index >= 2) {
-                return const SizedBox.shrink(); // Hide items beyond index 4
-              }
-              return Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: ListTile(
-                  leading: Image.asset(
-                    orderfood.food.imageFood,
-                    width: 60,
-                    height: 70,
-                  ),
-                  title: Text(
-                    "${orderfood.amount} x ${orderfood.food.name}",
-                    style: AppStyles.textSmall
-                        .copyWith(fontSize: 14, fontWeight: FontWeight.w400),
-                  ),
-                  trailing: Text(
-                    "${orderfood.food.price.toInt() * orderfood.amount}đ",
-                    style: AppStyles.textMedium
-                        .copyWith(fontSize: 15, fontWeight: FontWeight.w500),
-                  ),
-                ),
-              );
-            },
-          ),
-        ),
-        // Button to toggle list length
-        showFull
-            ? Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Expanded(child: Container()),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 15),
-                    child: TextButton(
-                      onPressed: toggleListLength,
-                      child: Text(isListShortened ? 'Xem thêm' : 'Thu gọn'),
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 100),
+            height: isListShortened
+                ? widthOrder.toDouble()
+                : listProducts.length.toDouble() * widthOrder,
+            child: ListView.builder(
+              itemCount: listProducts.length,
+              itemBuilder: (
+                BuildContext context,
+                int index,
+              ) {
+                var cartProduct = listProducts.elementAt(index);
+                if (isListShortened && index >= 2) {
+                  return const SizedBox.shrink(); // Hide items beyond index 4
+                }
+                return Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: ListTile(
+                    leading: ImageLoadingNetwork(
+                        image: cartProduct.images![0],
+                        size: const Size(60, 70)),
+                    title: Text(
+                      "${cartProduct.quantity} x ${cartProduct.name}",
+                      style: AppStyles.textSmall
+                          .copyWith(fontSize: 14, fontWeight: FontWeight.w400),
+                    ),
+                    trailing: Text(
+                      "${(cartProduct.price.toInt()) * (cartProduct.quantity)}đ",
+                      style: AppStyles.textMedium
+                          .copyWith(fontSize: 15, fontWeight: FontWeight.w500),
                     ),
                   ),
-                ],
-              )
-            : Container(),
-      ],
-    );
+                );
+              },
+            ),
+          ),
+          // Button to toggle list length
+          showFull
+              ? Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Expanded(child: Container()),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 15),
+                      child: TextButton(
+                        onPressed: toggleListLength,
+                        child: Text(isListShortened ? 'Xem thêm' : 'Thu gọn'),
+                      ),
+                    ),
+                  ],
+                )
+              : Container(),
+        ],
+      );
+    });
   }
 
   Container _addressAndTimeSection(OrderModel order) {
@@ -381,17 +387,4 @@ class _OrderDetailState extends State<OrderDetail> {
       ),
     );
   }
-}
-
-AppBar _appBar() {
-  return AppBar(
-    foregroundColor: AppColors.mainColor1,
-    backgroundColor: AppColors.mainColorBackground,
-    shadowColor: Colors.transparent,
-    title: Text(
-      "Xác nhận giao hàng",
-      style: AppStyles.textBold
-          .copyWith(fontSize: 20, fontWeight: FontWeight.w500),
-    ),
-  );
 }

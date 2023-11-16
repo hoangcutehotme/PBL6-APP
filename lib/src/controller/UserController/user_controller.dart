@@ -4,23 +4,37 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:pbl6_app/src/utils/custome_dialog.dart';
-import 'package:pbl6_app/src/utils/loading_full_screen.dart';
+import 'package:pbl6_app/src/model/contact_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:pbl6_app/src/data/repository/user_respository.dart';
 import 'package:pbl6_app/src/model/user_model.dart';
+import 'package:pbl6_app/src/utils/custome_dialog.dart';
 import 'package:pbl6_app/src/utils/custome_snackbar.dart';
+import 'package:pbl6_app/src/utils/loading_full_screen.dart';
 
 import '../../utils/api_endpoints.dart';
 
 class UserController extends GetxController {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+
+  final UserRespo respo;
+  final SharedPreferences sharedPreferences;
+
+  UserController({
+    required this.sharedPreferences,
+    required this.respo,
+  });
+
   var user = UserModel(role: 'User').obs;
   var id = ''.obs;
   var token = ''.obs;
   var isLoading = false.obs;
   var isEdit = false.obs;
   var isChange = false.obs;
+
+  Contact _contactChoose = Contact();
+  Contact get contacChoose => _contactChoose;
 
   final GlobalKey<FormState> changeInfoKey = GlobalKey<FormState>();
 
@@ -197,6 +211,8 @@ class UserController extends GetxController {
         if (response.statusCode == 200) {
           // Map<String, dynamic> userJson = jsonDecode(response.body);
           user.value = UserModel.fromJson(jsonDecode(response.body));
+          _contactChoose = user.value.contact!
+              .firstWhere((element) => element.id == user.value.defaultContact);
           update();
           isLoading(false);
         } else {
@@ -228,5 +244,31 @@ class UserController extends GetxController {
     // isEdit.value = true;
     user = user;
     update();
+  }
+
+  // change the address to delivery
+
+  changeAddressContactDefault(Contact contact) {
+    _contactChoose = Contact();
+    _contactChoose = contact;
+  }
+
+  addNewContact(dynamic body) async {
+    try {
+      var response = await respo.addAddressContact(id.value, body);
+
+      if (response.statusCode == 200) {
+        user.value = UserModel.fromJson(jsonDecode(response.body));
+        CustomeSnackBar.showSuccessSnackTopBar(
+            context: Get.context, title: 'Success', message: 'Thêm thành công');
+      } else {
+        CustomeSnackBar.showWarningTopBar(
+            context: Get.context,
+            title: 'Error',
+            message: 'Thêm không thành công');
+      }
+    } catch (e) {
+      print(e);
+    }
   }
 }

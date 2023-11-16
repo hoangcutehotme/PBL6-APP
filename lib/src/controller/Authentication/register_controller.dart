@@ -65,7 +65,7 @@ class RegisterController extends GetxController {
     } else {
       CustomeSnackBar.showErrorSnackBar(
           context: Get.context,
-          title: "Error",
+          title: "Thông báo",
           message: 'Mật khẩu không trùng');
       return false;
     }

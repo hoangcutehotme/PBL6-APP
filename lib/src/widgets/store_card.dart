@@ -31,9 +31,9 @@ class StoreCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ImageLoadingNetwork(image: storie.image, size: size),
+              ImageLoadingNetwork(image: storie.image??'', size: size),
               Text(
-                storie.name,
+                storie.name ?? '',
                 maxLines: 1,
                 style: AppStyles.textBold.copyWith(fontSize: 18),
               ),

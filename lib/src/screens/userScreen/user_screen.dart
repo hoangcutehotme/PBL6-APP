@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pbl6_app/src/controller/UserController/user_controller.dart';
-import 'package:pbl6_app/src/screens/userScreen/change_address_user.dart';
 import 'package:pbl6_app/src/screens/userScreen/change_user_info.dart';
 import 'package:pbl6_app/src/values/app_colors.dart';
 import 'package:pbl6_app/src/values/app_styles.dart';
 
 import '../../controller/Authentication/login_controller.dart';
 import '../../values/app_assets.dart';
+import 'list_contact.dart';
 
 class UserScreen extends StatefulWidget {
   const UserScreen({super.key});
@@ -18,7 +18,8 @@ class UserScreen extends StatefulWidget {
 
 class _UserScreenState extends State<UserScreen> {
   final LoginController _controller = Get.put(LoginController());
-  final UserController _userController = Get.put(UserController());
+  // final UserController _userController = Get.put(UserController());
+  final UserController _userController = Get.find();
 
   @override
   void initState() {
@@ -64,7 +65,7 @@ class _UserScreenState extends State<UserScreen> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    Get.to(() => const ChangAddressUser());
+                    Get.to(() => ListContactScreen());
                   },
                   child: Container(
                     decoration: BoxDecoration(
@@ -138,18 +139,19 @@ class _UserScreenState extends State<UserScreen> {
                   width: 10,
                 ),
                 Obx(
-                  () => _userController.isLoading.value
-                      ? const CircularProgressIndicator(
-                          color: AppColors.borderGray,
-                        )
-                      : Text(
-                          _userController.id.value == ''
-                              ? 'Người dùng'
-                              : "${_userController.user.value.lastName ?? ''} ${_userController.user.value.firstName ?? ''}",
-                          style: AppStyles.textBold.copyWith(
-                              color: AppColors.mainColorBackground,
-                              fontSize: 20),
-                        ),
+                  () =>
+                      // _userController.isLoading.value
+                      //     ? const CircularProgressIndicator(
+                      //         color: AppColors.borderGray,
+                      //       )
+                      //     :
+                      Text(
+                    _userController.id.value == ''
+                        ? 'Người dùng'
+                        : "${_userController.user.value.lastName ?? ''} ${_userController.user.value.firstName ?? ''}",
+                    style: AppStyles.textBold.copyWith(
+                        color: AppColors.mainColorBackground, fontSize: 20),
+                  ),
                 )
               ],
             ),

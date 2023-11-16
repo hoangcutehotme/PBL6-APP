@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pbl6_app/src/data/repository/product_respository.dart';
 import 'package:pbl6_app/src/model/product_model.dart';
 import 'package:pbl6_app/src/utils/api_endpoints.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,11 +15,19 @@ class ProductController extends GetxController {
 
   var list = <ProductModel>[].obs;
 
+  List _productList = [];
+
+  List get productList => _productList;
+
+  // int _quantity = 0;
+  // int get quantity => _quantity;
+
   @override
   void onInit() {
     super.onInit();
     var category = Get.arguments;
     String encodedCatName = Uri.encodeComponent(category.catName);
+
     fetchProductFromCategory(encodedCatName);
   }
 
@@ -42,7 +51,6 @@ class ProductController extends GetxController {
       if (response.statusCode == 200) {
         var data = response.body;
         list.value = productsModelFromJson(jsonEncode(json['data']['data']));
-        
       } else {
         showDialog(
             context: Get.context!,
@@ -67,4 +75,34 @@ class ProductController extends GetxController {
       isLoading(false);
     }
   }
+
+  // late ProductRepo productRepo;
+
+  // Future<void> getProductByStoreId(String id) async {
+  //   try {
+  //     var response = await productRepo.getProductsByStoreId(id);
+
+  //     if (response.statusCode == 200) {
+  //       _productList = [];
+  //       _productList.addAll(productsModelFromJson(
+  //           jsonEncode(jsonDecode(response.body)['data']['data'])));
+  //       update();
+  //     } else {
+  //       throw Exception(
+  //           'Failed to get products. Status code: ${response.statusCode}');
+  //     }
+  //   } catch (e) {
+  //     print('Error in getProductByStoreId: $e');
+  //     // Handle the error in a way that makes sense for your app
+  //   }
+  // }
+
+  // setQuantity(bool isInCrement) {
+  //   if (isInCrement) {
+  //     _quantity += 1;
+  //   } else {
+  //     _quantity -= 1;
+  //   }
+  //   update();
+  // }
 }
