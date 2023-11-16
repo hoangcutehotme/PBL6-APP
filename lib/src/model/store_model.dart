@@ -9,34 +9,34 @@ String storeModelToJson(List<StoreModel> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class StoreModel {
-  double ratingAverage;
-  String image;
-  bool isLocked;
-  String id;
-  String name;
+  double? ratingAverage;
+  String? image;
+  bool? isLocked;
+  String? id;
+  String? name;
   String? phoneNumber;
-  String address;
-  String openAt;
-  String closeAt;
-  String description;
-  DateTime createdAt;
-  DateTime updatedAt;
+  String? address;
+  String? openAt;
+  String? closeAt;
+  String? description;
+  DateTime? createdAt;
+  DateTime? updatedAt;
   String? ownerId;
   // String? registrationLicense;
 
   StoreModel({
-    required this.ratingAverage,
-    required this.image,
-    required this.isLocked,
-    required this.id,
-    required this.name,
+    this.ratingAverage,
+    this.image,
+    this.isLocked,
+    this.id,
+    this.name,
     this.phoneNumber,
-    required this.address,
-    required this.openAt,
-    required this.closeAt,
-    required this.description,
-    required this.createdAt,
-    required this.updatedAt,
+    this.address,
+    this.openAt,
+    this.closeAt,
+    this.description,
+    this.createdAt,
+    this.updatedAt,
     this.ownerId,
     // this.registrationLicense,
   });
@@ -69,8 +69,8 @@ class StoreModel {
         "openAt": openAt,
         "closeAt": closeAt,
         "description": description,
-        "createdAt": createdAt.toIso8601String(),
-        "updatedAt": updatedAt.toIso8601String(),
+        "createdAt": createdAt?.toIso8601String(),
+        "updatedAt": updatedAt?.toIso8601String(),
         "ownerId": ownerId,
         // "registrationLicense": registrationLicense,
       };

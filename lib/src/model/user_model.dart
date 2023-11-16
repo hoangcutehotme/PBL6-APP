@@ -9,17 +9,17 @@ class UserModel {
   DateTime? createdAt;
   DateTime? updatedAt;
   List<Contact>? contact;
-
-  UserModel({
-    required this.role,
-    this.id,
-    this.firstName,
-    this.lastName,
-    this.email,
-    this.createdAt,
-    this.updatedAt,
-    this.contact,
-  });
+  String? defaultContact;
+  UserModel(
+      {required this.role,
+      this.id,
+      this.firstName,
+      this.lastName,
+      this.email,
+      this.createdAt,
+      this.updatedAt,
+      this.contact,
+      this.defaultContact});
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
         role: json["role"],
@@ -31,6 +31,7 @@ class UserModel {
         updatedAt: DateTime.parse(json["updatedAt"]),
         contact:
             List<Contact>.from(json["contact"].map((x) => Contact.fromJson(x))),
+        defaultContact: json["defaultContact"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -42,5 +43,6 @@ class UserModel {
         "createdAt": (createdAt ?? DateTime.now()).toIso8601String(),
         "updatedAt": (updatedAt ?? DateTime.now()).toIso8601String(),
         "contact": List<dynamic>.from(contact ?? [].map((x) => x.toJson())),
+        "defaultContact": defaultContact,
       };
 }

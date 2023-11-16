@@ -40,7 +40,7 @@ class _ChangeUserInfoState extends State<ChangeUserInfo> {
                     message: 'Bạn chưa lưu, Bạn có muốn thoát mà không lưu',
                     pressConfirm: () {
                       Get.find<UserController>().setInitInfo();
-                      Get.close(2);
+                      // Get.close(2);
                     }, confirmText: 'Ok');
               } else {
                 Get.back();
@@ -71,7 +71,7 @@ class _ChangeUserInfoState extends State<ChangeUserInfo> {
 
   GetBuilder<UserController> changeInfoSection(BuildContext context) {
     return GetBuilder<UserController>(
-        init: UserController(),
+        // init: UserController(),
         builder: (userController) {
           return SingleChildScrollView(
             child: Form(

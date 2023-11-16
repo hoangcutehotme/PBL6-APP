@@ -10,7 +10,6 @@ import 'package:pbl6_app/src/utils/loading_full_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginController extends GetxController {
-  late ApiClient apiClient;
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   var isShowPass = true.obs;
@@ -131,7 +130,9 @@ class LoginController extends GetxController {
           final SharedPreferences prefs = await _prefs;
           await prefs.setString('token', token);
 
-          // apiClient.updateHeader(token);
+          ApiClient apiClient = Get.find();
+          apiClient.updateHeader(token);
+          apiClient.saveToken(token);
 
           var user = json['data']['user'];
           // await FuncUseful.saveJson('user', user);

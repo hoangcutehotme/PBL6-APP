@@ -20,7 +20,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  // final CategoryController _categoryController = Get.put(CategoryController());
 
   List<FoodModel> foodList = [];
 
@@ -232,6 +231,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       Obx(() {
         List<CategoryModel> categories = categoryController.listCategory;
+        
         return Container(
             width: double.infinity,
             height: 160,

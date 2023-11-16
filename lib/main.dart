@@ -5,7 +5,7 @@ import 'package:pbl6_app/splash_screen.dart';
 import 'package:pbl6_app/src/helper/dependencies.dart' as dep;
 import 'package:pbl6_app/src/screens/homeScreen/detail_category.dart';
 import 'package:pbl6_app/src/screens/homeScreen/detail_food.dart';
-import 'package:pbl6_app/src/screens/homeScreen/detail_shop.dart';
+import 'package:pbl6_app/src/screens/homeScreen/detail_shop1.dart';
 import 'package:pbl6_app/src/screens/homeScreen/home_screen.dart';
 import 'package:pbl6_app/src/screens/homeScreen/order_detail.dart';
 import 'package:pbl6_app/src/screens/homeScreen/order_success.dart';
@@ -15,6 +15,8 @@ import 'package:pbl6_app/src/screens/signUpScreens/fill_info.dart';
 import 'package:pbl6_app/src/screens/signUpScreens/forgot_password.dart';
 import 'package:pbl6_app/src/screens/signUpScreens/sign_in_screen.dart';
 import 'package:pbl6_app/src/screens/userScreen/change_address_user.dart';
+import 'package:pbl6_app/src/screens/userScreen/change_contact.dart';
+import 'package:pbl6_app/src/screens/warningScreen/error_screen.dart';
 import 'package:pbl6_app/src/values/app_colors.dart';
 import 'package:pbl6_app/src/values/app_fonts.dart';
 import 'package:pbl6_app/src/values/app_styles.dart';
@@ -22,6 +24,10 @@ import 'src/screens/signUpScreens/sign_up_screen.dart';
 import 'src/screens/signUpScreens/verify_otp.dart';
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  print("Dependencies <<<<<<<<<<<<<");
+  await dep.init();
+
   ErrorWidget.builder = (details) {
     bool inBug = false;
     return Container(
@@ -34,8 +40,6 @@ Future<void> main() async {
     );
   };
 
-  WidgetsFlutterBinding.ensureInitialized();
-  await dep.init();
   await EasyLocalization.ensureInitialized();
 
   runApp(
@@ -57,6 +61,7 @@ class MyApp extends StatelessWidget {
       // localizationsDelegates: context.localizationDelegates,
       // supportedLocales: context.supportedLocales,
       // locale: context.locale,
+      
       title: 'FoodDelivery',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
@@ -64,7 +69,8 @@ class MyApp extends StatelessWidget {
           scaffoldBackgroundColor: Colors.white,
           fontFamily: AppFonts.poppins),
 
-      // unknownRoute: GetPage(name: '/notfound', page: () => UnknownRoutePage()),
+      unknownRoute:
+          GetPage(name: '/errorscreen', page: () => const ErrorScreen()),
       initialRoute: '/',
       getPages: [
         GetPage(name: '/', page: () => const SplashScreen()),
@@ -78,7 +84,7 @@ class MyApp extends StatelessWidget {
           page: () => const DetailCategory(),
           transition: Transition.native,
         ),
-        GetPage(name: '/detailshop', page: () => const DetailShop()),
+        GetPage(name: '/detailshop', page: () => const DetailShop1()),
         GetPage(name: '/homePage', page: () => const HomeScreen()),
         GetPage(name: '/home', page: () => const HomeMainPage()),
         GetPage(name: '/detailfood', page: () => const DetailFood()),
@@ -87,6 +93,9 @@ class MyApp extends StatelessWidget {
         GetPage(name: '/search', page: () => const SearchScreen()),
         // GetPage(name: '/search', page: () =>  SearchSection()),
         GetPage(name: '/changeaddress', page: () => const ChangAddressUser()),
+        GetPage(name: '/changecontact', page: () => const ChangeContactScreen()),
+        GetPage(name: '/errorscreen', page: () => const ErrorScreen()),
+        
       ],
     );
   }

@@ -15,7 +15,6 @@ class _WebViewSignInState extends State<WebViewSignIn> {
   final controller = WebViewController()
     ..setJavaScriptMode(JavaScriptMode.disabled)
     ..loadRequest(Uri.parse('${ApiEndPoints.baseUrl}/auth/google'));
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
