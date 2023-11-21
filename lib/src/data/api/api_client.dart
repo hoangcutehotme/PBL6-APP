@@ -1,15 +1,18 @@
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:pbl6_app/src/values/app_string.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiClient extends GetConnect implements GetxService {
   final String appBaseUrl;
   late String token;
   late Map<String, String> header;
+  final SharedPreferences sharedPreferences;
 
-  ApiClient({required this.appBaseUrl}) {
+  ApiClient({required this.appBaseUrl, required this.sharedPreferences}) {
     baseUrl = appBaseUrl;
-    timeout = const Duration(seconds: 10);
-    token = 'token';
+    // timeout = const Duration(seconds: 10);
+    token = sharedPreferences.getString(AppString.SHAREPREF_TOKEN) ?? '';
     header = {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token'
@@ -26,8 +29,6 @@ class ApiClient extends GetConnect implements GetxService {
   //   token = newToken;
   // }
 
-
-
   saveToken(String newToken) {
     token = newToken;
   }
@@ -39,7 +40,7 @@ class ApiClient extends GetConnect implements GetxService {
       Response response = await get(uri, headers: header);
       return response;
     } catch (e) {
-      print(e);
+      print("Error getData>>>>>>>>>> $e");
       return Response(statusCode: 1, statusText: e.toString());
     }
   }
@@ -49,7 +50,7 @@ class ApiClient extends GetConnect implements GetxService {
       Response response = await post(uri, body, headers: header);
       return response;
     } catch (e) {
-      print(e);
+      print("Error getData>>>>>>>>>> $e");
       return Response(statusCode: 1, statusText: e.toString());
     }
   }
@@ -63,7 +64,6 @@ class ApiClient extends GetConnect implements GetxService {
       return Response(statusCode: 1, statusText: e.toString());
     }
   }
-
 
   Future<dynamic> patchData(String url, dynamic body) async {
     var client = http.Client();

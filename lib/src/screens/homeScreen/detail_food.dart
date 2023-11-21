@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pbl6_app/src/controller/StoreController/cart_controller.dart';
 import 'package:pbl6_app/src/model/comment_model.dart';
-import 'package:pbl6_app/src/model/food_model.dart';
+import 'package:pbl6_app/src/model/product_model.dart';
 import 'package:pbl6_app/src/values/app_styles.dart';
 import 'package:pbl6_app/src/widgets/image_button.dart';
+import 'package:pbl6_app/src/widgets/image_loading_network.dart';
 
 import '../../values/app_assets.dart';
 import '../../values/app_colors.dart';
-import '../../widgets/star_choose.dart';
 
 class DetailFood extends StatefulWidget {
   const DetailFood({super.key});
@@ -19,16 +20,14 @@ class DetailFood extends StatefulWidget {
 class _DetailFoodState extends State<DetailFood> {
   final ScrollController _scrollController = ScrollController();
 
-  List<FoodModel> foods = [];
   List<CommentModel> comments = [];
-  FoodModel? food;
+  ProductModel? product;
   bool showTitle = false;
 
   @override
   void initState() {
-    foods = FoodModel.getFoods();
+    product = Get.arguments;
     comments = CommentModel.getListComment();
-    food = foods[4];
 
     _scrollController.addListener(() {
       if (_scrollController.offset >= 145) {
@@ -52,9 +51,9 @@ class _DetailFoodState extends State<DetailFood> {
         slivers: <Widget>[
           _FlexibleHeadBar(
             showTitle: showTitle,
-            food: food!,
+            product: product!,
           ),
-          _InfoShop(food),
+          _InfoShop(product),
           SliverToBoxAdapter(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -168,11 +167,11 @@ class StarChoose extends StatelessWidget {
 class _FlexibleHeadBar extends StatelessWidget {
   const _FlexibleHeadBar({
     required this.showTitle,
-    required this.food,
+    required this.product,
   });
 
   final bool showTitle;
-  final FoodModel food;
+  final ProductModel product;
 
   @override
   Widget build(BuildContext context) {
@@ -205,18 +204,18 @@ class _FlexibleHeadBar extends StatelessWidget {
           left: 50,
         ),
         background: Opacity(
-          opacity: 1,
-          child: Image.asset(
-            food.imageFood,
-            fit: BoxFit.fill,
-          ),
-        ),
+            opacity: 1,
+            child: ImageLoadingNetwork(
+              image: product.images[0],
+              size: const Size(double.maxFinite, 200),
+            )),
       ), // Set the height of the app bar when it is expanded
     );
   }
 }
 
-SliverToBoxAdapter _InfoShop(FoodModel? food) {
+SliverToBoxAdapter _InfoShop(ProductModel? product) {
+  var cartController = Get.find<CartController>();
   return SliverToBoxAdapter(
     child: Padding(
       padding: const EdgeInsets.only(left: 15, top: 8, right: 20),
@@ -224,7 +223,7 @@ SliverToBoxAdapter _InfoShop(FoodModel? food) {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(food!.name, style: AppStyles.textBold.copyWith(fontSize: 20)),
+          Text(product!.name, style: AppStyles.textBold.copyWith(fontSize: 20)),
           Container(
             height: 20,
           ),
@@ -241,31 +240,38 @@ SliverToBoxAdapter _InfoShop(FoodModel? food) {
           Row(
             children: [
               Text(
-                "${food.price.toInt()}đ",
+                "${product.price.toInt()}đ",
                 style: AppStyles.textMedium.copyWith(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                     color: AppColors.mainColor1),
               ),
               Expanded(child: Container()),
-              Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 8.0, right: 8),
-                    child: ImageButton(
-                      image: AppAssets.getImg("minus.png", "icons"),
-                      press: () {},
+              GetBuilder<CartController>(builder: (_) {
+                return Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0, right: 8),
+                      child: ImageButton(
+                        image: AppAssets.getImg("minus.png", "icons"),
+                        press: () {
+                          cartController.addProduct(product);
+                        },
+                      ),
                     ),
-                  ),
-                  Text(1.toString()),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 8.0, left: 8),
-                    child: ImageButton(
-                        image: AppAssets.getImg("plus.png", "icons"),
-                        press: () {}),
-                  ),
-                ],
-              ),
+                    Text((cartController.products[product.id]?.quantity ?? 0)
+                        .toString()),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0, left: 8),
+                      child: ImageButton(
+                          image: AppAssets.getImg("plus.png", "icons"),
+                          press: () {
+                            cartController.addProduct(product);
+                          }),
+                    ),
+                  ],
+                );
+              }),
             ],
           ),
         ],

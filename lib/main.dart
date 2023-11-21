@@ -61,7 +61,7 @@ class MyApp extends StatelessWidget {
       // localizationsDelegates: context.localizationDelegates,
       // supportedLocales: context.supportedLocales,
       // locale: context.locale,
-      
+
       title: 'FoodDelivery',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
@@ -93,9 +93,9 @@ class MyApp extends StatelessWidget {
         GetPage(name: '/search', page: () => const SearchScreen()),
         // GetPage(name: '/search', page: () =>  SearchSection()),
         GetPage(name: '/changeaddress', page: () => const ChangAddressUser()),
-        GetPage(name: '/changecontact', page: () => const ChangeContactScreen()),
+        GetPage(
+            name: '/changecontact', page: () => const ChangeContactScreen()),
         GetPage(name: '/errorscreen', page: () => const ErrorScreen()),
-        
       ],
     );
   }

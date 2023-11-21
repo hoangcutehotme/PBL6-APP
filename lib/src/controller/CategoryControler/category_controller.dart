@@ -51,7 +51,7 @@ class CategoryController extends GetxController {
             context: Get.context!,
             builder: (context) {
               return const SimpleDialog(
-                title: Text("Error"),
+                title: Text("Error Category"),
                 children: [Text("Not success")],
               );
             });
@@ -63,7 +63,7 @@ class CategoryController extends GetxController {
           context: Get.context!,
           builder: (context) {
             return SimpleDialog(
-              title: const Text("Error"),
+              title: const Text("Error Category"),
               children: [Text(e.toString())],
             );
           });

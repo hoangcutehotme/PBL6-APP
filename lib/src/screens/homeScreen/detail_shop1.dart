@@ -24,6 +24,7 @@ class _DetailShopState extends State<DetailShop1> {
   bool showCart = false;
   ScrollController? _scrollController;
   String storeId = '';
+  // UserController userController = Get.find();
 
   @override
   void initState() {
@@ -93,7 +94,7 @@ class _DetailShopState extends State<DetailShop1> {
 
             return GestureDetector(
               onTap: () {
-                Get.to(() => const DetailFood());
+                Get.toNamed('/detailfood',arguments: products[index]);
               },
               child: FoodInfoCell(
                 controller: cartController,
@@ -250,57 +251,57 @@ class _DetailShopState extends State<DetailShop1> {
     );
   }
 
-  Container _showCartOrder() {
-    return Container(
-      decoration: BoxDecoration(
-          border: Border.all(width: 1, color: AppColors.borderGray)),
-      height: 60,
-      child: Row(
-        children: [
-          Expanded(
-            flex: 5,
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Padding(
-                      padding: const EdgeInsets.only(left: 15),
-                      child: Badge(
-                        // label: Text(count.toString()),
-                        child: Image.asset(
-                          AppAssets.getImg("bag_cart.png", "icons"),
-                          color: AppColors.mainColor1,
-                          width: 32,
-                          height: 32,
-                        ),
-                      )),
-                  Expanded(child: Container()),
-                  const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    // child: Text("Thanh toan $count"),
-                  ),
-                ]),
-          ),
-          Expanded(
-              flex: 2,
-              child: GestureDetector(
-                onTap: () {
-                  Get.toNamed("/detailorder");
-                },
-                child: Container(
-                  height: 58,
-                  alignment: Alignment.center,
-                  color: AppColors.mainColor1,
-                  child: Text(
-                    "Thanh toán",
-                    style: AppStyles.textBoldButton
-                        .copyWith(fontWeight: FontWeight.w500),
-                  ),
-                ),
-              ))
-        ],
-      ),
-    );
-  }
+  // Container _showCartOrder() {
+  //   return Container(
+  //     decoration: BoxDecoration(
+  //         border: Border.all(width: 1, color: AppColors.borderGray)),
+  //     height: 60,
+  //     child: Row(
+  //       children: [
+  //         Expanded(
+  //           flex: 5,
+  //           child: Row(
+  //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //               children: [
+  //                 Padding(
+  //                     padding: const EdgeInsets.only(left: 15),
+  //                     child: Badge(
+  //                       // label: Text(count.toString()),
+  //                       child: Image.asset(
+  //                         AppAssets.getImg("bag_cart.png", "icons"),
+  //                         color: AppColors.mainColor1,
+  //                         width: 32,
+  //                         height: 32,
+  //                       ),
+  //                     )),
+  //                 Expanded(child: Container()),
+  //                 const Padding(
+  //                   padding: EdgeInsets.all(8.0),
+  //                   // child: Text("Thanh toan $count"),
+  //                 ),
+  //               ]),
+  //         ),
+  //         Expanded(
+  //             flex: 2,
+  //             child: GestureDetector(
+  //               onTap: () {
+  //                 Get.toNamed("/detailorder");
+  //               },
+  //               child: Container(
+  //                 height: 58,
+  //                 alignment: Alignment.center,
+  //                 color: AppColors.mainColor1,
+  //                 child: Text(
+  //                   "Thanh toán",
+  //                   style: AppStyles.textBoldButton
+  //                       .copyWith(fontWeight: FontWeight.w500),
+  //                 ),
+  //               ),
+  //             ))
+  //       ],
+  //     ),
+  //   );
+  // }
 }
 
 class _FlexibleHeadBar extends StatelessWidget {

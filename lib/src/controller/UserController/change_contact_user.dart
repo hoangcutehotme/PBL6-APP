@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:pbl6_app/src/controller/UserController/user_controller.dart';
 
 import 'package:pbl6_app/src/data/repository/user_respository.dart';
+import 'package:pbl6_app/src/utils/custome_snackbar.dart';
 
 import '../../model/contact_model.dart';
 
@@ -27,6 +28,25 @@ class ChangeContact extends GetxController {
   void onClose() {
     // TODO: implement onClose
     super.onClose();
+  }
+
+  bool checkData() {
+    if (!phoneController.text.isPhoneNumber ||
+        phoneController.text.length != 10) {
+      CustomeSnackBar.showWarningTopBar(
+          context: Get.context,
+          title: 'Error',
+          message: 'Số điện thoại không hợp lệ');
+      return false;
+    }
+    if (addressController.text.isEmpty) {
+      CustomeSnackBar.showWarningTopBar(
+          context: Get.context,
+          title: 'Error',
+          message: 'Địa chỉ không hợp lệ');
+      return false;
+    }
+    return true;
   }
 
   initValue(Contact contact) {

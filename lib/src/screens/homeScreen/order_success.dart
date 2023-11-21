@@ -26,7 +26,7 @@ AppBar _appBar() {
     leading: IconButton(
       icon: const Icon(Icons.arrow_back),
       onPressed: () {
-        Get.toNamed("/home");
+        Get.offAllNamed("/home");
       },
     ),
   );

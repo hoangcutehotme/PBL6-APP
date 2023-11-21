@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pbl6_app/src/controller/CategoryControler/category_controller.dart';
+import 'package:pbl6_app/src/controller/ProductController/product_good_deal.dart';
 import 'package:pbl6_app/src/controller/StoreController/store_controller.dart';
+import 'package:pbl6_app/src/controller/UserController/user_controller.dart';
 import 'package:pbl6_app/src/model/food_category_model.dart';
 import 'package:pbl6_app/src/model/food_model.dart';
 import 'package:pbl6_app/src/screens/searchScreen/seach_section.dart';
@@ -20,7 +22,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
   List<FoodModel> foodList = [];
 
   void getFoodList() {
@@ -36,6 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Get.put(UserController(respo: Get.find()), permanent: true);
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: CustomScrollView(
@@ -78,6 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Column _foodSection() {
+    ProductGoodDeal goodDeal = Get.put(ProductGoodDeal());
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -92,18 +95,27 @@ class _HomeScreenState extends State<HomeScreen> {
             width: double.infinity,
             height: 240,
             padding: const EdgeInsets.only(left: 20),
-            child: ListView.separated(
-              scrollDirection: Axis.horizontal,
-              itemCount: foodList.length,
-              separatorBuilder: (BuildContext context, int index) {
-                return const SizedBox(
-                  width: 20,
+            child: GetBuilder<ProductGoodDeal>(builder: (_) {
+              if (goodDeal.isLoading.value && goodDeal.productList.isEmpty) {
+                return const Center(
+                  child: CircularProgressIndicator(),
                 );
-              },
-              itemBuilder: (context, index) {
-                return FoodCard(food: foodList[index]);
-              },
-            ))
+              } else {
+                var productList = goodDeal.productList;
+                return ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: productList.length,
+                  separatorBuilder: (BuildContext context, int index) {
+                    return const SizedBox(
+                      width: 20,
+                    );
+                  },
+                  itemBuilder: (context, index) {
+                    return FoodCard(food: productList[index]);
+                  },
+                );
+              }
+            }))
       ],
     );
   }
@@ -231,7 +243,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       Obx(() {
         List<CategoryModel> categories = categoryController.listCategory;
-        
+
         return Container(
             width: double.infinity,
             height: 160,

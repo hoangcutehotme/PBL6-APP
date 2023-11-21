@@ -24,11 +24,11 @@ class _UserScreenState extends State<UserScreen> {
   @override
   void initState() {
     super.initState();
-    _initializeUser();
+    // _initializeUser();
   }
 
   _initializeUser() async {
-    await _userController.getInfoUserById();
+    await _userController.onInit();
   }
 
   @override
@@ -65,7 +65,7 @@ class _UserScreenState extends State<UserScreen> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    Get.to(() => ListContactScreen());
+                    Get.to(() => const ListContactScreen());
                   },
                   child: Container(
                     decoration: BoxDecoration(

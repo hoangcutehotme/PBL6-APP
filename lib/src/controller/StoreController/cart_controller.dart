@@ -14,9 +14,9 @@ class CartController extends GetxController {
 
   Map<String, CartModel> get products => _products;
 
-  final _cart = {}.obs;
+  // final _cart = {}.obs;
 
-  get cart => _cart;
+  // get cart => _cart;
 
   saveCart() async {
     final SharedPreferences prefs = await _prefs;
@@ -51,7 +51,7 @@ class CartController extends GetxController {
     return {};
   }
 
-  productTotal() {
+  int productTotal() {
     var total = 0;
     _products.forEach((key, value) {
       total += value.price * value.quantity;
@@ -72,16 +72,7 @@ class CartController extends GetxController {
   addProduct(ProductModel product) {
     if (_products.containsKey(product.id)) {
       _products[product.id]!.quantity += 1;
-      // _cart[product.id]!.quantity += 1;
     } else {
-      // _cart.putIfAbsent(
-      //     product.id,
-      //     () => CartModel(
-      //         price: product.price,
-      //         id: product.id,
-      //         name: product.name,
-      //         // storeId: product.storeId,
-      //         quantity: 1));
       _products.putIfAbsent(
           product.id,
           () => CartModel(
@@ -106,6 +97,37 @@ class CartController extends GetxController {
         // _cart[product.id]!.quantity -= 1;
         _products[product.id]!.quantity -= 1;
       }
+    } else {
+      CustomeSnackBar.showWarningTopBar(
+          context: Get.context, title: 'Thông báo', message: 'Không thể xoá ');
+    }
+    update();
+  }
+
+  addCart(String productId) {
+    if (_products.containsKey(productId)) {
+      _products[productId]!.quantity += 1;
+    }
+    update();
+  }
+
+  removeCart(String productId) {
+    if (_products.containsKey(productId)) {
+      if (_products[productId]!.quantity == 1) {
+        _products.removeWhere((key, value) => key == productId);
+      } else {
+        _products[productId]!.quantity -= 1;
+      }
+    } else {
+      CustomeSnackBar.showWarningTopBar(
+          context: Get.context, title: 'Thông báo', message: 'Không thể xoá ');
+    }
+    update();
+  }
+
+  updateNote(String productId, String note) {
+    if (_products.containsKey(productId)) {
+      _products[productId]!.notes = note;
     } else {
       CustomeSnackBar.showWarningTopBar(
           context: Get.context, title: 'Thông báo', message: 'Không thể xoá ');
