@@ -1,0 +1,44 @@
+workflows:
+  android-workflow:
+    name: Android Workflow
+    instance_type: mac_mini_m1
+    max_build_duration: 100
+    environment:
+      groups:
+        - google_credentials # <-- (Includes GCLOUD_KEY_FILE, GOOGLE_CREDENTIALS)
+      vars:
+      flutter: stable
+      xcode: latest
+      cocoapods: default
+    scripts:
+      - name: Set up debug.keystore
+        script: |
+          rm -f ~/.android/debug.keystore
+          keytool -genkeypair -alias androiddebugkey -keypass android -keystore ~/.android/debug.keystore -storepass android -dname 'CN=Android Debug,O=Android,C=US' -keyalg 'RSA' -keysize 2048 -validity 10000
+      - name: Set up local.properties
+        script: |
+          echo "flutter.sdk=$HOME/programs/flutter" > "$CM_BUILD_DIR/android/local.properties"
+      - name: Get Flutter packages
+        script: |
+          flutter packages pub get
+      - name: Build APK with Flutter
+        script: |
+          flutter build apk --debug
+      - name: Create debug and test APK
+        script: |
+          set -ex
+          cd android
+          ./gradlew app:assembleAndroidTest
+          ./gradlew app:assembleDebug -Ptarget="$CM_BUILD_DIR/integration_test/app_test.dart"
+    artifacts:
+      - build/**/outputs/**/*.apk
+      - build/**/outputs/**/*.aab
+      - build/**/outputs/**/mapping.txt
+      - flutter_drive.log
+    publishing:
+      email:
+        recipients:
+          - hoangcool0988@gmail.com
+        notify:
+          success: true # To not receive a notification when a build succeeds
+          failure: false # To not receive a notification when a build fails
