@@ -58,7 +58,6 @@ class FoodInfoCell extends StatelessWidget {
                       child: ImageButton(
                         image: AppAssets.getImg("minus.png", "icons"),
                         press: () {
-                          print("remove");
                           controller.removeProduct(product);
                         },
                       ),
@@ -70,7 +69,6 @@ class FoodInfoCell extends StatelessWidget {
                       child: ImageButton(
                         image: AppAssets.getImg("plus.png", "icons"),
                         press: () {
-                          print("Add");
                           controller.addProduct(product);
                         },
                       ),

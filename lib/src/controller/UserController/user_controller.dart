@@ -252,8 +252,9 @@ class UserController extends GetxController {
   // change the address to delivery
 
   changeAddressContactDefault(Contact contact) {
-    _contactChoose = Contact();
+    // _contactChoose = Contact();
     _contactChoose = contact;
+    update();
   }
 
   addNewContact(dynamic body) async {

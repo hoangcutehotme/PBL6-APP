@@ -19,11 +19,6 @@ class NetworkSearchAppBarPage extends StatelessWidget {
               icon: const Icon(Icons.search),
               onPressed: () async {
                 showSearch(context: context, delegate: SearchSection());
-
-                // final results = await
-                //     showSearch(context: context, delegate: CitySearch());
-
-                // print('Result: $results');
               },
             )
           ],

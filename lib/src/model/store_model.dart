@@ -9,7 +9,7 @@ String storeModelToJson(List<StoreModel> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class StoreModel {
-  double? ratingAverage;
+  num? ratingAverage;
   String? image;
   bool? isLocked;
   String? id;
@@ -42,7 +42,7 @@ class StoreModel {
   });
 
   factory StoreModel.fromJson(Map<String, dynamic> json) => StoreModel(
-        ratingAverage: json["ratingAverage"]?.toDouble(),
+        ratingAverage: json["ratingsAverage"],
         image: json["image"],
         isLocked: json["isLocked"],
         id: json["_id"],
@@ -52,14 +52,14 @@ class StoreModel {
         openAt: json["openAt"],
         closeAt: json["closeAt"],
         description: json["description"],
-        createdAt: DateTime.parse(json["createdAt"]),
-        updatedAt: DateTime.parse(json["updatedAt"]),
+        // createdAt: json["createdAt"] DateTime.parse(json["createdAt"]) ,
+        // updatedAt: DateTime.parse(json["updatedAt"]),
         ownerId: json["ownerId"],
         // registrationLicense: json["registrationLicense"],
       );
 
   Map<String, dynamic> toJson() => {
-        "ratingAverage": ratingAverage,
+        "ratingsAverage": ratingAverage,
         "images": image,
         "isLocked": isLocked,
         "_id": id,
@@ -69,11 +69,9 @@ class StoreModel {
         "openAt": openAt,
         "closeAt": closeAt,
         "description": description,
-        "createdAt": createdAt?.toIso8601String(),
-        "updatedAt": updatedAt?.toIso8601String(),
+        // "createdAt": createdAt?.toIso8601String(),
+        // "updatedAt": updatedAt?.toIso8601String(),
         "ownerId": ownerId,
         // "registrationLicense": registrationLicense,
       };
-
- 
 }

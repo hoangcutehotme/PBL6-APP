@@ -84,7 +84,7 @@ class MyApp extends StatelessWidget {
           page: () => const DetailCategory(),
           transition: Transition.native,
         ),
-        GetPage(name: '/detailshop', page: () => const DetailShop1()),
+        GetPage(name: '/detailshop', page: () => const DetailShop()),
         GetPage(name: '/homePage', page: () => const HomeScreen()),
         GetPage(name: '/home', page: () => const HomeMainPage()),
         GetPage(name: '/detailfood', page: () => const DetailFood()),

@@ -41,7 +41,8 @@ class PlaceOrderController extends GetxController {
       "cart": getCart(),
       "coordinates":
           shippingFeeController.currentInfo.contact!.location!.coordinates,
-      "totalPrice": cartController.productTotal(),
+      "totalPrice": (cartController.productTotal() +
+          shippingFeeController.currentInfo.shipCost!.toInt()),
       "shipCost": shippingFeeController.currentInfo.shipCost
     };
 
@@ -76,7 +77,6 @@ class PlaceOrderController extends GetxController {
   }
 
   void onPayment(String paymentUrl) async {
-    var i = 0;
     // LoadingFullScreen.showLoading();
     try {
       if (paymentUrl != '') {
@@ -88,12 +88,9 @@ class PlaceOrderController extends GetxController {
                 .then((value) => Get.to(() => const OrderSuccess()));
           },
           onPaymentError: (params) {
-            print("Not Success ${i++}");
             // Get.back();
           },
-          onWebPaymentComplete: () {
-            print("WebPayment Complete ${i++}");
-          },
+          onWebPaymentComplete: () {},
         );
       } else {
         CustomeSnackBar.showWarningTopBar(

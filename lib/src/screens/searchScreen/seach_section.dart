@@ -8,6 +8,7 @@ import '../../values/app_styles.dart';
 class SearchSection extends SearchDelegate {
   final SearchFoodStoreController _searchController =
       Get.put(SearchFoodStoreController());
+
   @override
   List<Widget> buildActions(BuildContext context) => [
         IconButton(
@@ -22,31 +23,12 @@ class SearchSection extends SearchDelegate {
           },
         )
       ];
-  // @override
-  // ThemeData appBarTheme(BuildContext context) {
-  //   return ThemeData(
-  //     primaryColor: Colors.blue, // Change the app bar background color
-  //     primaryIconTheme: IconThemeData(color: Colors.white), // Change the icon color
-  //     primaryTextTheme: ,
-  //   );
-  // }
-  // Widget buildSearchBar(BuildContext context) {
-  //   // Customize the style of the search query
-  //   return const TextField(
-  //     style: TextStyle(color: Colors.white), // Change the query text color
-  //     decoration: InputDecoration(
-  //       hintText: 'Tìm kiếm',
-  //       // hintStyle: TextStyle(color: Colors.white.withOpacity(0.5)), // Change the hint text color
-  //     ),
-  //   );
-  // }
-  @override
-  // TODO: implement searchFieldStyle
-  TextStyle? get searchFieldStyle =>
-      AppStyles.textMedium.copyWith(fontSize: 18);
 
   @override
-  // TODO: implement searchFieldLabel
+  TextStyle? get searchFieldStyle =>
+      AppStyles.textMedium.copyWith(fontSize: 16);
+
+  @override
   String? get searchFieldLabel => 'Tìm kiếm';
 
   @override
@@ -61,13 +43,14 @@ class SearchSection extends SearchDelegate {
         child: FutureBuilder<List<Map<String, dynamic>>>(
           future: _searchController.searchFoodAndStore(query),
           builder: (context, snapshot) {
-            if (query.isEmpty) return buildNoSuggestions();
+            print("Snapshot  ${snapshot.data}");
+            if (query == "") return buildNoSuggestions();
 
             switch (snapshot.connectionState) {
               case ConnectionState.waiting:
                 return const Center(child: CircularProgressIndicator());
               default:
-                if (snapshot.hasError || snapshot.data!.isEmpty) {
+                if (snapshot.hasError || snapshot.data == []) {
                   return buildNoSuggestions();
                 } else {
                   return buildSuggestionsSuccess(snapshot.data);
@@ -95,7 +78,6 @@ class SearchSection extends SearchDelegate {
               ListTile(
                 onTap: () {
                   query = suggestion['name'];
-
                   // 1. Show Results
                   showResults(context);
 
@@ -104,12 +86,14 @@ class SearchSection extends SearchDelegate {
 
                   // // 3. Navigate to Result Page
                   Get.toNamed('/detailshop', arguments: suggestion['storeId']);
+                  // Get.toNamed('/detailshop',
+                  //               arguments: stories[index].id);
                 },
                 // title: Text(suggestion),
                 title: RichText(
                   text: TextSpan(
                       text: suggestion['name'],
-                      style: AppStyles.textMedium.copyWith(fontSize: 18)),
+                      style: AppStyles.textMedium.copyWith(fontSize: 16)),
                 ),
               ),
             ],
@@ -124,7 +108,9 @@ class SearchSection extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    // TODO: implement buildResults
-    return Container();
+    return RichText(
+      text: TextSpan(
+          text: query, style: AppStyles.textMedium.copyWith(fontSize: 16)),
+    );
   }
 }

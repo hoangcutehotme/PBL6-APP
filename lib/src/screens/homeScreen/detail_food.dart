@@ -255,7 +255,7 @@ SliverToBoxAdapter _InfoShop(ProductModel? product) {
                       child: ImageButton(
                         image: AppAssets.getImg("minus.png", "icons"),
                         press: () {
-                          cartController.addProduct(product);
+                          cartController.removeProduct(product);
                         },
                       ),
                     ),

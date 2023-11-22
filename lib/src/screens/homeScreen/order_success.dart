@@ -11,7 +11,7 @@ class OrderSuccess extends StatelessWidget {
       body: Column(
         children: [
           _appBar(),
-          const Center(child: Text("Order Success")),
+          const Center(child: Text("Bạn đã đặt hàng thành công")),
         ],
       ),
     );
@@ -23,11 +23,19 @@ AppBar _appBar() {
     foregroundColor: AppColors.mainColor1,
     backgroundColor: AppColors.mainColorBackground,
     shadowColor: Colors.transparent,
-    leading: IconButton(
-      icon: const Icon(Icons.arrow_back),
-      onPressed: () {
-        Get.offAllNamed("/home");
-      },
-    ),
+    actions: [
+      IconButton(
+        icon: const Icon(Icons.home_filled),
+        onPressed: () {
+          Get.offAllNamed("/home");
+        },
+      ),
+    ],
+    // leading: IconButton(
+    //   icon: const Icon(Icons.arrow_back),
+    //   onPressed: () {
+    //     Get.offAllNamed("/home");
+    //   },
+    // ),
   );
 }

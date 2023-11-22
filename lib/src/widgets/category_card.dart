@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pbl6_app/src/values/app_styles.dart';
 
 import '../model/food_category_model.dart';
 import 'image_loading_network.dart';
@@ -29,7 +30,13 @@ class CategoryCard extends StatelessWidget {
               image: categorie.photo,
               size: const Size(120, 120),
             ),
-            Text(categorie.catName)
+            const SizedBox(
+              height: 10,
+            ),
+            Text(
+              categorie.catName,
+              style: AppStyles.textMedium,
+            )
           ],
         ),
       ),

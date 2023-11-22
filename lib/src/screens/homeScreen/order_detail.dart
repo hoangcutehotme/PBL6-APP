@@ -395,8 +395,12 @@ class _OrderDetailState extends State<OrderDetail> {
                     const SizedBox(
                       height: 10,
                     ),
-                    Text(user.address ?? ''.toString(),
-                        style: AppStyles.textMedium.copyWith(fontSize: 16)),
+                    Text(
+                      user.address ?? ''.toString(),
+                      style: AppStyles.textMedium.copyWith(fontSize: 16),
+                      softWrap: true,
+                      maxLines: 2,
+                    ),
                     const SizedBox(
                       height: 10,
                     ),

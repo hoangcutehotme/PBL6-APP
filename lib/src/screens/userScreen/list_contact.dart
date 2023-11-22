@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pbl6_app/src/controller/UserController/user_controller.dart';
 import 'package:pbl6_app/src/model/contact_model.dart';
+import 'package:pbl6_app/src/values/app_assets.dart';
 import 'package:pbl6_app/src/values/app_colors.dart';
-import 'package:pbl6_app/src/widgets/app_bar_default.dart';
+
+import '../../values/app_styles.dart';
 
 class ListContactScreen extends StatelessWidget {
   const ListContactScreen({super.key});
@@ -12,7 +14,26 @@ class ListContactScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.placeholder,
-      appBar: AppWidget.appBar("Thông tin liên hệ"),
+      appBar: AppBar(
+        foregroundColor: AppColors.mainColor1,
+        backgroundColor: AppColors.mainColorBackground,
+        shadowColor: Colors.transparent,
+        title: Text(
+          "Thông tin liên hệ",
+          style: AppStyles.textBold
+              .copyWith(fontSize: 20, fontWeight: FontWeight.w500),
+        ),
+        actions: [
+          IconButton(
+              onPressed: () {
+                Get.toNamed('/changecontact', arguments: Contact());
+              },
+              icon: Image.asset(
+                AppAssets.getImg("plus.png", "icons"),
+                color: AppColors.mainColor1,
+              ))
+        ],
+      ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: GetBuilder<UserController>(builder: (userController) {
@@ -35,7 +56,8 @@ class ListContactScreen extends StatelessWidget {
                   ),
                   child: ListTile(
                     onTap: () {
-                      Get.toNamed('/changecontact', arguments: Contact());
+                      // Get.toNamed('/changecontact', arguments: Contact());
+                      userController.changeAddressContactDefault(contact);
                     },
                     leading: const Icon(
                       Icons.location_on,

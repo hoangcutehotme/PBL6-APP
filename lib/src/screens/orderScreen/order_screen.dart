@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:pbl6_app/src/controller/OrderController/order_controller.dart';
 import 'package:pbl6_app/src/screens/orderScreen/comming_order.dart';
 import 'package:pbl6_app/src/screens/orderScreen/history_order.dart';
 import 'package:pbl6_app/src/values/app_colors.dart';
@@ -14,6 +16,7 @@ class OrderScreen extends StatefulWidget {
 class _OrderScreenState extends State<OrderScreen> {
   @override
   Widget build(BuildContext context) {
+    Get.put(OrderController(userController: Get.find()));
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -26,7 +29,6 @@ class _OrderScreenState extends State<OrderScreen> {
               unselectedLabelColor: AppColors.grayBold,
               labelStyle:
                   AppStyles.textMedium.copyWith(fontWeight: FontWeight.w600),
-              
               tabs: const [
                 Tab(text: "Đang đến"),
                 Tab(
