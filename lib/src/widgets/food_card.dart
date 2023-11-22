@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pbl6_app/src/model/product_model.dart';
 import 'package:pbl6_app/src/values/app_styles.dart';
-
-import '../model/food_model.dart';
 import '../values/app_colors.dart';
+import 'image_loading_network.dart';
 
 class FoodCard extends StatelessWidget {
   const FoodCard({
@@ -11,7 +11,7 @@ class FoodCard extends StatelessWidget {
     required this.food,
   });
 
-  final FoodModel food;
+  final ProductModel food;
 
   @override
   Widget build(BuildContext context) {
@@ -30,16 +30,8 @@ class FoodCard extends StatelessWidget {
         child: Stack(
           alignment: Alignment.topCenter,
           children: [
-            // ImageLoadingNetwork(image: food.imageFood, size: Size(160, 140)),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(2),
-              child: Image.asset(
-                food.imageFood,
-                width: 160,
-                height: 140,
-                fit: BoxFit.fill,
-              ),
-            ),
+            ImageLoadingNetwork(
+                image: food.images[0], size: const Size(160, 140)),
             Positioned(
               top: 130,
               left: 5,
@@ -49,7 +41,7 @@ class FoodCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(5)),
                 padding: const EdgeInsets.only(right: 8, left: 8),
                 child: Text(
-                  "Freeship",
+                  "Deal hời",
                   style: AppStyles.textBold.copyWith(fontSize: 14),
                 ),
               ),

@@ -41,7 +41,8 @@ class _ChangeUserInfoState extends State<ChangeUserInfo> {
                     pressConfirm: () {
                       Get.find<UserController>().setInitInfo();
                       // Get.close(2);
-                    }, confirmText: 'Ok');
+                    },
+                    confirmText: 'Ok');
               } else {
                 Get.back();
               }
@@ -63,136 +64,135 @@ class _ChangeUserInfoState extends State<ChangeUserInfo> {
               ))
         ],
       ),
-      body: Column(
-        children: [changeInfoSection(context)],
-      ),
+      body: changeInfoSection(context),
     );
   }
 
   GetBuilder<UserController> changeInfoSection(BuildContext context) {
+    UserController userController = Get.find();
     return GetBuilder<UserController>(
-        // init: UserController(),
-        builder: (userController) {
-          return SingleChildScrollView(
-            child: Form(
-              key: userController.changeInfoKey,
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Column(
-                  children: [
-                    TextFormField(
-                      decoration: const InputDecoration(labelText: 'Email '),
-                      keyboardType: TextInputType.emailAddress,
-                      readOnly: true,
-                      controller: userController.emailController,
-                    ),
-                    TextFormField(
-                      decoration: const InputDecoration(
-                        // labelText: 'Họ ',
-                        label: Text('Họ'),
-                      ),
-                      readOnly: userController.isEdit.value,
-                      keyboardType: TextInputType.name,
-                      controller: userController.lastnameController,
-                      onSaved: (value) {
-                        userController.lastnameController.text = value!;
-                      },
-                      onChanged: (value) {
-                        userController.isChange.value = true;
-                      },
-                      validator: (value) {
-                        return userController.validateName(value!);
-                      },
-                    ),
-                    TextFormField(
-                      readOnly: userController.isEdit.value,
-                      decoration: const InputDecoration(labelText: 'Tên '),
-                      keyboardType: TextInputType.name,
-                      controller: userController.firstNameController,
-                      onSaved: (value) {
-                        userController.firstNameController.text = value!;
-
-                        print("Value : $value");
-                      },
-                      onChanged: (value) {
-                        userController.isChange.value = true;
-                      },
-                      validator: (value) {
-                        return userController.validateName(value!);
-                      },
-                    ),
-                    TextFormField(
-                      readOnly: userController.isEdit.value,
-                      decoration:
-                          const InputDecoration(labelText: 'Số điện thoại '),
-                      keyboardType: TextInputType.phone,
-                      controller: userController.phoneController,
-                      onSaved: (value) {
-                        userController.phoneController.text = value!;
-                      },
-                      onChanged: (value) {
-                        userController.isChange.value = true;
-                      },
-                      validator: (value) {
-                        return userController.validatePhone(value!);
-                      },
-                    ),
-                    TextFormField(
-                      decoration: const InputDecoration(labelText: 'Địa chỉ '),
-                      keyboardType: TextInputType.emailAddress,
-                      // initialValue: user.email,
-                      readOnly: userController.isEdit.value,
-                      controller: userController.addressController,
-                      onSaved: (value) {
-                        userController.addressController.text = value!;
-                      },
-                      onChanged: (value) {
-                        userController.isChange.value = true;
-                      },
-                      validator: (value) {
-                        return userController.validateAddress(value!);
-                      },
-                    ),
-                    Obx(
-                      () => ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: userController.isChange.value
-                                ? AppColors.mainColor1
-                                : AppColors.borderGray,
-                            padding:
-                                const EdgeInsets.only(right: 30, left: 30)),
-                        onPressed: () {
-                          if (userController.validateForm()) {
-                            CustomeDialog.showCustomeDialog(
-                              context: Get.context,
-                              title: 'Thông báo',
-                              message: 'Bạn có chắc cập nhật thông tin mới ??',
-                              pressConfirm: () async {
-                                await userController
-                                    .updateUser(userController.id.value);
-                              }, confirmText: 'Ok',
-                            );
-                          } else {
-                            CustomeSnackBar.showErrorSnackBar(
-                                context: Get.context,
-                                title: 'Error',
-                                message: 'Thông tin nhập không hợp lệ');
-                          }
-                        },
-                        child: Text(
-                          'Lưu',
-                          style: AppStyles.textMedium
-                              .copyWith(color: AppColors.mainColorBackground),
-                        ),
-                      ),
-                    ),
-                  ],
+        // initState: (state) => userController.setInitInfo(),
+        builder: (_) {
+      return SingleChildScrollView(
+        child: Form(
+          key: userController.changeInfoKey,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              children: [
+                TextFormField(
+                  decoration: const InputDecoration(labelText: 'Email '),
+                  keyboardType: TextInputType.emailAddress,
+                  readOnly: true,
+                  controller: userController.emailController,
                 ),
-              ),
-              // ),
+                TextFormField(
+                  decoration: const InputDecoration(
+                    // labelText: 'Họ ',
+                    label: Text('Họ'),
+                  ),
+                  readOnly: userController.isEdit.value,
+                  keyboardType: TextInputType.name,
+                  controller: userController.lastnameController,
+                  onSaved: (value) {
+                    userController.lastnameController.text = value!;
+                  },
+                  onChanged: (value) {
+                    userController.isChange.value = true;
+                  },
+                  validator: (value) {
+                    return userController.validateName(value!);
+                  },
+                ),
+                TextFormField(
+                  readOnly: userController.isEdit.value,
+                  decoration: const InputDecoration(labelText: 'Tên '),
+                  keyboardType: TextInputType.name,
+                  controller: userController.firstNameController,
+                  onSaved: (value) {
+                    userController.firstNameController.text = value!;
+
+                    print("Value : $value");
+                  },
+                  onChanged: (value) {
+                    userController.isChange.value = true;
+                  },
+                  validator: (value) {
+                    return userController.validateName(value!);
+                  },
+                ),
+                TextFormField(
+                  readOnly: userController.isEdit.value,
+                  decoration:
+                      const InputDecoration(labelText: 'Số điện thoại '),
+                  keyboardType: TextInputType.phone,
+                  controller: userController.phoneController,
+                  onSaved: (value) {
+                    userController.phoneController.text = value!;
+                  },
+                  onChanged: (value) {
+                    userController.isChange.value = true;
+                  },
+                  validator: (value) {
+                    return userController.validatePhone(value!);
+                  },
+                ),
+                TextFormField(
+                  decoration: const InputDecoration(labelText: 'Địa chỉ '),
+                  keyboardType: TextInputType.emailAddress,
+                  // initialValue: user.email,
+                  readOnly: userController.isEdit.value,
+                  controller: userController.addressController,
+                  onSaved: (value) {
+                    userController.addressController.text = value!;
+                  },
+                  onChanged: (value) {
+                    userController.isChange.value = true;
+                  },
+                  validator: (value) {
+                    return userController.validateAddress(value!);
+                  },
+                ),
+                Obx(
+                  () => ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: userController.isChange.value
+                            ? AppColors.mainColor1
+                            : AppColors.borderGray,
+                        padding: const EdgeInsets.only(right: 30, left: 30)),
+                    onPressed: () {
+                      if (userController.validateForm()) {
+                        CustomeDialog.showCustomeDialog(
+                          context: Get.context,
+                          title: 'Thông báo',
+                          message: 'Bạn có chắc cập nhật thông tin mới ??',
+                          pressConfirm: () async {
+                            await userController
+                                .updateUser(userController.id.value);
+                          },
+                          confirmText: 'Ok',
+                        );
+                      } else {
+                        CustomeSnackBar.showErrorSnackBar(
+                            context: Get.context,
+                            title: 'Error',
+                            message: 'Thông tin nhập không hợp lệ');
+                      }
+                    },
+                    child: Text(
+                      'Lưu',
+                      style: AppStyles.textMedium
+                          .copyWith(color: AppColors.mainColorBackground),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          );
-        });
+          ),
+          // ),
+        ),
+      );
+    });
   }
 }

@@ -27,7 +27,6 @@ class ProductController extends GetxController {
     super.onInit();
     var category = Get.arguments;
     String encodedCatName = Uri.encodeComponent(category.catName);
-
     fetchProductFromCategory(encodedCatName);
   }
 
@@ -56,7 +55,7 @@ class ProductController extends GetxController {
             context: Get.context!,
             builder: (context) {
               return const SimpleDialog(
-                title: Text("Error"),
+                title: Text("Error Product"),
                 children: [Text('Not Success')],
               );
             });
@@ -67,7 +66,7 @@ class ProductController extends GetxController {
           context: Get.context!,
           builder: (context) {
             return SimpleDialog(
-              title: const Text("Error"),
+              title: const Text("Error Product"),
               children: [Text(e.toString())],
             );
           });
@@ -76,33 +75,5 @@ class ProductController extends GetxController {
     }
   }
 
-  // late ProductRepo productRepo;
-
-  // Future<void> getProductByStoreId(String id) async {
-  //   try {
-  //     var response = await productRepo.getProductsByStoreId(id);
-
-  //     if (response.statusCode == 200) {
-  //       _productList = [];
-  //       _productList.addAll(productsModelFromJson(
-  //           jsonEncode(jsonDecode(response.body)['data']['data'])));
-  //       update();
-  //     } else {
-  //       throw Exception(
-  //           'Failed to get products. Status code: ${response.statusCode}');
-  //     }
-  //   } catch (e) {
-  //     print('Error in getProductByStoreId: $e');
-  //     // Handle the error in a way that makes sense for your app
-  //   }
-  // }
-
-  // setQuantity(bool isInCrement) {
-  //   if (isInCrement) {
-  //     _quantity += 1;
-  //   } else {
-  //     _quantity -= 1;
-  //   }
-  //   update();
-  // }
+ 
 }

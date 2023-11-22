@@ -9,7 +9,6 @@ import '../../utils/api_endpoints.dart';
 class SearchFoodStoreController extends GetxController {
   TextEditingController search = TextEditingController();
   var client = http.Client();
-  // var list = [].obs;
 
   Future<List<Map<String, dynamic>>> searchFoodAndStore(String query) async {
     try {
@@ -26,6 +25,7 @@ class SearchFoodStoreController extends GetxController {
         List<Map<String, dynamic>> result = bodyData.map((item) {
           return {
             "name": item["name"] as String,
+            "storeId": item["storeId"] ?? ''
           };
         }).toList();
 

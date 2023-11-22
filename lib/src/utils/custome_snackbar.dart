@@ -70,7 +70,7 @@ class CustomeSnackBar {
       title,
       message,
       snackPosition: SnackPosition.TOP,
-      backgroundColor: Color.fromARGB(255, 57, 95, 233),
+      backgroundColor: const Color.fromARGB(255, 57, 95, 233),
       titleText: Text(
         title,
         style:
@@ -87,7 +87,7 @@ class CustomeSnackBar {
         Icons.error_outline,
         color: AppColors.mainColorBackground,
       ),
-      duration: const Duration(seconds: 4),
+      duration: const Duration(seconds: 1),
     );
   }
 
@@ -116,7 +116,7 @@ class CustomeSnackBar {
         Icons.error_outline,
         color: AppColors.mainColorBackground,
       ),
-      duration: const Duration(seconds: 4),
+      duration: const Duration(seconds: 1),
     );
   }
 }

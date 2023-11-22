@@ -31,7 +31,7 @@ class StoreCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ImageLoadingNetwork(image: storie.image??'', size: size),
+              ImageLoadingNetwork(image: storie.image ?? '', size: size),
               Text(
                 storie.name ?? '',
                 maxLines: 1,
@@ -45,25 +45,18 @@ class StoreCard extends StatelessWidget {
                     style: AppStyles.textMedium,
                   ),
                   Text(
-                    " | ",
+                    "  - ",
                     style: AppStyles.textMedium
                         .copyWith(fontSize: 20, color: AppColors.borderGray),
                   ),
                   const Icon(
-                    Icons.location_on,
+                    Icons.access_time,
                     color: AppColors.mainColor1,
                   ),
-                  // Text("${stories[index].distance.toString()} km",
-                  //     style: AppStyles.textMedium),
                   Text(
-                    " | ",
-                    style: AppStyles.textMedium
-                        .copyWith(fontSize: 20, color: AppColors.borderGray),
+                    " ${storie.openAt} - ${storie.closeAt}",
+                    style: AppStyles.textMedium,
                   ),
-                  // Text(
-                  //   "${storie.openAt} - ${storie.closeAt}",
-                  //   style: AppStyles.textMedium,
-                  // ),
                 ],
               ),
             ],

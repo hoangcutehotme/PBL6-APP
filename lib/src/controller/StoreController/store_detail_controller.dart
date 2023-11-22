@@ -39,7 +39,6 @@ class StoreDetailController extends GetxController {
       var response = await client.get(url);
       var json = jsonDecode(response.body);
       if (response.statusCode == 200) {
-        _store = StoreModel();
         _store = StoreModel.fromJson(json['data']);
         update();
         return _store;

@@ -133,6 +133,7 @@ class LoginController extends GetxController {
           ApiClient apiClient = Get.find();
           apiClient.updateHeader(token);
           apiClient.saveToken(token);
+          
 
           var user = json['data']['user'];
           // await FuncUseful.saveJson('user', user);

@@ -8,22 +8,23 @@ import 'package:pbl6_app/src/values/app_assets.dart';
 import 'package:pbl6_app/src/values/app_colors.dart';
 import 'package:pbl6_app/src/values/app_styles.dart';
 import 'package:pbl6_app/src/widgets/image_loading_network.dart';
+import 'package:pbl6_app/src/widgets/skelton.dart';
 
 import '../../widgets/food_cell.dart';
-import 'detail_food.dart';
 
-class DetailShop1 extends StatefulWidget {
-  const DetailShop1({super.key});
+class DetailShop extends StatefulWidget {
+  const DetailShop({super.key});
 
   @override
-  State<DetailShop1> createState() => _DetailShopState();
+  State<DetailShop> createState() => _DetailShopState();
 }
 
-class _DetailShopState extends State<DetailShop1> {
+class _DetailShopState extends State<DetailShop> {
   bool showTitle = false;
   bool showCart = false;
   ScrollController? _scrollController;
   String storeId = '';
+  // UserController userController = Get.find();
 
   @override
   void initState() {
@@ -49,12 +50,14 @@ class _DetailShopState extends State<DetailShop1> {
   Widget build(BuildContext context) {
     StoreDetailController storeController = Get.put(StoreDetailController());
     CartController cartController = Get.put(CartController());
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       bottomNavigationBar: bottomCart(cartController),
       body: GetBuilder<StoreDetailController>(
         initState: (_) => storeController.updateStore(storeId),
         builder: (_) {
           StoreModel store = storeController.store;
+          print(store);
           List<ProductModel> products = storeController.listProduct;
 
           return CustomScrollView(
@@ -64,7 +67,7 @@ class _DetailShopState extends State<DetailShop1> {
               SliverToBoxAdapter(
                 child: Column(
                   children: [
-                    _InfoShop(store),
+                    _InfoShop(store, size),
                   ],
                 ),
               ),
@@ -78,113 +81,308 @@ class _DetailShopState extends State<DetailShop1> {
 
   GetBuilder<CartController> _listProductStore(
       List<ProductModel> products, CartController cartController) {
+    Size size = MediaQuery.of(context).size;
     return GetBuilder<CartController>(builder: (_) {
-      return SliverList(
-        delegate: SliverChildBuilderDelegate(
-          (BuildContext context, int index) {
-            if (products.isEmpty) {
-              return const SliverToBoxAdapter(
-                child: Center(
-                  child:
-                      CircularProgressIndicator(), // Or any other loading widget
-                ),
-              );
-            }
-
-            return GestureDetector(
-              onTap: () {
-                Get.to(() => const DetailFood());
-              },
-              child: FoodInfoCell(
-                controller: cartController,
-                product: products[index],
+      if (products.isEmpty) {
+        Future.delayed(const Duration(seconds: 10)).then(
+          (value) {
+            return const SliverToBoxAdapter(
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 100,
+                  ),
+                  Center(
+                      child: Text(
+                    "Hiện tại chưa có món ăn",
+                    style: AppStyles.textMedium,
+                  )),
+                ],
               ),
             );
           },
-          childCount: products.length,
-        ),
-      );
+        );
+        return SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (BuildContext context, int index) {
+              return Container(
+                height: 140,
+                padding: const EdgeInsets.all(10),
+                child: Row(
+                  children: [
+                    const Skelton(
+                      width: 160,
+                      height: 120,
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Skelton(
+                              width: size.width * 0.5,
+                            ),
+                            const SizedBox(
+                              height: 8,
+                            ),
+                            const Skelton(
+                              width: 120,
+                            ),
+                            Expanded(child: Container()),
+                            const Row(
+                              children: [
+                                Skelton(
+                                  width: 100,
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              );
+            },
+            childCount: 4,
+          ),
+        );
+      } else {
+        return SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (BuildContext context, int index) {
+              return GestureDetector(
+                onTap: () {
+                  Get.toNamed('/detailfood', arguments: products[index]);
+                },
+                child: FoodInfoCell(
+                  controller: cartController,
+                  product: products[index],
+                ),
+              );
+            },
+            childCount: products.length,
+          ),
+        );
+      }
     });
   }
 
-  _InfoShop(StoreModel store) {
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Padding(
-        padding: const EdgeInsets.only(left: 8, top: 8),
-        child: Row(
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                  color: Colors.red, borderRadius: BorderRadius.circular(5)),
-              padding: const EdgeInsets.only(right: 8, left: 8),
-              child: Text(
-                "Yêu thích",
-                style: AppStyles.textBold
-                    .copyWith(fontSize: 14, color: Colors.white),
-              ),
-            ),
-            const SizedBox(
-              width: 10,
-            ),
-            Text(
-              store.name ?? '',
-              style: AppStyles.textBold.copyWith(fontSize: 18),
-            ),
-          ],
-        ),
-      ),
-      Padding(
-        padding: const EdgeInsets.only(left: 8, bottom: 20),
-        child: Row(
-          children: [
-            const Icon(Icons.star_outlined, color: Colors.amber),
-            Text(
-              (store.ratingAverage ?? 0).toString(),
-              style: AppStyles.textMedium,
-            ),
-            const Text(" (100+ Bình luận)", style: AppStyles.textMedium),
-            Text(
-              " | ",
-              style: AppStyles.textMedium
-                  .copyWith(fontSize: 20, color: AppColors.borderGray),
-            ),
-            // const Icon(
-            //   Icons.location_on,
-            //   color: AppColors.mainColor1,
-            // ),
-            // Text(
-            //     "${stories!.openAt.toString()} - ${stories!.closeAt.toString()}",
-            //     style: AppStyles.textMedium),
-            Expanded(child: Container()),
-            Container(
-              alignment: Alignment.centerRight,
-              child: TextButton(
-                onPressed: () {
-                  // Handle button press
-                },
-                style: TextButton.styleFrom(
-                  foregroundColor: Colors.blue,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(
-                          8)), // Optional: customize button shape
-                ),
-                child: Image.asset(
-                  'assets/icons/heartIcon.png', // Path to your image asset
-                  width: 32, // Width of the image icon
-                  height: 32, // Height of the image icon
-                  color: AppColors
-                      .borderGray, // Optional: change the color of the image icon
+  _InfoShop(StoreModel store, Size size) {
+    if (store.name != null) {
+      return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 8, top: 10),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                    color: Colors.red, borderRadius: BorderRadius.circular(5)),
+                padding: const EdgeInsets.only(right: 8, left: 8),
+                child: Text(
+                  "Yêu thích",
+                  style: AppStyles.textBold
+                      .copyWith(fontSize: 14, color: Colors.white),
                 ),
               ),
-            ),
-          ],
+              const SizedBox(
+                width: 10,
+              ),
+              Flexible(
+                child: Text(
+                  store.name ?? '',
+                  style: AppStyles.textBold.copyWith(fontSize: 18),
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
-      Container(
-        height: 10,
-        color: AppColors.placeholder,
-      )
-    ]);
+        Padding(
+          padding: const EdgeInsets.only(left: 8),
+          child: Row(
+            children: [
+              const Icon(Icons.star_outlined, color: Colors.amber),
+              Text(
+                (store.ratingAverage ?? 0).toString(),
+                style: AppStyles.textMedium,
+              ),
+              // const Text(" (100+ Bình luận)", style: AppStyles.textMedium),
+              Text(
+                " | ",
+                style: AppStyles.textMedium
+                    .copyWith(fontSize: 20, color: AppColors.borderGray),
+              ),
+              const Icon(
+                Icons.access_time,
+                color: AppColors.mainColor1,
+              ),
+
+              Text(" ${store.openAt.toString()} - ${store.closeAt.toString()}",
+                  style: AppStyles.textMedium),
+              Expanded(child: Container()),
+              Container(
+                alignment: Alignment.centerRight,
+                child: TextButton(
+                  onPressed: () {
+                    // Handle button press
+                  },
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.blue,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(
+                            8)), // Optional: customize button shape
+                  ),
+                  child: Image.asset(
+                    'assets/icons/heartIcon.png', // Path to your image asset
+                    width: 32, // Width of the image icon
+                    height: 32, // Height of the image icon
+                    color: AppColors
+                        .borderGray, // Optional: change the color of the image icon
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 10),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Icon(
+                Icons.location_on,
+                color: AppColors.mainColor1,
+              ),
+              Flexible(
+                child: Text(
+                  store.address.toString(),
+                  style: AppStyles.textMedium,
+                  softWrap: true,
+                ),
+              ),
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 10, bottom: 10, top: 8),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Icon(
+                Icons.phone,
+                color: AppColors.mainColor1,
+              ),
+              Flexible(
+                child: Text(
+                  store.phoneNumber.toString(),
+                  style: AppStyles.textMedium,
+                  softWrap: true,
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        Container(
+          height: 10,
+          color: AppColors.placeholder,
+        )
+      ]);
+    } else {
+      return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 8, top: 8),
+          child: Row(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                    color: Colors.red, borderRadius: BorderRadius.circular(5)),
+                padding: const EdgeInsets.only(right: 8, left: 8),
+                child: Text(
+                  "Yêu thích",
+                  style: AppStyles.textBold
+                      .copyWith(fontSize: 14, color: Colors.white),
+                ),
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+              const Skelton(
+                width: 160,
+              )
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 8),
+          child: Row(
+            children: [
+              const Skelton(
+                width: 120,
+              ),
+              Expanded(child: Container()),
+              Container(
+                alignment: Alignment.centerRight,
+                child: TextButton(
+                  onPressed: () {
+                    // Handle button press
+                  },
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.blue,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(
+                            8)), // Optional: customize button shape
+                  ),
+                  child: Image.asset(
+                    'assets/icons/heartIcon.png', // Path to your image asset
+                    width: 32, // Width of the image icon
+                    height: 32, // Height of the image icon
+                    color: AppColors
+                        .borderGray, // Optional: change the color of the image icon
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 10),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Flexible(
+                  child: Skelton(
+                width: size.width - 30,
+              )),
+            ],
+          ),
+        ),
+        const Padding(
+          padding: EdgeInsets.only(left: 10, bottom: 10, top: 8),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Flexible(
+                  child: Skelton(
+                width: 110,
+              )),
+            ],
+          ),
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        Container(
+          height: 10,
+          color: AppColors.placeholder,
+        )
+      ]);
+    }
   }
 
   bottomCart(CartController controller) {
@@ -250,57 +448,57 @@ class _DetailShopState extends State<DetailShop1> {
     );
   }
 
-  Container _showCartOrder() {
-    return Container(
-      decoration: BoxDecoration(
-          border: Border.all(width: 1, color: AppColors.borderGray)),
-      height: 60,
-      child: Row(
-        children: [
-          Expanded(
-            flex: 5,
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Padding(
-                      padding: const EdgeInsets.only(left: 15),
-                      child: Badge(
-                        // label: Text(count.toString()),
-                        child: Image.asset(
-                          AppAssets.getImg("bag_cart.png", "icons"),
-                          color: AppColors.mainColor1,
-                          width: 32,
-                          height: 32,
-                        ),
-                      )),
-                  Expanded(child: Container()),
-                  const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    // child: Text("Thanh toan $count"),
-                  ),
-                ]),
-          ),
-          Expanded(
-              flex: 2,
-              child: GestureDetector(
-                onTap: () {
-                  Get.toNamed("/detailorder");
-                },
-                child: Container(
-                  height: 58,
-                  alignment: Alignment.center,
-                  color: AppColors.mainColor1,
-                  child: Text(
-                    "Thanh toán",
-                    style: AppStyles.textBoldButton
-                        .copyWith(fontWeight: FontWeight.w500),
-                  ),
-                ),
-              ))
-        ],
-      ),
-    );
-  }
+  // Container _showCartOrder() {
+  //   return Container(
+  //     decoration: BoxDecoration(
+  //         border: Border.all(width: 1, color: AppColors.borderGray)),
+  //     height: 60,
+  //     child: Row(
+  //       children: [
+  //         Expanded(
+  //           flex: 5,
+  //           child: Row(
+  //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //               children: [
+  //                 Padding(
+  //                     padding: const EdgeInsets.only(left: 15),
+  //                     child: Badge(
+  //                       // label: Text(count.toString()),
+  //                       child: Image.asset(
+  //                         AppAssets.getImg("bag_cart.png", "icons"),
+  //                         color: AppColors.mainColor1,
+  //                         width: 32,
+  //                         height: 32,
+  //                       ),
+  //                     )),
+  //                 Expanded(child: Container()),
+  //                 const Padding(
+  //                   padding: EdgeInsets.all(8.0),
+  //                   // child: Text("Thanh toan $count"),
+  //                 ),
+  //               ]),
+  //         ),
+  //         Expanded(
+  //             flex: 2,
+  //             child: GestureDetector(
+  //               onTap: () {
+  //                 Get.toNamed("/detailorder");
+  //               },
+  //               child: Container(
+  //                 height: 58,
+  //                 alignment: Alignment.center,
+  //                 color: AppColors.mainColor1,
+  //                 child: Text(
+  //                   "Thanh toán",
+  //                   style: AppStyles.textBoldButton
+  //                       .copyWith(fontWeight: FontWeight.w500),
+  //                 ),
+  //               ),
+  //             ))
+  //       ],
+  //     ),
+  //   );
+  // }
 }
 
 class _FlexibleHeadBar extends StatelessWidget {

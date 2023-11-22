@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:pbl6_app/src/model/contact_model.dart';
+import 'package:pbl6_app/src/values/app_string.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:pbl6_app/src/data/repository/user_respository.dart';
@@ -17,12 +18,11 @@ import '../../utils/api_endpoints.dart';
 
 class UserController extends GetxController {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-
   final UserRespo respo;
-  final SharedPreferences sharedPreferences;
+  // final SharedPreferences sharedPreferences;
 
   UserController({
-    required this.sharedPreferences,
+    // required this.sharedPreferences,
     required this.respo,
   });
 
@@ -48,15 +48,18 @@ class UserController extends GetxController {
 
   @override
   Future<void> onInit() async {
-    super.onInit();
     emailController = TextEditingController();
     firstNameController = TextEditingController();
     lastnameController = TextEditingController();
     addressController = TextEditingController();
     phoneController = TextEditingController();
-    await getInfoUserById().then((value) {
-      setInitInfo();
+    await getIdToken().then((_) async {
+      await getInfoUserById().then((value) {
+        setInitInfo();
+      });
     });
+
+    super.onInit();
   }
 
   setInitInfo() {
@@ -71,7 +74,6 @@ class UserController extends GetxController {
   @override
   void onClose() {
     super.onClose();
-
     emailController.clear();
     firstNameController.clear();
     lastnameController.clear();
@@ -163,77 +165,78 @@ class UserController extends GetxController {
 
   Future<void> getIdToken() async {
     final SharedPreferences prefs = await _prefs;
-    id.value = prefs.getString('id_user') ?? '';
-    token.value = prefs.getString('token') ?? '';
+    id.value = prefs.getString(AppString.SHAREPREF_USERID) ?? '';
+    token.value = prefs.getString(AppString.SHAREPREF_TOKEN) ?? '';
     update();
   }
 
   Future<void> getInfoUserById() async {
-    isLoading(true);
     try {
-      await getIdToken();
-      if (id.value == '') {
-        isLoading(false);
-        CustomeDialog.showCustomeDialog(
-            context: Get.context,
-            title: '',
-            message: 'Bạn chưa đăng ký !!!',
-            pressConfirm: () {
-              Get.toNamed("/signup");
-            },
-            confirmText: 'Đăng ký');
-        showDialog(
-            context: Get.context!,
-            builder: (context) {
-              return SimpleDialog(
-                title: const Text("Bạn chưa đăng ký !!!"),
-                children: [
-                  ElevatedButton(
-                      onPressed: () {
-                        Get.toNamed("/signup");
-                      },
-                      child: const Text("Đăng ký"))
-                ],
-                // children: [Text(e.toString())],
-              );
-            });
-      } else {
-        var cookies = token.value;
-
-        var headers = {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $cookies',
-        };
-        var url = Uri.parse("${ApiEndPoints.baseUrl}/user/${id.value}");
-
-        final response = await http.get(url, headers: headers);
-
-        if (response.statusCode == 200) {
-          // Map<String, dynamic> userJson = jsonDecode(response.body);
-          user.value = UserModel.fromJson(jsonDecode(response.body));
-          _contactChoose = user.value.contact!
-              .firstWhere((element) => element.id == user.value.defaultContact);
-          update();
-          isLoading(false);
-        } else {
-          isLoading(false);
+      await getIdToken().then((_) async {
+        if (id.value == '') {
+          // isLoading(false);
+          CustomeDialog.showCustomeDialog(
+              context: Get.context,
+              title: '',
+              message: 'Bạn chưa đăng ký !!!',
+              pressConfirm: () {
+                Get.toNamed("/signup");
+              },
+              confirmText: 'Đăng ký');
           showDialog(
               context: Get.context!,
               builder: (context) {
                 return SimpleDialog(
-                  title: const Text("Error"),
-                  children: [Text(response.headers.toString())],
+                  title: const Text("Bạn chưa đăng ký !!!"),
+                  children: [
+                    ElevatedButton(
+                        onPressed: () {
+                          Get.toNamed("/signup");
+                        },
+                        child: const Text("Đăng ký"))
+                  ],
+                  // children: [Text(e.toString())],
                 );
               });
+        } else {
+          var cookies = token.value;
+
+          var headers = {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $cookies',
+          };
+          var url = Uri.parse("${ApiEndPoints.baseUrl}/user/${id.value}");
+
+          var response = await http.get(url, headers: headers);
+          var json = jsonDecode(response.body);
+          if (response.statusCode == 200) {
+            user.value = UserModel.fromJson(json);
+            _contactChoose = user.value.contact!.firstWhere(
+                (element) => element.id == user.value.defaultContact);
+
+            update();
+            // isLoading(false);
+          } else {
+            // isLoading(false);
+
+            showDialog(
+                context: Get.context!,
+                builder: (context) {
+                  return SimpleDialog(
+                    title: const Text("Error UserController"),
+                    children: [Text(response.headers.toString())],
+                  );
+                });
+          }
         }
-      }
+      });
     } catch (e) {
-      isLoading(false);
+      // isLoading(false);
       showDialog(
           context: Get.context!,
           builder: (context) {
             return SimpleDialog(
-              title: const Text("Error"),
+              title: const Text("Error user"),
               children: [Text(e.toString())],
             );
           });
@@ -249,16 +252,24 @@ class UserController extends GetxController {
   // change the address to delivery
 
   changeAddressContactDefault(Contact contact) {
-    _contactChoose = Contact();
+    // _contactChoose = Contact();
     _contactChoose = contact;
+    update();
   }
 
   addNewContact(dynamic body) async {
     try {
-      var response = await respo.addAddressContact(id.value, body);
+      var url = "${ApiEndPoints.baseUrl}/user/add-contact/${id.value}";
+      var headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${token.value}',
+      };
+      var response1 = await respo.addAddressContact(id.value, body);
+      // var response = await http.put(Uri.parse(url),
+      //     body: jsonEncode(body), headers: headers);
 
-      if (response.statusCode == 200) {
-        user.value = UserModel.fromJson(jsonDecode(response.body));
+      if (response1.statusCode == 200) {
+        user.value = UserModel.fromJson(jsonDecode(response1.body));
         CustomeSnackBar.showSuccessSnackTopBar(
             context: Get.context, title: 'Success', message: 'Thêm thành công');
       } else {

@@ -1,5 +1,5 @@
 class ApiEndPoints {
-  static const String baseUrl = "https://falth.vercel.app/api";
+  static const String baseUrl = "https://falth-api.vercel.app/api";
 }
 
 class LocalString {

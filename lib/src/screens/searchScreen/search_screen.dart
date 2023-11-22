@@ -5,7 +5,7 @@ import 'package:pbl6_app/src/screens/searchScreen/new_search.dart';
 import 'package:pbl6_app/src/values/app_assets.dart';
 
 import '../../values/app_colors.dart';
-
+// not use
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
 

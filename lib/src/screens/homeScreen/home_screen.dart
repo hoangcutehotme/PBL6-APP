@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pbl6_app/src/controller/CategoryControler/category_controller.dart';
+import 'package:pbl6_app/src/controller/ProductController/product_good_deal.dart';
 import 'package:pbl6_app/src/controller/StoreController/store_controller.dart';
+import 'package:pbl6_app/src/controller/UserController/user_controller.dart';
 import 'package:pbl6_app/src/model/food_category_model.dart';
 import 'package:pbl6_app/src/model/food_model.dart';
 import 'package:pbl6_app/src/screens/searchScreen/seach_section.dart';
@@ -10,6 +12,7 @@ import '../../model/store_model.dart';
 import '../../values/app_colors.dart';
 import '../../widgets/category_card.dart';
 import '../../widgets/food_card.dart';
+import '../../widgets/skelton.dart';
 import '../../widgets/store_card.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -20,7 +23,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
   List<FoodModel> foodList = [];
 
   void getFoodList() {
@@ -36,6 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Get.put(UserController(respo: Get.find()), permanent: true);
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: CustomScrollView(
@@ -45,7 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
             backgroundColor: AppColors.mainColorBackground,
             shadowColor: Colors.transparent,
             pinned: true,
-            collapsedHeight: 110,
+            collapsedHeight: 120,
             flexibleSpace: Column(children: [
               const SizedBox(
                 height: 25,
@@ -77,7 +80,67 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  Column _categorySection() {
+    final CategoryController categoryController = Get.put(CategoryController());
+
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Padding(
+        padding: const EdgeInsets.only(left: 10, right: 10),
+        child: Text(
+          "Danh mục",
+          style: AppStyles.textBold.copyWith(fontSize: 22),
+        ),
+      ),
+      Obx(() {
+        List<CategoryModel> categories = categoryController.listCategory;
+
+        return Container(
+            width: double.infinity,
+            height: 170,
+            padding: const EdgeInsets.only(left: 20, top: 10),
+            child: categoryController.isLoading.value
+                ? ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: 4,
+                    separatorBuilder: (BuildContext context, int index) {
+                      return const SizedBox(
+                        width: 15,
+                      );
+                    },
+                    itemBuilder: (context, index) {
+                      return const Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Skelton(
+                            height: 120,
+                            width: 120,
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Skelton(
+                            width: 100,
+                          )
+                        ],
+                      );
+                    })
+                : ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: categories.length,
+                    separatorBuilder: (BuildContext context, int index) {
+                      return const SizedBox(
+                        width: 15,
+                      );
+                    },
+                    itemBuilder: (context, index) {
+                      return CategoryCard(categorie: categories[index]);
+                    }));
+      }),
+    ]);
+  }
+
   Column _foodSection() {
+    ProductGoodDeal goodDeal = Get.put(ProductGoodDeal());
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -91,19 +154,60 @@ class _HomeScreenState extends State<HomeScreen> {
         Container(
             width: double.infinity,
             height: 240,
-            padding: const EdgeInsets.only(left: 20),
-            child: ListView.separated(
-              scrollDirection: Axis.horizontal,
-              itemCount: foodList.length,
-              separatorBuilder: (BuildContext context, int index) {
-                return const SizedBox(
-                  width: 20,
+            padding: const EdgeInsets.only(left: 20, top: 20),
+            child: GetBuilder<ProductGoodDeal>(builder: (_) {
+              if (goodDeal.isLoading.value && goodDeal.productList.isEmpty) {
+                return ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: 4,
+                  separatorBuilder: (BuildContext context, int index) {
+                    return const SizedBox(
+                      width: 20,
+                    );
+                  },
+                  itemBuilder: (context, index) {
+                    return const Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Skelton(
+                          width: 160,
+                          height: 140,
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Skelton(
+                          width: 140,
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Center(
+                          child: Skelton(
+                            width: 140,
+                          ),
+                        )
+                      ],
+                    );
+                  },
                 );
-              },
-              itemBuilder: (context, index) {
-                return FoodCard(food: foodList[index]);
-              },
-            ))
+              } else {
+                var productList = goodDeal.productList;
+                return ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: productList.length,
+                  separatorBuilder: (BuildContext context, int index) {
+                    return const SizedBox(
+                      width: 20,
+                    );
+                  },
+                  itemBuilder: (context, index) {
+                    return FoodCard(food: productList[index]);
+                  },
+                );
+              }
+            }))
       ],
     );
   }
@@ -124,14 +228,41 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         Container(
             width: double.infinity,
-            height: 240,
-            padding: const EdgeInsets.only(left: 20),
+            height: 260,
+            padding: const EdgeInsets.only(left: 20, top: 20),
             child: Obx(
               () => storeController.isLoading.value
-                  ? Container(
-                      child: const Center(
-                        child: CircularProgressIndicator(),
-                      ),
+                  ? ListView.separated(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: 4,
+                      separatorBuilder: (BuildContext context, int index) {
+                        return const SizedBox(
+                          width: 20,
+                        );
+                      },
+                      itemBuilder: (context, index) {
+                        return const Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Skelton(
+                              width: 240,
+                              height: 160,
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Skelton(
+                              width: 190,
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Skelton(
+                              width: 190,
+                            )
+                          ],
+                        );
+                      },
                     )
                   : ListView.separated(
                       scrollDirection: Axis.horizontal,
@@ -188,6 +319,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Column _addressSection() {
+    var controller = Get.find<UserController>();
+    // var user = controller.
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -200,13 +333,33 @@ class _HomeScreenState extends State<HomeScreen> {
         Padding(
           padding: const EdgeInsetsDirectional.symmetric(horizontal: 10),
           child: GestureDetector(
-            child: const Row(
+            child: Row(
               children: [
-                Icon(
+                const Icon(
                   Icons.location_on,
                   color: AppColors.mainColor1,
                 ),
-                Text("Address"),
+                const SizedBox(
+                  width: 10,
+                ),
+                GetBuilder<UserController>(builder: (_) {
+                  if (controller.contacChoose.address == null) {
+                    return const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                        ));
+                  } else {
+                    return Flexible(
+                      child: Text(
+                        controller.contacChoose.address.toString(),
+                        maxLines: 2,
+                        softWrap: true,
+                      ),
+                    );
+                  }
+                }),
               ],
             ),
             onTap: () {
@@ -216,42 +369,5 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ],
     );
-  }
-
-  Column _categorySection() {
-    final CategoryController categoryController = Get.put(CategoryController());
-
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Padding(
-        padding: const EdgeInsets.only(left: 10, right: 10),
-        child: Text(
-          "Danh mục",
-          style: AppStyles.textBold.copyWith(fontSize: 22),
-        ),
-      ),
-      Obx(() {
-        List<CategoryModel> categories = categoryController.listCategory;
-        
-        return Container(
-            width: double.infinity,
-            height: 160,
-            padding: const EdgeInsets.only(left: 20),
-            child: categoryController.isLoading.value
-                ? const Center(
-                    child: CircularProgressIndicator(),
-                  )
-                : ListView.separated(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: categories.length,
-                    separatorBuilder: (BuildContext context, int index) {
-                      return const SizedBox(
-                        width: 15,
-                      );
-                    },
-                    itemBuilder: (context, index) {
-                      return CategoryCard(categorie: categories[index]);
-                    }));
-      }),
-    ]);
   }
 }
