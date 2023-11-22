@@ -6,7 +6,7 @@ workflows:
     environment:
       groups:
         - google_credentials # <-- (Includes GCLOUD_KEY_FILE, GOOGLE_CREDENTIALS)
-      vars:
+      
       flutter: stable
       xcode: latest
       cocoapods: default
