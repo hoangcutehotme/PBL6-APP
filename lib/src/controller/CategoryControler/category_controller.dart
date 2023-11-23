@@ -10,8 +10,6 @@ class CategoryController extends GetxController {
 
   var isLoading = false.obs;
 
-  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-
   @override
   void onInit() {
     super.onInit();

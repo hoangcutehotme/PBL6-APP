@@ -29,7 +29,7 @@ Future<void> main() async {
   await dep.init();
 
   ErrorWidget.builder = (details) {
-    bool inBug = false;
+    // bool inBug = false;
     return Container(
       color: AppColors.placeholder,
       alignment: Alignment.center,
