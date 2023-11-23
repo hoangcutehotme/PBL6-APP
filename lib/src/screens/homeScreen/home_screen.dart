@@ -5,7 +5,6 @@ import 'package:pbl6_app/src/controller/ProductController/product_good_deal.dart
 import 'package:pbl6_app/src/controller/StoreController/store_controller.dart';
 import 'package:pbl6_app/src/controller/UserController/user_controller.dart';
 import 'package:pbl6_app/src/model/food_category_model.dart';
-import 'package:pbl6_app/src/model/food_model.dart';
 import 'package:pbl6_app/src/screens/searchScreen/seach_section.dart';
 import 'package:pbl6_app/src/values/app_styles.dart';
 import '../../model/store_model.dart';
@@ -23,19 +22,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  List<FoodModel> foodList = [];
-
-  void getFoodList() {
-    foodList = FoodModel.getFoods();
-  }
-
-  @override
-  void initState() {
-    getFoodList();
-
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     Get.put(UserController(respo: Get.find()), permanent: true);
