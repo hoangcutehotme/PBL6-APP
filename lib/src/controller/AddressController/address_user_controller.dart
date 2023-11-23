@@ -46,7 +46,6 @@ class AddressUserController extends GetxController {
   }
 
   Future<String?> getNamePosition(Position position) async {
-    String name = '';
 
     List<Placemark> placemarks = await placemarkFromCoordinates(
         position.latitude, position.longitude,

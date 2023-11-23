@@ -48,22 +48,18 @@ dependencies:
   shared_preferences: ^2.2.2
   easy_localization: ^3.0.3
   google_sign_in: ^6.1.5
-  webview_flutter: ^4.4.1
+  webview_flutter: ^4.4.2
   cached_network_image: ^3.3.0
   google_maps_flutter: ^2.5.0
   geolocator: ^10.1.0
-  # geocoding: ^2.1.1
-  # flutter_google_places_sdk: ^0.3.3
   flutter_typeahead: ^4.8.0
   geocoding: ^2.1.1
-
-  # flutter_google_places_hoc081098: ^1.2.0
+  #
   google_api_headers: ^1.1.1
   intl: ^0.17.0
+  
   # payment vnpay
   vnpay_flutter: ^1.0.1
-  flutter_webview_plugin: ^0.4.0
-  # flutter_google_places: ^0.3.0
 
   
 
