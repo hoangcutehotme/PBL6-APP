@@ -66,8 +66,8 @@ class UserController extends GetxController {
     emailController.text = user.value.email.toString();
     firstNameController.text = user.value.firstName.toString();
     lastnameController.text = user.value.lastName.toString();
-    addressController.text = user.value.contact![0].address.toString();
-    phoneController.text = user.value.contact![0].phoneNumber.toString();
+    addressController.text = user.value.contact?[0].address.toString() ?? '';
+    phoneController.text = user.value.contact?[0].phoneNumber.toString() ?? '';
     update();
   }
 

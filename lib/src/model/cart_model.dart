@@ -37,3 +37,4 @@ class CartModel {
         "notes": notes
       };
 }
+

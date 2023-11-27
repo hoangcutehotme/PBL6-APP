@@ -10,8 +10,10 @@ class UserModel {
   DateTime? updatedAt;
   List<Contact>? contact;
   String? defaultContact;
+  String? photo;
   UserModel(
-      {required this.role,
+      {
+      required this.role,
       this.id,
       this.firstName,
       this.lastName,
@@ -19,7 +21,9 @@ class UserModel {
       this.createdAt,
       this.updatedAt,
       this.contact,
-      this.defaultContact});
+      this.defaultContact,
+      this.photo
+      });
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
         role: json["role"],
@@ -32,6 +36,7 @@ class UserModel {
         contact:
             List<Contact>.from(json["contact"].map((x) => Contact.fromJson(x))),
         defaultContact: json["defaultContact"],
+        photo: json['photo'],
       );
 
   Map<String, dynamic> toJson() => {
@@ -44,5 +49,6 @@ class UserModel {
         "updatedAt": (updatedAt ?? DateTime.now()).toIso8601String(),
         "contact": List<dynamic>.from(contact ?? [].map((x) => x.toJson())),
         "defaultContact": defaultContact,
+        "photo" : photo,
       };
 }

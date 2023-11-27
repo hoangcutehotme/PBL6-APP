@@ -17,4 +17,10 @@ class BottomNavigationBarController extends GetxController {
     }
     update();
   }
+
+  void onItemTappedShipper(int index) {
+    selectedIndex = index;
+
+    update();
+  }
 }

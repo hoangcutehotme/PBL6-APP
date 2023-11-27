@@ -82,14 +82,157 @@ class _FillInfoUserScreenState extends State<FillInfoUserScreen> {
                 ),
               ),
 
+              Visibility(
+                  visible: !_controller.isUser.value,
+                  child: Column(
+                    children: [
+                      FillLabelText(
+                        size: Size(size.width * 0.85, 56),
+                        label: 'Loại xe',
+                        child: TextField(
+                          controller: _controller.vehicleTypeController,
+                          decoration: InputDecoration(
+                            contentPadding:
+                                const EdgeInsets.symmetric(vertical: 10),
+                            hintText: "Loại xe",
+                            hintStyle: AppStyles.textMedium
+                                .copyWith(color: AppColors.colorTextBlur),
+                            border: InputBorder.none,
+                          ),
+                        ),
+                      ),
+                      FillLabelText(
+                        size: Size(size.width * 0.85, 56),
+                        label: 'Số xe',
+                        child: TextField(
+                          controller: _controller.vehicleNumberController,
+                          decoration: InputDecoration(
+                            contentPadding:
+                                const EdgeInsets.symmetric(vertical: 10),
+                            hintText: "Số xe",
+                            hintStyle: AppStyles.textMedium
+                                .copyWith(color: AppColors.colorTextBlur),
+                            border: InputBorder.none,
+                          ),
+                        ),
+                      ),
+                      GetBuilder<RegisterController>(builder: (_) {
+                        return Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Text(
+                                    'Mặt trước CCCD',
+                                    style: AppStyles.textMedium
+                                        .copyWith(fontWeight: FontWeight.w600),
+                                  ),
+                                  ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                          backgroundColor:
+                                              AppColors.borderGray),
+                                      onPressed: () {
+                                        _controller.getFrontCCCDImage();
+                                      },
+                                      child: Text(
+                                          _controller.frontCCCDImage?.path ==
+                                                  null
+                                              ? 'Choose image'
+                                              : 'frontImage.jpg')),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Text(
+                                    'Mặt sau CCCD',
+                                    style: AppStyles.textMedium
+                                        .copyWith(fontWeight: FontWeight.w600),
+                                  ),
+                                  ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                          backgroundColor:
+                                              AppColors.borderGray),
+                                      onPressed: () {
+                                        _controller.getBehindCCCDImage();
+                                      },
+                                      child: Text(
+                                          _controller.behindCCCDImage?.path ==
+                                                  null
+                                              ? 'Choose image'
+                                              : 'behindImage.jpg')),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Text(
+                                    'Giấy phép lái xe',
+                                    style: AppStyles.textMedium
+                                        .copyWith(fontWeight: FontWeight.w600),
+                                  ),
+                                  ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                          backgroundColor:
+                                              AppColors.borderGray),
+                                      onPressed: () {
+                                        _controller.getLicenseImage();
+                                      },
+                                      child: Text(
+                                          _controller.licenseImage?.path == null
+                                              ? 'Choose image'
+                                              : 'licenseImage.jpg')),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Text(
+                                    'Giấy đăng ký xe',
+                                    style: AppStyles.textMedium
+                                        .copyWith(fontWeight: FontWeight.w600),
+                                  ),
+                                  ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                          backgroundColor:
+                                              AppColors.borderGray),
+                                      onPressed: () {
+                                        _controller.getVehicleImage();
+                                      },
+                                      child: Text(
+                                          _controller.vehicleImage?.path == null
+                                              ? 'Choose image'
+                                              : 'vehicleImage.jpg')),
+                                ],
+                              ),
+                            ],
+                          ),
+                        );
+                      }),
+                    ],
+                  )),
+
               Container(
                 margin: const EdgeInsets.only(top: 29),
                 alignment: Alignment.center,
                 child: RoundedButton(
                   press: () async {
-                    await Get.find<RegisterController>().registerUserEmail();
+                    if (_controller.isUser.value) {
+                      await Get.find<RegisterController>().registerUserEmail();
 
-                    await Get.toNamed("/verifyotp");
+                      await Get.toNamed("/verifyotp");
+                    } else {
+                      await Get.find<RegisterController>()
+                          .registerShipperEmail();
+
+                      await Get.toNamed("/verifyotp");
+                    }
                   },
                   text: 'Xác nhận',
                   size: Size(size.width * 0.8, 56),

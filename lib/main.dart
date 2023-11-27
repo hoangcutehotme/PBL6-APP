@@ -11,6 +11,7 @@ import 'package:pbl6_app/src/screens/homeScreen/order_detail.dart';
 import 'package:pbl6_app/src/screens/homeScreen/order_success.dart';
 import 'package:pbl6_app/src/screens/navigation/HomeMainPage.dart';
 import 'package:pbl6_app/src/screens/searchScreen/search_screen.dart';
+import 'package:pbl6_app/src/screens/shipperScreen/home_shipper_screen.dart';
 import 'package:pbl6_app/src/screens/signUpScreens/fill_info.dart';
 import 'package:pbl6_app/src/screens/signUpScreens/forgot_password.dart';
 import 'package:pbl6_app/src/screens/signUpScreens/sign_in_screen.dart';
@@ -20,6 +21,7 @@ import 'package:pbl6_app/src/screens/warningScreen/error_screen.dart';
 import 'package:pbl6_app/src/values/app_colors.dart';
 import 'package:pbl6_app/src/values/app_fonts.dart';
 import 'package:pbl6_app/src/values/app_styles.dart';
+import 'src/screens/shipperScreen/navigation_shipper.dart';
 import 'src/screens/signUpScreens/sign_up_screen.dart';
 import 'src/screens/signUpScreens/verify_otp.dart';
 
@@ -91,11 +93,14 @@ class MyApp extends StatelessWidget {
         GetPage(name: '/detailorder', page: () => const OrderDetail()),
         GetPage(name: '/ordersuccess', page: () => const OrderSuccess()),
         GetPage(name: '/search', page: () => const SearchScreen()),
-        // GetPage(name: '/search', page: () =>  SearchSection()),
         GetPage(name: '/changeaddress', page: () => const ChangAddressUser()),
         GetPage(
             name: '/changecontact', page: () => const ChangeContactScreen()),
         GetPage(name: '/errorscreen', page: () => const ErrorScreen()),
+
+        // shipper
+        GetPage(name: '/shipperNaviPage', page: () => const ShipperNaviPage()),
+        GetPage(name: '/shipperPage', page: () => const ShipperHomePage()),
       ],
     );
   }

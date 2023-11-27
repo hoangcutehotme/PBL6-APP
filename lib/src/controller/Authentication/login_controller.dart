@@ -2,11 +2,11 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:pbl6_app/src/data/api/api_client.dart';
 import 'package:pbl6_app/src/utils/api_endpoints.dart';
 import 'package:http/http.dart' as http;
 import 'package:pbl6_app/src/utils/custome_snackbar.dart';
 import 'package:pbl6_app/src/utils/loading_full_screen.dart';
+import 'package:pbl6_app/src/values/app_string.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginController extends GetxController {
@@ -123,23 +123,20 @@ class LoginController extends GetxController {
           await http.post(url, body: jsonEncode(body), headers: headers);
       final json = jsonDecode(response.body);
       if (response.statusCode == 200) {
-        print("success");
-
         if (json['status'] == "success") {
           var token = json['token'];
           final SharedPreferences prefs = await _prefs;
-          await prefs.setString('token', token);
+          await prefs.setString(AppString.SHAREPREF_TOKEN, token);
 
-          ApiClient apiClient = Get.find();
-          apiClient.updateHeader(token);
-          apiClient.saveToken(token);
-          
+          // ApiClient apiClient = Get.find();
+          // apiClient.updateHeader(token);
+          // apiClient.saveToken(token);
 
           var user = json['data']['user'];
-          // await FuncUseful.saveJson('user', user);
-          // get id user
-          print("id $user['_id]");
-          prefs.setString('id_user', user['_id']);
+
+          prefs.setString(AppString.SHAREPREF_USERID, user['_id']);
+
+          prefs.setString(AppString.ROLE, user['role']);
           LoadingFullScreen.cancelLoading();
 
           emailController.clear();
@@ -149,8 +146,12 @@ class LoginController extends GetxController {
               context: Get.context,
               title: "Success",
               message: "Đăng nhập thành công");
+          Get.offAllNamed("/");
+          // if (user['role'] == 'User') {
 
-          Get.offAllNamed("/home");
+          // } else if (user['role'] == 'Shipper') {
+          //   Get.offAllNamed('/shipperPage');
+          // }
         } else {
           LoadingFullScreen.cancelLoading();
           CustomeSnackBar.showErrorSnackBar(

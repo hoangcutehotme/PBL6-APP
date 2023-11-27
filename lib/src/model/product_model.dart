@@ -1,7 +1,5 @@
 import 'dart:convert';
 
-import '../values/app_assets.dart';
-
 List<ProductModel> productsModelFromJson(String str) => List<ProductModel>.from(
     json.decode(str).map((x) => ProductModel.fromJson(x)));
 // List<ProductModel> productModelFromJson(String str) => List<ProductModel>.from(
@@ -56,54 +54,6 @@ class ProductModel {
         "description": description,
         "storeId": storeId,
       };
-
-  static List<ProductModel> getFoods() {
-    List<ProductModel> listFood = [];
-
-    listFood.add(ProductModel(
-      id: "1",
-      name: "Trà sữa Gongcha",
-      images: [AppAssets.getImg("gongcha.png", "images")],
-      ratingAverage: 4,
-      description: "Ngon nhứt nách",
-      price: 30000,
-    ));
-    listFood.add(ProductModel(
-      id: "2",
-      name: "Ghẹ hấp 3 con",
-      images: [AppAssets.getImg("ghe.jpg", "images")],
-      ratingAverage: 4,
-      description: "Ngon nhứt nách",
-      price: 103000,
-    ));
-    listFood.add(ProductModel(
-      id: "3",
-      name: "Gà rán",
-      images: [AppAssets.getImg("ga.jpg", "images")],
-      ratingAverage: 4,
-      description: "Ngon tới từng miếng xương",
-      price: 30000,
-    ));
-    listFood.add(ProductModel(
-      id: "4",
-      name: "Nem nướng",
-      images: [AppAssets.getImg("nemnuong.jpg", "images")],
-      ratingAverage: 4,
-      description: "Zai zòn ngon ngon",
-      price: 49000,
-    ));
-    // listFood.add(ProductModel(
-    //     id: "5",
-    //     name: "Bún đậu mắm tôm",
-    //     categoryId: "2",
-    //     imageFood: AppAssets.bundauImage,
-    //     averageRating: 4.8,
-    //     decription: "Ngon ngon",
-    //     price: 49000,
-    //     nameCategory: 'Đồ ăn'));
-
-    return listFood;
-  }
 }
 
 class Category {
