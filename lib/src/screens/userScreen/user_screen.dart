@@ -43,6 +43,7 @@ class _UserScreenState extends State<UserScreen> {
             child: Column(
               children: [
                 GestureDetector(
+                  key: const Key('changeUserButton'),
                   onTap: () {
                     Get.to(() => const ChangeUserInfo());
                   },

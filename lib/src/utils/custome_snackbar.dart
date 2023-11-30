@@ -14,11 +14,13 @@ class CustomeSnackBar {
       snackPosition: SnackPosition.BOTTOM,
       backgroundColor: AppColors.mainColor1,
       titleText: Text(
+        key: const Key('title'),
         title,
         style:
             AppStyles.textMedium.copyWith(color: AppColors.mainColorBackground),
       ),
       messageText: Text(
+        key: const Key('result'),
         message,
         style:
             AppStyles.textMedium.copyWith(color: AppColors.mainColorBackground),
@@ -29,7 +31,6 @@ class CustomeSnackBar {
         Icons.error_outline,
         color: AppColors.mainColorBackground,
       ),
-      duration: const Duration(seconds: 4),
     );
   }
 
@@ -48,6 +49,7 @@ class CustomeSnackBar {
             AppStyles.textMedium.copyWith(color: AppColors.mainColorBackground),
       ),
       messageText: Text(
+        key: const Key('result'),
         message,
         style:
             AppStyles.textMedium.copyWith(color: AppColors.mainColorBackground),
@@ -58,7 +60,7 @@ class CustomeSnackBar {
         Icons.error_outline,
         color: AppColors.mainColorBackground,
       ),
-      duration: const Duration(seconds: 4),
+      // duration: const Duration(seconds: 4),
     );
   }
 
@@ -77,6 +79,7 @@ class CustomeSnackBar {
             AppStyles.textMedium.copyWith(color: AppColors.mainColorBackground),
       ),
       messageText: Text(
+        key: const Key('result'),
         message,
         style:
             AppStyles.textMedium.copyWith(color: AppColors.mainColorBackground),
@@ -106,6 +109,7 @@ class CustomeSnackBar {
             AppStyles.textMedium.copyWith(color: AppColors.mainColorBackground),
       ),
       messageText: Text(
+        key: const Key('result'),
         message,
         style:
             AppStyles.textMedium.copyWith(color: AppColors.mainColorBackground),

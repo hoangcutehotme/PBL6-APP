@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -82,14 +81,14 @@ class UserController extends GetxController {
   }
 
   String? validateName(String value) {
-    if (value.isEmpty) {
+    if (value.isEmpty || !value.isAlphabetOnly) {
       return "Không được để trống";
     }
     return null;
   }
 
   String? validatePhone(String value) {
-    if (value.length != 10) {
+    if (value.length < 10 || value.length > 11 || !value.isPhoneNumber) {
       return "Số điện thoại không hợp lệ";
     }
     return null;

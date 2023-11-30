@@ -18,9 +18,7 @@ import 'package:pbl6_app/src/screens/signUpScreens/sign_in_screen.dart';
 import 'package:pbl6_app/src/screens/userScreen/change_address_user.dart';
 import 'package:pbl6_app/src/screens/userScreen/change_contact.dart';
 import 'package:pbl6_app/src/screens/warningScreen/error_screen.dart';
-import 'package:pbl6_app/src/values/app_colors.dart';
 import 'package:pbl6_app/src/values/app_fonts.dart';
-import 'package:pbl6_app/src/values/app_styles.dart';
 import 'src/screens/shipperScreen/navigation_shipper.dart';
 import 'src/screens/signUpScreens/sign_up_screen.dart';
 import 'src/screens/signUpScreens/verify_otp.dart';
@@ -30,17 +28,17 @@ Future<void> main() async {
   print("Dependencies <<<<<<<<<<<<<");
   await dep.init();
 
-  ErrorWidget.builder = (details) {
-    // bool inBug = false;
-    return Container(
-      color: AppColors.placeholder,
-      alignment: Alignment.center,
-      child: Text(
-        'Error\n${details.exception}',
-        style: AppStyles.textMedium,
-      ),
-    );
-  };
+  // ErrorWidget.builder = (details) {
+  //   // bool inBug = false;
+  //   return Container(
+  //     color: AppColors.placeholder,
+  //     alignment: Alignment.center,
+  //     child: Text(
+  //       'Error\n${details.exception}',
+  //       style: AppStyles.textMedium,
+  //     ),
+  //   );
+  // };
 
   await EasyLocalization.ensureInitialized();
 

@@ -88,6 +88,7 @@ class _ChangeUserInfoState extends State<ChangeUserInfo> {
                   controller: userController.emailController,
                 ),
                 TextFormField(
+                  key: const Key('lastname'),
                   decoration: const InputDecoration(
                     // labelText: 'Họ ',
                     label: Text('Họ'),
@@ -106,6 +107,7 @@ class _ChangeUserInfoState extends State<ChangeUserInfo> {
                   },
                 ),
                 TextFormField(
+                  key: const Key('firstname'),
                   readOnly: userController.isEdit.value,
                   decoration: const InputDecoration(labelText: 'Tên '),
                   keyboardType: TextInputType.name,
@@ -123,6 +125,7 @@ class _ChangeUserInfoState extends State<ChangeUserInfo> {
                   },
                 ),
                 TextFormField(
+                  key: const Key('phone'),
                   readOnly: userController.isEdit.value,
                   decoration:
                       const InputDecoration(labelText: 'Số điện thoại '),
@@ -139,6 +142,7 @@ class _ChangeUserInfoState extends State<ChangeUserInfo> {
                   },
                 ),
                 TextFormField(
+                  key: const Key('address'),
                   decoration: const InputDecoration(labelText: 'Địa chỉ '),
                   keyboardType: TextInputType.emailAddress,
                   // initialValue: user.email,
@@ -156,30 +160,34 @@ class _ChangeUserInfoState extends State<ChangeUserInfo> {
                 ),
                 Obx(
                   () => ElevatedButton(
+                    key: const Key('saveButton'),
                     style: ElevatedButton.styleFrom(
                         backgroundColor: userController.isChange.value
                             ? AppColors.mainColor1
                             : AppColors.borderGray,
                         padding: const EdgeInsets.only(right: 30, left: 30)),
-                    onPressed: () {
-                      if (userController.validateForm()) {
-                        CustomeDialog.showCustomeDialog(
-                          context: Get.context,
-                          title: 'Thông báo',
-                          message: 'Bạn có chắc cập nhật thông tin mới ??',
-                          pressConfirm: () async {
-                            await userController
-                                .updateUser(userController.id.value);
-                          },
-                          confirmText: 'Ok',
-                        );
-                      } else {
-                        CustomeSnackBar.showErrorSnackBar(
-                            context: Get.context,
-                            title: 'Error',
-                            message: 'Thông tin nhập không hợp lệ');
-                      }
-                    },
+                    onPressed: userController.isChange.value
+                        ? () {
+                            if (userController.validateForm()) {
+                              CustomeDialog.showCustomeDialog(
+                                context: Get.context,
+                                title: 'Thông báo',
+                                message:
+                                    'Bạn có chắc cập nhật thông tin mới ??',
+                                pressConfirm: () async {
+                                  await userController
+                                      .updateUser(userController.id.value);
+                                },
+                                confirmText: 'Ok',
+                              );
+                            } else {
+                              CustomeSnackBar.showErrorSnackBar(
+                                  context: Get.context,
+                                  title: 'Error',
+                                  message: 'Thông tin nhập không hợp lệ');
+                            }
+                          }
+                        : null,
                     child: Text(
                       'Lưu',
                       style: AppStyles.textMedium

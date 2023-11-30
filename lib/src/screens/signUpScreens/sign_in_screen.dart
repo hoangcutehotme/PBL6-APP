@@ -25,24 +25,22 @@ class _SignInScreenState extends State<SignInScreen> {
       body: SingleChildScrollView(
           child: Center(
         child: Obx(
-          () => 
-              Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const SizedBox(
-                      height: 100,
-                    ),
-                    Text(
-                      'Đăng nhập',
-                      style: AppStyles.textBold
-                          .copyWith(color: AppColors.mainColor1),
-                    ),
-                    const SizedBox(
-                      height: 40,
-                    ),
-                    loginForm(context, size),
-                  ],
-                ),
+          () => Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(
+                height: 100,
+              ),
+              Text(
+                'Đăng nhập',
+                style: AppStyles.textBold.copyWith(color: AppColors.mainColor1),
+              ),
+              const SizedBox(
+                height: 40,
+              ),
+              loginForm(context, size),
+            ],
+          ),
         ),
       )),
     );
@@ -53,6 +51,7 @@ class _SignInScreenState extends State<SignInScreen> {
       children: [
         TextFieldContainer(
           child: TextField(
+            key: const Key('email'),
             controller: loginController.emailController,
             keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
@@ -70,6 +69,7 @@ class _SignInScreenState extends State<SignInScreen> {
         ),
         TextFieldContainer(
           child: TextField(
+            key: const Key('password'),
             controller: loginController.passwordController,
             obscureText: loginController.isShowPass.value,
             decoration: InputDecoration(
@@ -119,6 +119,7 @@ class _SignInScreenState extends State<SignInScreen> {
           margin: const EdgeInsets.only(top: 29),
           alignment: Alignment.center,
           child: RoundedButton(
+            key: const Key('login'),
             press: () async {
               await loginController.login();
             },
@@ -174,7 +175,6 @@ class _SignInScreenState extends State<SignInScreen> {
               height: 60,
             ),
             onTap: () {
-              // await Get.find<LoginController>().handleSignIn();
               Get.to(() => const WebViewSignIn());
             },
           ),

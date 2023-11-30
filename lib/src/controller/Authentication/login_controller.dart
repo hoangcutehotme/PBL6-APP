@@ -67,32 +67,6 @@ class LoginController extends GetxController {
       } else {
         print("no success");
       }
-
-      // if (json['status'] == "success") {
-      //   var token = json['token'];
-      //   final SharedPreferences prefs = await _prefs;
-      //   await prefs.setString('token', token);
-
-      //   var user = json['data']['user'];
-      //   // await FuncUseful.saveJson('user', user);
-      //   // get id user
-      //   print("id $user['_id]");
-      //   prefs.setString('id_user', user['_id']);
-
-      //   emailController.clear();
-      //   passwordController.clear();
-
-      //   Get.toNamed("/home");
-      // } else {
-      //   showDialog(
-      //       context: Get.context!,
-      //       builder: (context) {
-      //         return SimpleDialog(
-      //           title: const Text("Error"),
-      //           children: [Center(child: Text(json['status'].toString()))],
-      //         );
-      //       });
-      // }
     } catch (e) {
       showDialog(
           context: Get.context!,
@@ -128,10 +102,6 @@ class LoginController extends GetxController {
           final SharedPreferences prefs = await _prefs;
           await prefs.setString(AppString.SHAREPREF_TOKEN, token);
 
-          // ApiClient apiClient = Get.find();
-          // apiClient.updateHeader(token);
-          // apiClient.saveToken(token);
-
           var user = json['data']['user'];
 
           prefs.setString(AppString.SHAREPREF_USERID, user['_id']);
@@ -147,11 +117,6 @@ class LoginController extends GetxController {
               title: "Success",
               message: "Đăng nhập thành công");
           Get.offAllNamed("/");
-          // if (user['role'] == 'User') {
-
-          // } else if (user['role'] == 'Shipper') {
-          //   Get.offAllNamed('/shipperPage');
-          // }
         } else {
           LoadingFullScreen.cancelLoading();
           CustomeSnackBar.showErrorSnackBar(

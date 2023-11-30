@@ -23,7 +23,9 @@ class _HomeMainPageState extends State<HomeMainPage> {
     const HomeScreen(),
     const SearchScreen(),
     const OrderScreen(),
-    const UserScreen(),
+    const UserScreen(
+      key: Key('User'),
+    ),
   ];
 
   @override
@@ -31,6 +33,7 @@ class _HomeMainPageState extends State<HomeMainPage> {
     return GetBuilder<BottomNavigationBarController>(builder: (controller) {
       return Scaffold(
         bottomNavigationBar: BottomNavigationBar(
+          key: const Key('selectBottomItem'),
           selectedItemColor: AppColors.mainColor1,
           unselectedItemColor: AppColors.colorTextBlur,
           items: const [
@@ -55,6 +58,7 @@ class _HomeMainPageState extends State<HomeMainPage> {
               label: 'Order',
             ),
             BottomNavigationBarItem(
+              tooltip: 'user',
               icon: Icon(
                 Icons.person,
                 size: 30,
