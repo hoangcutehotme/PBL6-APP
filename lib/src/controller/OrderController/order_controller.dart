@@ -2,7 +2,9 @@ import 'dart:convert';
 
 import 'package:get/get.dart';
 import 'package:pbl6_app/src/controller/UserController/user_controller.dart';
+import 'package:pbl6_app/src/data/repository/order_repository.dart';
 import 'package:pbl6_app/src/model/order_model.dart';
+import 'package:pbl6_app/src/model/shipper_order.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import '../../utils/api_endpoints.dart';
@@ -11,7 +13,8 @@ import '../../values/app_string.dart';
 class OrderController extends GetxController {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   final UserController userController;
-  OrderController({required this.userController});
+  final OrderRepo orderRepo;
+  OrderController({required this.orderRepo, required this.userController});
 
   List<OrderModel> _listOrder = [];
   List<OrderModel> get listOrder => _listOrder;
@@ -67,6 +70,20 @@ class OrderController extends GetxController {
     }
   }
 
+  Future<OrderShipper?> showOrderDetail(String id) async {
+    try {
+      var response = await orderRepo.getOrderDetailShipper(id);
+      var jsonBody = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        var order = OrderShipper.fromJson(jsonBody['data']);
+        return order;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      return null;
+    }
+  }
   // Future<List<ProductModel>> getProductByStoreId(String? id) async {
   //   // isLoading(true);
   //   try {

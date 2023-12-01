@@ -9,6 +9,8 @@ import 'package:pbl6_app/src/utils/loading_full_screen.dart';
 import 'package:pbl6_app/src/values/app_string.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../data/api/api_client.dart';
+
 class LoginController extends GetxController {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -67,32 +69,6 @@ class LoginController extends GetxController {
       } else {
         print("no success");
       }
-
-      // if (json['status'] == "success") {
-      //   var token = json['token'];
-      //   final SharedPreferences prefs = await _prefs;
-      //   await prefs.setString('token', token);
-
-      //   var user = json['data']['user'];
-      //   // await FuncUseful.saveJson('user', user);
-      //   // get id user
-      //   print("id $user['_id]");
-      //   prefs.setString('id_user', user['_id']);
-
-      //   emailController.clear();
-      //   passwordController.clear();
-
-      //   Get.toNamed("/home");
-      // } else {
-      //   showDialog(
-      //       context: Get.context!,
-      //       builder: (context) {
-      //         return SimpleDialog(
-      //           title: const Text("Error"),
-      //           children: [Center(child: Text(json['status'].toString()))],
-      //         );
-      //       });
-      // }
     } catch (e) {
       showDialog(
           context: Get.context!,
@@ -128,9 +104,9 @@ class LoginController extends GetxController {
           final SharedPreferences prefs = await _prefs;
           await prefs.setString(AppString.SHAREPREF_TOKEN, token);
 
-          // ApiClient apiClient = Get.find();
-          // apiClient.updateHeader(token);
-          // apiClient.saveToken(token);
+          ApiClient apiClient = Get.find();
+          apiClient.updateHeader(token);
+          apiClient.saveToken(token);
 
           var user = json['data']['user'];
 

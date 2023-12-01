@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pbl6_app/src/controller/ShipperController/shipper_controller.dart';
 
 import '../../controller/Authentication/login_controller.dart';
-import '../../controller/UserController/user_controller.dart';
 import '../../values/app_assets.dart';
 import '../../values/app_colors.dart';
 import '../../values/app_styles.dart';
@@ -12,16 +12,15 @@ import '../userScreen/list_contact.dart';
 class ShipperInfoScreen extends StatelessWidget {
   ShipperInfoScreen({super.key});
   final LoginController _controller = Get.put(LoginController());
-  // final UserController _userController = Get.put(UserController());
-  final UserController _userController = Get.find();
 
   @override
   Widget build(BuildContext context) {
+    ShipperController shipperController = Get.find();
     return Scaffold(
       backgroundColor: AppColors.placeholder,
       body: Column(
         children: [
-          _headerTopBar(),
+          _headerTopBar(shipperController),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
@@ -97,7 +96,7 @@ class ShipperInfoScreen extends StatelessWidget {
     );
   }
 
-  Container _headerTopBar() {
+  Container _headerTopBar(ShipperController shipperController) {
     return Container(
       // width: double.maxFinite,
       height: 180,
@@ -123,16 +122,10 @@ class ShipperInfoScreen extends StatelessWidget {
                   width: 10,
                 ),
                 Obx(
-                  () =>
-                      // _userController.isLoading.value
-                      //     ? const CircularProgressIndicator(
-                      //         color: AppColors.borderGray,
-                      //       )
-                      //     :
-                      Text(
-                    _userController.id.value == ''
+                  () => Text(
+                    shipperController.id.value == ''
                         ? 'Người dùng'
-                        : "${_userController.user.value.lastName ?? ''} ${_userController.user.value.firstName ?? ''}",
+                        : "${shipperController.user.value.lastName ?? ''} ${shipperController.user.value.firstName ?? ''}",
                     style: AppStyles.textBold.copyWith(
                         color: AppColors.mainColorBackground, fontSize: 20),
                   ),

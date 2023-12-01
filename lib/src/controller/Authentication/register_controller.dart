@@ -176,7 +176,7 @@ class RegisterController extends GetxController {
 
   registerShipperEmail() async {
     try {
-      var headers = {'Content-Type': 'application/json'};
+      // var headers = {'Content-Type': 'application/json'};
       var url = "${ApiEndPoints.baseUrl}/shipper";
 
       if (_vehicleImage != null &&
@@ -203,7 +203,7 @@ class RegisterController extends GetxController {
           "frontImageCCCD": MultipartFile(_frontCCCDImage!.path,
               filename: 'frontCCCDImage.jpg'),
         });
-        var response = await dio.Dio().post(url, data: formData);
+        var response = await dio.Dio().post(url, data: formData,);
 
         final json = jsonDecode(response.data);
 

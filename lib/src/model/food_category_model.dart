@@ -28,18 +28,3 @@ class CategoryModel {
   Map<String, dynamic> toJson() =>
       {"_id": id, "catName": catName, "photo": photo};
 }
-
-//   // static List<CategoryModel> getCategories() {
-//   //   List<CategoryModel> categories = [];
-
-//   //   categories.add(CategoryModel(name: 'Đồ ăn', imgPath: AppAssets.foodImage, id: ''));
-//   //   categories
-//   //       .add(CategoryModel(name: 'Đồ uống', imgPath: AppAssets.milkteaImage, id: ''));
-
-//   //   categories
-//   //       .add(CategoryModel(name: 'Đồ ăn nhanh', imgPath: AppAssets.foodImage, id: ''));
-//   //   categories
-//   //       .add(CategoryModel(name: 'Đồ chay', imgPath: AppAssets.foodImage, id: ''));
-
-//   //   return categories;
-//   // }

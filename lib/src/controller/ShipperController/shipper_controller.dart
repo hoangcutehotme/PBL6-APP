@@ -1,30 +1,27 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:pbl6_app/src/data/api/api_client.dart';
 import 'package:pbl6_app/src/model/contact_model.dart';
+import 'package:pbl6_app/src/model/shipper.dart';
+import 'package:pbl6_app/src/model/shipper_order.dart';
 import 'package:pbl6_app/src/values/app_string.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'package:pbl6_app/src/data/repository/user_respository.dart';
-import 'package:pbl6_app/src/model/user_model.dart';
-import 'package:pbl6_app/src/utils/custome_dialog.dart';
 import 'package:pbl6_app/src/utils/custome_snackbar.dart';
 import 'package:pbl6_app/src/utils/loading_full_screen.dart';
 
+import '../../data/repository/shipper_respository.dart';
 import '../../utils/api_endpoints.dart';
 
-class UserController extends GetxController {
+class ShipperController extends GetxController {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-  final UserRespo respo;
+  final ShipperRepo shipperRepo;
 
-  UserController({
-    required this.respo,
-  });
+  ShipperController({required this.shipperRepo});
 
-  var user = UserModel(role: 'User').obs;
+  var user = Shipper(role: 'Shipper').obs;
+
   var id = ''.obs;
   var token = ''.obs;
   var role = ''.obs;
@@ -33,7 +30,12 @@ class UserController extends GetxController {
   var isEdit = false.obs;
   var isChange = false.obs;
 
+  // list order shipper
+  List<OrderShipper> _listOrder = [];
+  List<OrderShipper> get listOrder => _listOrder;
+
   Contact _contactChoose = Contact();
+
   Contact get contacChoose => _contactChoose;
 
   final GlobalKey<FormState> changeInfoKey = GlobalKey<FormState>();
@@ -54,9 +56,10 @@ class UserController extends GetxController {
     addressController = TextEditingController();
     phoneController = TextEditingController();
     await getIdToken().then((_) async {
-      if (role.value == "User") {
-        await getInfoUserById().then((value) {
+      if (role.value == "Shipper") {
+        await getInfoShipperrById().then((value) {
           setInitInfo();
+          getListOrder();
         });
       }
     });
@@ -169,70 +172,41 @@ class UserController extends GetxController {
     final SharedPreferences prefs = await _prefs;
     id.value = prefs.getString(AppString.SHAREPREF_USERID) ?? '';
     token.value = prefs.getString(AppString.SHAREPREF_TOKEN) ?? '';
-    role.value = prefs.getString(AppString.ROLE) ?? '';
+
     update();
   }
 
-  Future<void> getInfoUserById() async {
+  Future<void> getInfoShipperrById() async {
     try {
-      await getIdToken().then((_) async {
-        if (id.value == '') {
-          // isLoading(false);
-          CustomeDialog.showCustomeDialog(
-              context: Get.context,
-              title: '',
-              message: 'Bạn chưa đăng ký !!!',
-              pressConfirm: () {
-                Get.toNamed("/signup");
-              },
-              confirmText: 'Đăng ký');
-          showDialog(
-              context: Get.context!,
-              builder: (context) {
-                return SimpleDialog(
-                  title: const Text("Bạn chưa đăng ký !!!"),
-                  children: [
-                    ElevatedButton(
-                        onPressed: () {
-                          Get.toNamed("/signup");
-                        },
-                        child: const Text("Đăng ký"))
-                  ],
-                  // children: [Text(e.toString())],
-                );
-              });
-        } else {
-          var cookies = token.value;
+      var cookies = token.value;
 
-          var headers = {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer $cookies',
-          };
-          var url = Uri.parse("${ApiEndPoints.baseUrl}/user/${id.value}");
+      var headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $cookies',
+      };
+      var url = Uri.parse("${ApiEndPoints.baseUrl}/user/${id.value}");
 
-          var response = await http.get(url, headers: headers);
-          var json = jsonDecode(response.body);
-          if (response.statusCode == 200) {
-            user.value = UserModel.fromJson(json);
-            _contactChoose = user.value.contact!.firstWhere(
-                (element) => element.id == user.value.defaultContact);
+      var response = await http.get(url, headers: headers);
+      var json = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        user.value = Shipper.fromJson(json);
+        _contactChoose = user.value.contact!
+            .firstWhere((element) => element.id == user.value.defaultContact);
 
-            update();
-            // isLoading(false);
-          } else {
-            // isLoading(false);
+        update();
+        // isLoading(false);
+      } else {
+        // isLoading(false);
 
-            showDialog(
-                context: Get.context!,
-                builder: (context) {
-                  return SimpleDialog(
-                    title: const Text("Error UserController"),
-                    children: [Text(response.body.toString())],
-                  );
-                });
-          }
-        }
-      });
+        showDialog(
+            context: Get.context!,
+            builder: (context) {
+              return SimpleDialog(
+                title: const Text("Error UserController"),
+                children: [Text(response.body.toString())],
+              );
+            });
+      }
     } catch (e) {
       // isLoading(false);
       showDialog(
@@ -260,29 +234,24 @@ class UserController extends GetxController {
     update();
   }
 
-  addNewContact(dynamic body) async {
+  getListOrder() async {
     try {
-      var url = "${ApiEndPoints.baseUrl}/user/add-contact/${id.value}";
-      var headers = {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ${token.value}',
-      };
-      var response1 = await respo.addAddressContact(id.value, body);
-      // var response = await http.put(Uri.parse(url),
-      //     body: jsonEncode(body), headers: headers);
+      ApiClient apiClient = Get.find();
+      var url = "${ApiEndPoints.baseUrl}/shipper/$id/find-orders";
 
-      if (response1.statusCode == 200) {
-        user.value = UserModel.fromJson(jsonDecode(response1.body));
-        CustomeSnackBar.showSuccessSnackTopBar(
-            context: Get.context, title: 'Success', message: 'Thêm thành công');
+      var response = await http.get(Uri.parse(url), headers: apiClient.header);
+
+      if (response.statusCode == 200) {
+        var json = jsonDecode(response.body);
+        _listOrder = orderShipperFromJson(jsonEncode(json['data']));
+        update();
       } else {
-        CustomeSnackBar.showWarningTopBar(
-            context: Get.context,
-            title: 'Error',
-            message: 'Thêm không thành công');
+        CustomeSnackBar.showErrorSnackBar(
+            context: Get.context, title: "Error", message: '');
       }
     } catch (e) {
-      print(e);
+      CustomeSnackBar.showErrorSnackBar(
+          context: Get.context, title: "Error", message: '');
     }
   }
 }

@@ -2,14 +2,12 @@ import 'dart:convert';
 
 import 'package:pbl6_app/src/model/location_model.dart';
 
-
-
 List<Contact> contactFromJson(String str) => List<Contact>.from(json.decode(str).map((x) => Contact.fromJson(x)));
 
 String contactToJson(List<Contact> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class Contact {
-    Location? location;
+    LocationCoordinate? location;
     String? id;
     String? address;
     String? phoneNumber;
@@ -22,7 +20,7 @@ class Contact {
     });
 
     factory Contact.fromJson(Map<String, dynamic> json) => Contact(
-        location: Location.fromJson(json["location"]),
+        location: LocationCoordinate.fromJson(json["location"]),
         id: json["_id"],
         address: json["address"],
         phoneNumber: json["phoneNumber"],

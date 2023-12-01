@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pbl6_app/src/controller/ShipperController/shipper_controller.dart';
 import 'package:pbl6_app/src/screens/shipperScreen/home_shipper_screen.dart';
 import 'package:pbl6_app/src/screens/shipperScreen/order_shipper_screen.dart';
 import 'package:pbl6_app/src/screens/shipperScreen/shipper_info_screen.dart';
@@ -29,6 +30,7 @@ class _HomeMainPageState extends State<ShipperNaviPage> {
 
   @override
   Widget build(BuildContext context) {
+    Get.put(ShipperController(shipperRepo: Get.find()), permanent: true);
     return GetBuilder<BottomNavigationBarController>(builder: (controller) {
       return Scaffold(
         bottomNavigationBar: BottomNavigationBar(

@@ -33,15 +33,15 @@ class ApiClient extends GetConnect implements GetxService {
     token = newToken;
   }
 
-  Future<Response> getData(
-    String uri,
-  ) async {
+  getData(String uri) async {
     try {
-      Response response = await get(uri, headers: header);
+      // final respone = await get(uri, headers: header);
+      http.Response response = await http.get(Uri.parse(uri), headers: header);
       return response;
     } catch (e) {
       print("Error getData>>>>>>>>>> $e");
-      return Response(statusCode: 1, statusText: e.toString());
+      return Future<Response>.value(
+          Response(statusCode: 1, statusText: e.toString()));
     }
   }
 
