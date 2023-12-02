@@ -62,6 +62,54 @@ void main() {
       expect(find.byType(SignInScreen), findsOneWidget);
     });
 
+    testWidgets('login fail with email is not email', (tester) async {
+      app.main();
+      await tester.pumpWidget(const SignInScreen());
+
+      // wait until the app pump and settle
+      await tester.pumpAndSettle();
+      // finder for element
+
+      final emailInput = find.byKey(const Key('email'));
+      final passwordInput = find.byKey(const Key('password'));
+      final login = find.byKey(const Key('login'));
+
+      //
+      await tester.enterText(emailInput, "hoangnt.com");
+      await tester.enterText(passwordInput, "hoangpro12");
+      await tester.pumpAndSettle();
+
+      // Perform the login action
+      await tester.tap(login);
+
+      await tester.pumpAndSettle();
+      expect(find.byType(SignInScreen), findsOneWidget);
+    });
+
+    testWidgets('login fail with password is less than 6', (tester) async {
+      app.main();
+      await tester.pumpWidget(const SignInScreen());
+
+      // wait until the app pump and settle
+      await tester.pumpAndSettle();
+      // finder for element
+
+      final emailInput = find.byKey(const Key('email'));
+      final passwordInput = find.byKey(const Key('password'));
+      final login = find.byKey(const Key('login'));
+
+      //
+      await tester.enterText(emailInput, "hoangnt@gmail.com");
+      await tester.enterText(passwordInput, "hoang");
+      await tester.pumpAndSettle();
+
+      // Perform the login action
+      await tester.tap(login);
+
+      await tester.pumpAndSettle();
+      expect(find.byType(SignInScreen), findsOneWidget);
+    });
+
     testWidgets('login fail with password and email is not true',
         (tester) async {
       app.main();
@@ -353,5 +401,6 @@ void main() {
       await tester.tap(find.byKey(const Key('saveButton')));
       await tester.pumpAndSettle();
     });
+  
   });
 }

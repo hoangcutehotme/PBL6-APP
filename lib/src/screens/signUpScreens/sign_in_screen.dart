@@ -121,7 +121,9 @@ class _SignInScreenState extends State<SignInScreen> {
           child: RoundedButton(
             key: const Key('login'),
             press: () async {
-              await loginController.login();
+              if (loginController.checkLogin()) {
+                await loginController.login();
+              }
             },
             text: 'Đăng nhập',
             size: Size(size.width * 0.8, 56),

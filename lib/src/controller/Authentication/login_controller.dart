@@ -142,6 +142,22 @@ class LoginController extends GetxController {
     }
   }
 
+  checkLogin() {
+    if (!emailController.text.isEmail) {
+      CustomeSnackBar.showErrorSnackBar(
+          context: Get.context, title: 'Error', message: 'Email không hợp lệ');
+      return false;
+    } else if ((passwordController.text.length < 7)) {
+      CustomeSnackBar.showErrorSnackBar(
+          context: Get.context,
+          title: 'Error',
+          message: 'Mật khẩu có ít hơn 6 kí tự');
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   Future<void> logout() async {
     // Get.bot
     final SharedPreferences prefs = await _prefs;
