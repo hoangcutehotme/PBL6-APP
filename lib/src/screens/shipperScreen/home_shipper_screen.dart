@@ -7,11 +7,13 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:pbl6_app/src/controller/ShipperController/shipper_address_controllerd.dart';
 import 'package:pbl6_app/src/controller/ShipperController/shipper_controller.dart';
 import 'package:pbl6_app/src/model/shipper_order.dart';
+import 'package:pbl6_app/src/utils/custome_snackbar.dart';
 import 'package:pbl6_app/src/values/app_assets.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import '../../values/app_colors.dart';
 import '../../values/app_styles.dart';
+import 'order_detail_shipper_screen.dart';
 
 class ShipperHomePage extends StatefulWidget {
   const ShipperHomePage({super.key});
@@ -172,9 +174,7 @@ class _ScreenDetailOrderAndShipperState extends State<ShipperHomePage> {
                   height: 10,
                 ),
                 GestureDetector(
-                  onTap: () {
-                    
-                  },
+                  onTap: () {},
                   child: Column(
                     children: [
                       Image.asset(
@@ -196,7 +196,16 @@ class _ScreenDetailOrderAndShipperState extends State<ShipperHomePage> {
         ElevatedButton(
             style:
                 ElevatedButton.styleFrom(backgroundColor: AppColors.mainColor1),
-            onPressed: () {},
+            onPressed: () {
+              if (order.id != null) {
+                Get.to(()=> const OrderDetailShipperScreen(),arguments: order.id);
+              } else {
+                CustomeSnackBar.showWarningTopBar(
+                    context: Get.context,
+                    title: 'Thông báo',
+                    message: 'Không thể nhận đơn này');
+              }
+            },
             child: const Text('Nhận đơn'))
       ],
     );

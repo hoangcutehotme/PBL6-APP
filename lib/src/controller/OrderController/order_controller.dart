@@ -19,6 +19,9 @@ class OrderController extends GetxController {
   List<OrderModel> _listOrder = [];
   List<OrderModel> get listOrder => _listOrder;
 
+  OrderShipper _orderShipper = OrderShipper();
+  OrderShipper get orderShipper => _orderShipper;
+
   var isLoading = false.obs;
   var client = http.Client();
 
@@ -76,6 +79,8 @@ class OrderController extends GetxController {
       var jsonBody = jsonDecode(response.body);
       if (response.statusCode == 200) {
         var order = OrderShipper.fromJson(jsonBody['data']);
+        _orderShipper = order;
+        update();
         return order;
       } else {
         return null;
