@@ -1,6 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:js_interop';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -11,7 +8,7 @@ import '../../controller/OrderController/order_controller.dart';
 import '../../controller/StoreController/cart_controller.dart';
 import '../../controller/StoreController/store_detail_controller.dart';
 import '../../model/cart_model.dart';
-import '../../model/shipper_order.dart';
+import '../../model/order_detail_shipper.dart';
 import '../../values/app_styles.dart';
 import '../../widgets/food_cell_cart.dart';
 import '../../widgets/image_loading_network.dart';
@@ -43,55 +40,54 @@ class _OrderDetailShipperScreenState extends State<OrderDetailShipperScreen> {
   @override
   Widget build(BuildContext context) {
     OrderController orderController = Get.find();
-    // OrderController orderController = Get.put(
-    //     OrderController(orderRepo: Get.find(), userController: Get.find()));
+
     return Scaffold(
       appBar: AppWidget.appBar('Chi tiết đơn hàng'),
       body: GetBuilder<OrderController>(
-        initState: (state) => orderController.showOrderDetail(id),
-        builder: (controller)  {
-        var detailOrder = orderController.orderShipper;
-        return !detailOrder.isDefinedAndNotNull
-            ? const Center(
-                child: CircularProgressIndicator(),
-              )
-            : Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Column(children: [
-                  Container(
-                    child: const Row(
-                      children: [
-                        Icon(Icons.check_circle_outline),
-                        Text('Trạng thái đơn hàng'),
-                        Spacer(),
-                        Text('time'),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    child: const Column(children: [
-                      Text('Địa chỉ cửa hàng'),
-                      Text('Address'),
-                    ]),
-                  ),
-                  // _orderDetail(detailOrder),
-                  Row(
-                    children: [
-                      const Text('Tổng cộng :'),
-                      Text("${FuncUseful.formartStringPrice(2500000)}đ"),
-                    ],
-                  ),
-                  Container(
-                    child: const Column(
-                      children: [
-                        Text('Giao đến'),
-                        Text('Address'),
-                      ],
-                    ),
+          initState: (state) => orderController.showOrderDetail(id),
+          builder: (controller) {
+            var detailOrder = orderController.orderShipper;
+            return detailOrder == OrderDetailShipper()
+                ? const Center(
+                    child: CircularProgressIndicator(),
                   )
-                ]),
-              );
-      }),
+                : Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Column(children: [
+                      Container(
+                        child: const Row(
+                          children: [
+                            Icon(Icons.check_circle_outline),
+                            Text('Trạng thái đơn hàng'),
+                            Spacer(),
+                            Text('time'),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        child: const Column(children: [
+                          Text('Địa chỉ cửa hàng'),
+                          Text('Address'),
+                        ]),
+                      ),
+                      // _orderDetail(detailOrder),
+                      Row(
+                        children: [
+                          const Text('Tổng cộng :'),
+                          Text("${FuncUseful.formartStringPrice(2500000)}đ"),
+                        ],
+                      ),
+                      Container(
+                        child: const Column(
+                          children: [
+                            Text('Giao đến'),
+                            Text('Address'),
+                          ],
+                        ),
+                      )
+                    ]),
+                  );
+          }),
     );
   }
 

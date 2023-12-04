@@ -113,15 +113,30 @@ class _ScreenDetailOrderAndShipperState extends State<ShipperHomePage> {
               initState: (state) => shipperController.getListOrder(),
               builder: (_) {
                 var listOrder = shipperController.listOrder;
-                return listOrder.isEmpty
-                    ? const Center(
-                        child: CircularProgressIndicator(),
-                      )
-                    : PageView.builder(
-                        itemCount: listOrder.length,
-                        itemBuilder: (context, index) {
-                          return _itemOrder(listOrder[index]);
-                        });
+
+                if (listOrder.isEmpty) {
+                  return FutureBuilder(
+                    future: Future.delayed(const Duration(seconds: 5)),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else {
+                        return const Center(
+                          child: Text("No order"),
+                        );
+                      }
+                    },
+                  );
+                } else {
+                  return PageView.builder(
+                    itemCount: listOrder.length,
+                    itemBuilder: (context, index) {
+                      return _itemOrder(listOrder[index]);
+                    },
+                  );
+                }
               }),
         )
       ],
@@ -198,7 +213,8 @@ class _ScreenDetailOrderAndShipperState extends State<ShipperHomePage> {
                 ElevatedButton.styleFrom(backgroundColor: AppColors.mainColor1),
             onPressed: () {
               if (order.id != null) {
-                Get.to(()=> const OrderDetailShipperScreen(),arguments: order.id);
+                Get.to(() => const OrderDetailShipperScreen(),
+                    arguments: order.id);
               } else {
                 CustomeSnackBar.showWarningTopBar(
                     context: Get.context,

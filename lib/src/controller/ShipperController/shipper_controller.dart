@@ -237,7 +237,7 @@ class ShipperController extends GetxController {
   getListOrder() async {
     try {
       ApiClient apiClient = Get.find();
-      var url = "${ApiEndPoints.baseUrl}/shipper/$id/find-orders";
+      var url = "${ApiEndPoints.baseUrl}/shipper/${id.value}/find-orders";
 
       var response = await http.get(Uri.parse(url), headers: apiClient.header);
 
