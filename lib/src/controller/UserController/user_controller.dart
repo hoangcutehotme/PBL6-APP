@@ -81,8 +81,11 @@ class UserController extends GetxController {
   }
 
   String? validateName(String value) {
-    if (value.isEmpty || !value.isAlphabetOnly) {
+    final RegExp regex = RegExp(r'^[a-zA-ZÀ-ỹ\s]+$');
+    if (value.isEmpty) {
       return "Không được để trống";
+    } else if (!regex.hasMatch(value)) {
+      return "Giá trị không hợp lệ";
     }
     return null;
   }

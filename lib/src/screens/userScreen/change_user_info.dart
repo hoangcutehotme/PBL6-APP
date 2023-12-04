@@ -115,7 +115,6 @@ class _ChangeUserInfoState extends State<ChangeUserInfo> {
                   onSaved: (value) {
                     userController.firstNameController.text = value!;
 
-                    print("Value : $value");
                   },
                   onChanged: (value) {
                     userController.isChange.value = true;
@@ -180,12 +179,13 @@ class _ChangeUserInfoState extends State<ChangeUserInfo> {
                                 },
                                 confirmText: 'Ok',
                               );
-                            } else {
-                              CustomeSnackBar.showErrorSnackBar(
-                                  context: Get.context,
-                                  title: 'Error',
-                                  message: 'Thông tin nhập không hợp lệ');
-                            }
+                            } 
+                            // else {
+                            //   CustomeSnackBar.showErrorSnackBar(
+                            //       context: Get.context,
+                            //       title: 'Error',
+                            //       message: 'Thông tin nhập không hợp lệ');
+                            // }
                           }
                         : null,
                     child: Text(
