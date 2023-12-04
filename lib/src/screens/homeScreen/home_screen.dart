@@ -320,6 +320,7 @@ class _HomeScreenState extends State<HomeScreen> {
           padding: const EdgeInsetsDirectional.symmetric(horizontal: 10),
           child: GestureDetector(
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Icon(
                   Icons.location_on,

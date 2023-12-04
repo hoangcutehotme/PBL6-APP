@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class FuncUseful {
@@ -28,5 +29,10 @@ class FuncUseful {
               return const Center(child: CircularProgressIndicator());
             })
         : Get.back();
+  }
+
+  static String formartStringPrice(int price) {
+    String formattedPrice = NumberFormat('#,##0', 'vi_VN').format(price);
+    return formattedPrice;
   }
 }

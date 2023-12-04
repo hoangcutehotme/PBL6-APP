@@ -14,7 +14,9 @@ class TextFieldContainer extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.only(left: 15, top: 10),
+          padding: const EdgeInsets.only(
+            left: 15,
+          ),
           child: Text(
             label,
             style: AppStyles.textMedium.copyWith(fontSize: 17),

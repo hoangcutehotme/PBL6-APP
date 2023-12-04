@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:pbl6_app/src/values/app_string.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashController extends GetxController {
@@ -15,12 +16,16 @@ class SplashController extends GetxController {
     super.onReady();
 
     SharedPreferences prefs = await _prefs;
-    // Get.testMode = true;
     final token = prefs.getString('token');
-
+    var role = prefs.getString(AppString.ROLE);
     if (token != null) {
-      print('Token: $token');
-      Get.offAllNamed("/home");
+      if (role == 'User') {
+        print('Token: $token');
+        Get.offAllNamed("/home");
+      } else if (role == "Shipper") {
+        print('Token: $token');
+        Get.offAllNamed("/shipperNaviPage");
+      }
     } else {
       Get.offAllNamed('/signin');
     }

@@ -22,7 +22,6 @@ class OrderDetail extends StatefulWidget {
 
 class _OrderDetailState extends State<OrderDetail> {
   int widthOrder = 90;
-  bool chooseCash = true;
 
   var shipController = Get.put(ShippingFeeController());
   var userController = Get.find<UserController>();
@@ -385,30 +384,32 @@ class _OrderDetailState extends State<OrderDetail> {
                     color: AppColors.mainColor1,
                   ),
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Địa chỉ giao hàng",
-                      style: AppStyles.textMedium.copyWith(fontSize: 16),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      user.address ?? ''.toString(),
-                      style: AppStyles.textMedium.copyWith(fontSize: 16),
-                      softWrap: true,
-                      maxLines: 2,
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Text(user.phoneNumber ?? ''.toString(),
-                        style: AppStyles.textMedium.copyWith(fontSize: 16)),
-                  ],
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Địa chỉ giao hàng",
+                        style: AppStyles.textMedium.copyWith(fontSize: 15),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        user.address ?? ''.toString(),
+                        style: AppStyles.textMedium.copyWith(fontSize: 15),
+                        softWrap: true,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Text(user.phoneNumber ?? ''.toString(),
+                          style: AppStyles.textMedium.copyWith(fontSize: 15)),
+                    ],
+                  ),
                 ),
-                Expanded(child: Container()),
                 Center(
                   child: IconButton(
                     onPressed: () {
@@ -452,7 +453,7 @@ class _OrderDetailState extends State<OrderDetail> {
                   ),
                   Text(
                     "Dự kiến giao lúc ${shipController.getNowDelivery().toString()}",
-                    style: AppStyles.textMedium.copyWith(fontSize: 16),
+                    style: AppStyles.textMedium.copyWith(fontSize: 15),
                   ),
                   Expanded(child: Container()),
                   // IconButton(

@@ -101,10 +101,20 @@ class _VerifyOTPScreenState extends State<VerifyOTPScreen> {
               child: RoundedButton(
                 press: () async {
                   String otp = _otpCode.join();
-                  var response = await _registerController.verifyOtp(otp);
+                  if (Get.find<RegisterController>().isUser.value) {
+                    var response =
+                        await _registerController.verifyOtp(otp, true);
 
-                  if (response == 'Success') {
-                    Get.toNamed('/signin');
+                    if (response == 'Success') {
+                      Get.toNamed('/signin');
+                    }
+                  } else {
+                    var response =
+                        await _registerController.verifyOtp(otp, false);
+
+                    if (response == 'Success') {
+                      Get.toNamed('/signin');
+                    }
                   }
                 },
                 text: 'Xác thực',

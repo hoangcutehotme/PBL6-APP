@@ -16,7 +16,6 @@ class SignInScreen extends StatefulWidget {
   State<SignInScreen> createState() => _SignInScreenState();
 }
 
-//
 class _SignInScreenState extends State<SignInScreen> {
   LoginController loginController = Get.put(LoginController());
   @override
@@ -121,7 +120,6 @@ class _SignInScreenState extends State<SignInScreen> {
           alignment: Alignment.center,
           child: RoundedButton(
             press: () async {
-              //check
               await loginController.login();
             },
             text: 'Đăng nhập',

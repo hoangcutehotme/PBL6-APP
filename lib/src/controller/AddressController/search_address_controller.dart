@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:pbl6_app/src/data/api/api_client.dart';
 import 'package:pbl6_app/src/values/app_string.dart';
 
-import '../../model/place_autocomplete_model.dart';
+// import '../../model/place_autocomplete_model.dart';
 
 class SearchAddressController extends GetxController {
   final ApiClient apiClient;
@@ -11,8 +11,8 @@ class SearchAddressController extends GetxController {
   // late GooglePlace googlePlace;
   // GooglePlace googlePlace;
   final TextEditingController addressController = TextEditingController();
-  final List<AutocompletePrediction> _predictions = [];
-  List<AutocompletePrediction> get prediction => _predictions;
+  // final List<AutocompletePrediction> _predictions = [];
+  // List<AutocompletePrediction> get prediction => _predictions;
 
   SearchAddressController({required this.apiClient});
 
@@ -20,8 +20,6 @@ class SearchAddressController extends GetxController {
   void onInit() {
     super.onInit();
     initValue();
-    // addressController.text = '';
-    // update();
   }
 
   @override
@@ -43,7 +41,7 @@ class SearchAddressController extends GetxController {
       "key": AppString.API_KEY,
     });
 
-    Response response = await apiClient.getData(uri.toString());
+    var response = await apiClient.getData(uri.toString());
     if (response.statusCode == 200) {
       print(response.body);
     } else {

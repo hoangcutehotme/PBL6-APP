@@ -16,7 +16,7 @@ class OrderScreen extends StatefulWidget {
 class _OrderScreenState extends State<OrderScreen> {
   @override
   Widget build(BuildContext context) {
-    Get.put(OrderController(userController: Get.find()));
+    Get.put(OrderController(userController: Get.find(), orderRepo: Get.find()));
     return DefaultTabController(
       length: 2,
       child: Scaffold(

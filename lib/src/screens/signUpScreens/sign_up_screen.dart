@@ -28,7 +28,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           () => Column(
             children: [
               const SizedBox(
-                height: 100,
+                height: 90,
               ),
               Text(
                 "Đăng ký",
@@ -37,32 +37,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               const SizedBox(
                 height: 20,
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  RoundedButton(
-                      text: "Người dùng",
-                      size: const Size(150, 30),
-                      background: _registerController.isUser.value
-                          ? AppColors.mainColor1
-                          : AppColors.borderGray,
-                      press: () {
-                        _registerController.changeRole("user");
-                      }),
-                  const SizedBox(
-                    width: 15,
-                  ),
-                  RoundedButton(
-                      text: "Giao hàng",
-                      background: _registerController.isUser.value
-                          ? AppColors.borderGray
-                          : AppColors.mainColor1,
-                      size: const Size(150, 30),
-                      press: () {
-                        _registerController.changeRole("shipper");
-                      })
-                ],
-              ),
+              _changeRoleSignUp(),
               const SizedBox(
                 height: 10,
               ),
@@ -74,9 +49,39 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
+  Row _changeRoleSignUp() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        RoundedButton(
+            text: "Người dùng",
+            size: const Size(150, 30),
+            background: _registerController.isUser.value
+                ? AppColors.mainColor1
+                : AppColors.borderGray,
+            press: () {
+              _registerController.changeRole("user");
+            }),
+        const SizedBox(
+          width: 15,
+        ),
+        RoundedButton(
+            text: "Giao hàng",
+            background: _registerController.isUser.value
+                ? AppColors.borderGray
+                : AppColors.mainColor1,
+            size: const Size(150, 30),
+            press: () {
+              _registerController.changeRole("shipper");
+            })
+      ],
+    );
+  }
+
   Column logupForm(BuildContext context, Size size, bool hide) {
     return Column(
       children: [
+        
         TextFieldContainer(
           child: TextField(
             controller: _registerController.emailController,
@@ -176,7 +181,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
           alignment: Alignment.center,
           child: RoundedButton(
             press: () {
-              _registerController.checkPassword();
+              if (_registerController.isUser.value) {
+                _registerController.validateForm()
+                    ? Get.toNamed('/fillinfo')
+                    : null;
+              } else {
+                _registerController.validateForm()
+                    ? Get.toNamed('/fillinfo')
+                    : null;
+              }
             },
             text: 'Đăng ký',
             size: Size(size.width * 0.8, 56),
