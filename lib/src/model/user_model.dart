@@ -12,8 +12,7 @@ class UserModel {
   String? defaultContact;
   String? photo;
   UserModel(
-      {
-      this.role,
+      {this.role,
       this.id,
       this.firstName,
       this.lastName,
@@ -22,8 +21,7 @@ class UserModel {
       this.updatedAt,
       this.contact,
       this.defaultContact,
-      this.photo
-      });
+      this.photo});
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
         role: json["role"],
@@ -31,10 +29,16 @@ class UserModel {
         firstName: json["firstName"],
         lastName: json["lastName"],
         email: json["email"],
-        createdAt: DateTime.parse(json["createdAt"]),
-        updatedAt: DateTime.parse(json["updatedAt"]),
-        contact:
-            List<Contact>.from(json["contact"].map((x) => Contact.fromJson(x))),
+        createdAt: json["createdAt"] == null
+            ? null
+            : DateTime.parse(json["createdAt"]),
+        updatedAt: json["updatedAt"] == null
+            ? null
+            : DateTime.parse(json["updatedAt"]),
+        contact: json["contact"] == null
+            ? null
+            : List<Contact>.from(
+                json["contact"].map((x) => Contact.fromJson(x))),
         defaultContact: json["defaultContact"],
         photo: json['photo'],
       );
@@ -49,6 +53,6 @@ class UserModel {
         "updatedAt": (updatedAt ?? DateTime.now()).toIso8601String(),
         "contact": List<dynamic>.from(contact ?? [].map((x) => x.toJson())),
         "defaultContact": defaultContact,
-        "photo" : photo,
+        "photo": photo,
       };
 }

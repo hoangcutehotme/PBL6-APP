@@ -206,7 +206,7 @@ class _FlexibleHeadBar extends StatelessWidget {
         background: Opacity(
             opacity: 1,
             child: ImageLoadingNetwork(
-              image: product.images[0],
+              image: product.images == null ? '' : product.images![0],
               size: const Size(double.maxFinite, 200),
             )),
       ), // Set the height of the app bar when it is expanded

@@ -31,7 +31,15 @@ class FuncUseful {
         : Get.back();
   }
 
-  static String formartStringPrice(int price) {
+  static String formatStatus(String? status) {
+    return status == "Pending"
+        ? "Đang xử lý"
+        : status == "Refused"
+            ? "Từ chối đơn hàng"
+            : "Đang xử lý";
+  }
+
+  static String formartStringPrice(int? price) {
     String formattedPrice = NumberFormat('#,##0', 'vi_VN').format(price);
     return formattedPrice;
   }

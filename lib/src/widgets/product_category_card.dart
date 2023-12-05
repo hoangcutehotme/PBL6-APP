@@ -22,7 +22,7 @@ class ProductWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             ImageLoadingNetwork(
-                image: product.images.isEmpty ? "" : product.images[0],
+                image: product.images == null ? "" : product.images![0],
                 size: const Size(160, 160)),
             Text(
               product.name,

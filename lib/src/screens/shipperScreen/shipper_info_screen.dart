@@ -7,7 +7,6 @@ import '../../values/app_assets.dart';
 import '../../values/app_colors.dart';
 import '../../values/app_styles.dart';
 import '../userScreen/change_user_info.dart';
-import '../userScreen/list_contact.dart';
 
 class ShipperInfoScreen extends StatelessWidget {
   ShipperInfoScreen({super.key});
@@ -36,27 +35,6 @@ class ShipperInfoScreen extends StatelessWidget {
                     child: const ListTile(
                       contentPadding: EdgeInsets.only(left: 25),
                       title: Text("Thay đổi thông tin cá nhân"),
-                      trailing: Icon(
-                        Icons.arrow_forward_ios_rounded,
-                        color: AppColors.colorTextBold,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Get.to(() => const ListContactScreen());
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                        color: AppColors.mainColorBackground,
-                        borderRadius: BorderRadius.circular(5)),
-                    child: const ListTile(
-                      contentPadding: EdgeInsets.only(left: 25),
-                      title: Text("Thay đổi địa chỉ giao hàng"),
                       trailing: Icon(
                         Icons.arrow_forward_ios_rounded,
                         color: AppColors.colorTextBold,

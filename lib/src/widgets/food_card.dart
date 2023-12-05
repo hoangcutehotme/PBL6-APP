@@ -31,7 +31,7 @@ class FoodCard extends StatelessWidget {
           alignment: Alignment.topCenter,
           children: [
             ImageLoadingNetwork(
-                image: food.images[0], size: const Size(160, 140)),
+                image: food.images == null ? '' : food.images![0], size: const Size(160, 140)),
             Positioned(
               top: 130,
               left: 5,

@@ -16,6 +16,7 @@ class OrderShipperController extends GetxController {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   final ShipperController shipperController;
   final OrderRepo orderRepo;
+
   OrderShipperController(
       {required this.orderRepo, required this.shipperController});
 
@@ -28,57 +29,28 @@ class OrderShipperController extends GetxController {
   var isLoading = false.obs;
   var client = http.Client();
 
-  // fetchListOrder(String status, String start, String end, int page) async {
-  //   var prefs = await _prefs;
-
-  //   var token = prefs.getString(AppString.SHAREPREF_TOKEN);
-  //   var id = prefs.getString(AppString.SHAREPREF_USERID);
-
-  //   var url = "${ApiEndPoints.baseUrl}/order/user/$id";
-
-  //   try {
-  //     Map<String, dynamic> params = {
-  //       'status': status,
-  //       'fields': 'status,dateOrdered,totalPrice',
-  //       'sort': '-createdAt',
-  //       'limit': '10',
-  //       'page': page.toString(),
-  //       'start': start,
-  //       'end': end,
-  //     };
-
-  //     Uri uri = Uri.parse(url).replace(queryParameters: params);
-
-  //     var header = {
-  //       'Content-Type': 'application/json',
-  //       'Authorization': 'Bearer $token'
-  //     };
-
-  //     var response = await http.get(uri, headers: header);
-
-  //     var json = jsonDecode(response.body);
-  //     if (response.statusCode == 200) {
-  //       _listOrder = orderModelFromJson(jsonEncode(json['data']));
-  //       update();
-  //       return _listOrder;
-  //       // return listProduct;
-  //     } else {
-  //       return [];
-  //       // throw Exception(
-  //       //     'Failed to get products. Status code: ${response.statusCode}');
-  //     }
-  //   } catch (e) {
-  //     print('Error in getProductByStoreId: $e');
-  //     return [];
-  //     // Handle the error in a way that makes sense for your app
-  //   } finally {
-  //     // isLoading(false);
-  //   }
-  // }
-
   Future<OrderDetailShipper?> showOrderDetail(String id) async {
     try {
       var response = await orderRepo.getOrderDetailShipper(id);
+
+      var jsonBody = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        var order = OrderDetailShipper.fromJson(jsonBody['data']);
+        _orderShipper = order;
+        update();
+        return order;
+      } else {
+        return OrderDetailShipper();
+      }
+    } catch (e) {
+      return OrderDetailShipper();
+    }
+  }
+
+  changeStatusOrder(String idOrder,String idShipper) async {
+     try {
+      var response = await orderRepo.changeStatusShipper(idOrder,idShipper);
 
       var jsonBody = jsonDecode(response.body);
 

@@ -61,8 +61,8 @@ class PlaceOrderController extends GetxController {
           await http.post(Uri.parse(url), headers: headers, body: jsonBody);
 
       var json = jsonDecode(response.body);
+      
       if (response.statusCode == 200) {
-        // var data = json['data'];
         var urlNew = json['url'].toString();
         return urlNew;
       } else {

@@ -78,7 +78,7 @@ class OrderController extends GetxController {
       var response = await orderRepo.getOrderDetailShipper(id);
 
       var jsonBody = jsonDecode(response.body);
-      
+
       if (response.statusCode == 200) {
         var order = OrderDetailShipper.fromJson(jsonBody['data']);
         _orderShipper = order;

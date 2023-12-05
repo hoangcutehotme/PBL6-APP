@@ -30,7 +30,8 @@ class FoodInfoCell extends StatelessWidget {
           ClipRRect(
               borderRadius: BorderRadius.circular(5),
               child: ImageLoadingNetwork(
-                  image: product.images[0], size: const Size(160, 130))),
+                  image: product.images == null ? '' : product.images![0],
+                  size: const Size(160, 130))),
           Expanded(
               child: Padding(
             padding: const EdgeInsets.only(left: 8),

@@ -9,7 +9,7 @@ String producModelToJson(List<ProductModel> data) =>
 
 class ProductModel {
   Category? category;
-  List<String> images;
+  List<String>? images;
   int price;
   int? ratingAverage;
   bool? isOutofOrder;
@@ -21,7 +21,7 @@ class ProductModel {
 
   ProductModel({
     this.category,
-    required this.images,
+    this.images,
     required this.price,
     this.ratingAverage,
     this.isOutofOrder,
@@ -32,8 +32,12 @@ class ProductModel {
   });
 
   factory ProductModel.fromJson(Map<String, dynamic> json) => ProductModel(
-        category: Category.fromJson(json["category"]),
-        images: List<String>.from(json["images"].map((x) => x)),
+        category: json["category"] == null
+            ? null
+            : Category.fromJson(json["category"]),
+        images: json["images"] == null
+            ? null
+            : List<String>.from(json["images"].map((x) => x)),
         price: json["price"],
         ratingAverage: json["ratingAverage"],
         isOutofOrder: json["isOutofOrder"],
@@ -45,7 +49,7 @@ class ProductModel {
 
   Map<String, dynamic> toJson() => {
         "category": category?.toJson(),
-        "images": List<dynamic>.from(images.map((x) => x)),
+        "images": List<dynamic>.from(images ?? [].map((x) => x)),
         "price": price,
         "ratingAverage": ratingAverage,
         "isOutofOrder": isOutofOrder,

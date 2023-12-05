@@ -7,10 +7,10 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:pbl6_app/src/controller/ShipperController/shipper_address_controllerd.dart';
 import 'package:pbl6_app/src/controller/ShipperController/shipper_controller.dart';
 import 'package:pbl6_app/src/model/shipper_order.dart';
-import 'package:pbl6_app/src/utils/custome_snackbar.dart';
 import 'package:pbl6_app/src/values/app_assets.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
+import '../../utils/custome_snackbar.dart';
 import '../../values/app_colors.dart';
 import '../../values/app_styles.dart';
 import 'order_detail_shipper_screen.dart';
@@ -123,14 +123,14 @@ class _ScreenDetailOrderAndShipperState extends State<ShipperHomePage> {
                           child: CircularProgressIndicator(),
                         );
                       } else {
-                        return ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.mainColor1),
-                            onPressed: () {
-                              Get.to(() => const OrderDetailShipperScreen(),
-                                  arguments: "656aeb0634082744d44ababa");
-                            },
-                            child: const Text('Nhận đơn'));
+                        // return ElevatedButton(
+                        //     style: ElevatedButton.styleFrom(
+                        //         backgroundColor: AppColors.mainColor1),
+                        //     onPressed: () {
+                        //       Get.to(() => const OrderDetailShipperScreen(),
+                        //           arguments: "656aeb0634082744d44ababa");
+                        //     },
+                        //     child: const Text('Nhận đơn'));
 
                         return const Center(
                           child: Text("No order"),
@@ -198,7 +198,17 @@ class _ScreenDetailOrderAndShipperState extends State<ShipperHomePage> {
                   height: 10,
                 ),
                 GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    if (order.id != null) {
+                      Get.to(() => const OrderDetailShipperScreen(),
+                          arguments: order.id);
+                    } else {
+                      CustomeSnackBar.showWarningTopBar(
+                          context: Get.context,
+                          title: 'Thông báo',
+                          message: 'Hiện không thể nhận đơn này');
+                    }
+                  },
                   child: Column(
                     children: [
                       Image.asset(
@@ -221,15 +231,15 @@ class _ScreenDetailOrderAndShipperState extends State<ShipperHomePage> {
             style:
                 ElevatedButton.styleFrom(backgroundColor: AppColors.mainColor1),
             onPressed: () {
-              if (order.id != null) {
-                Get.to(() => const OrderDetailShipperScreen(),
-                    arguments: order.id);
-              } else {
-                CustomeSnackBar.showWarningTopBar(
-                    context: Get.context,
-                    title: 'Thông báo',
-                    message: 'Không thể nhận đơn này');
-              }
+              // if (order.id != null) {
+              //   Get.to(() => const OrderDetailShipperScreen(),
+              //       arguments: order.id);
+              // } else {
+              //   CustomeSnackBar.showWarningTopBar(
+              //       context: Get.context,
+              //       title: 'Thông báo',
+              //       message: 'Không thể nhận đơn này');
+              // }
             },
             child: const Text('Nhận đơn'))
       ],
