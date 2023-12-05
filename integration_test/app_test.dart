@@ -62,7 +62,7 @@ void main() {
       expect(find.byType(SignInScreen), findsOneWidget);
     });
 
-    testWidgets('login fail with email is not email', (tester) async {
+    testWidgets('login fail with email is invalid', (tester) async {
       app.main();
       await tester.pumpWidget(const SignInScreen());
 
@@ -86,7 +86,7 @@ void main() {
       expect(find.byType(SignInScreen), findsOneWidget);
     });
 
-    testWidgets('login fail with password is less than 6', (tester) async {
+    testWidgets('login fail with password is less than 8', (tester) async {
       app.main();
       await tester.pumpWidget(const SignInScreen());
 
@@ -110,7 +110,7 @@ void main() {
       expect(find.byType(SignInScreen), findsOneWidget);
     });
 
-    testWidgets('login fail with password and email is not true',
+    testWidgets('login fail with password and email is invalid',
         (tester) async {
       app.main();
       await tester.pumpWidget(const SignInScreen());
@@ -136,7 +136,7 @@ void main() {
       // expect(find.text('Sai tài khoản, mật khẩu'), findsOneWidget);
     });
 
-    testWidgets('login success', (tester) async {
+    testWidgets('login success with valid account', (tester) async {
       app.main();
       await tester.pumpWidget(const SignInScreen());
 
@@ -197,7 +197,7 @@ void main() {
       await tester.tap(find.byKey(const Key('changeUserButton')));
       await tester.pumpAndSettle();
 
-      await tester.enterText(lastname, 'Nguyễn');
+      await tester.enterText(lastname, 'Nguyễn Trọng');
       await tester.pumpAndSettle();
       await tester.enterText(firstname, 'Hoàng');
       await tester.pumpAndSettle();
@@ -300,7 +300,7 @@ void main() {
       // expect(find.text('Success'), findsOneWidget);
     });
 
-    testWidgets('update fail - lastname empty ', (tester) async {
+    testWidgets('update fail - lastname is empty ', (tester) async {
       app.main();
       await tester.pumpWidget(const ChangeUserInfo());
 
@@ -342,7 +342,7 @@ void main() {
       // expect(find.text('Success'), findsOneWidget);
     });
 
-    testWidgets('update fail - phonenumber is wrong ', (tester) async {
+    testWidgets('update fail - phonenumber is invalid', (tester) async {
       app.main();
       await tester.pumpWidget(const ChangeUserInfo());
 
@@ -428,4 +428,7 @@ void main() {
       // expect(find.text('Success'), findsOneWidget);
     });
   });
+
+  
+
 }

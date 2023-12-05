@@ -7,6 +7,7 @@ import 'package:pbl6_app/src/values/app_styles.dart';
 
 import '../../controller/Authentication/login_controller.dart';
 import '../../values/app_assets.dart';
+import 'change_password.dart';
 import 'list_contact.dart';
 
 class UserScreen extends StatefulWidget {
@@ -75,6 +76,27 @@ class _UserScreenState extends State<UserScreen> {
                     child: const ListTile(
                       contentPadding: EdgeInsets.only(left: 25),
                       title: Text("Thay đổi địa chỉ giao hàng"),
+                      trailing: Icon(
+                        Icons.arrow_forward_ios_rounded,
+                        color: AppColors.colorTextBold,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    Get.to(() => const ChangePasswordUser());
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: AppColors.mainColorBackground,
+                        borderRadius: BorderRadius.circular(5)),
+                    child: const ListTile(
+                      contentPadding: EdgeInsets.only(left: 25),
+                      title: Text("Thay đổi mật khẩu"),
                       trailing: Icon(
                         Icons.arrow_forward_ios_rounded,
                         color: AppColors.colorTextBold,

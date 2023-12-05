@@ -84,7 +84,7 @@ class _DetailShopState extends State<DetailShop> {
     Size size = MediaQuery.of(context).size;
     return GetBuilder<CartController>(builder: (_) {
       if (products.isEmpty) {
-        Future.delayed(const Duration(seconds: 10)).then(
+        Future.delayed(const Duration(seconds: 8)).then(
           (value) {
             return const SliverToBoxAdapter(
               child: Column(

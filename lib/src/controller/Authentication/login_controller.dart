@@ -147,11 +147,11 @@ class LoginController extends GetxController {
       CustomeSnackBar.showErrorSnackBar(
           context: Get.context, title: 'Error', message: 'Email không hợp lệ');
       return false;
-    } else if ((passwordController.text.length < 7)) {
+    } else if ((passwordController.text.length < 8)) {
       CustomeSnackBar.showErrorSnackBar(
           context: Get.context,
           title: 'Error',
-          message: 'Mật khẩu có ít hơn 6 kí tự');
+          message: 'Mật khẩu có ít hơn 8 kí tự');
       return false;
     } else {
       return true;
