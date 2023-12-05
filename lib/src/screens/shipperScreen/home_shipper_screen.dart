@@ -123,6 +123,15 @@ class _ScreenDetailOrderAndShipperState extends State<ShipperHomePage> {
                           child: CircularProgressIndicator(),
                         );
                       } else {
+                        return ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.mainColor1),
+                            onPressed: () {
+                              Get.to(() => const OrderDetailShipperScreen(),
+                                  arguments: "656aeb0634082744d44ababa");
+                            },
+                            child: const Text('Nhận đơn'));
+
                         return const Center(
                           child: Text("No order"),
                         );

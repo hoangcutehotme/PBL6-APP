@@ -6,6 +6,7 @@ import 'package:pbl6_app/src/data/repository/user_respository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../controller/OrderController/order_controller.dart';
+import '../controller/OrderController/order_shipper_controller.dart';
 import '../data/api/api_client.dart';
 import '../data/repository/order_repository.dart';
 import '../utils/api_endpoints.dart';
@@ -29,8 +30,12 @@ Future<void> init() async {
     ),
   );
 
-  Get.lazyPut(() =>
-        OrderController(orderRepo: Get.find(), userController: Get.find()));
+  Get.lazyPut(() => OrderShipperController(
+        orderRepo: Get.find(),
+        shipperController: Get.find(),
+      ));
+  Get.lazyPut(
+      () => OrderController(orderRepo: Get.find(), userController: Get.find()));
 
   Get.lazyPut(
     () => ShipperController(shipperRepo: Get.find()),

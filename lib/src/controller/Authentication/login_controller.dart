@@ -113,6 +113,7 @@ class LoginController extends GetxController {
           prefs.setString(AppString.SHAREPREF_USERID, user['_id']);
 
           prefs.setString(AppString.ROLE, user['role']);
+
           LoadingFullScreen.cancelLoading();
 
           emailController.clear();
@@ -123,11 +124,7 @@ class LoginController extends GetxController {
               title: "Success",
               message: "Đăng nhập thành công");
           Get.offAllNamed("/");
-          // if (user['role'] == 'User') {
-
-          // } else if (user['role'] == 'Shipper') {
-          //   Get.offAllNamed('/shipperPage');
-          // }
+          
         } else {
           LoadingFullScreen.cancelLoading();
           CustomeSnackBar.showErrorSnackBar(

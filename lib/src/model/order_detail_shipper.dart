@@ -1,65 +1,67 @@
 import 'package:pbl6_app/src/model/cart_model.dart';
+import 'package:pbl6_app/src/model/store_model.dart';
+import 'package:pbl6_app/src/model/user_model.dart';
 
+import 'contact_model.dart';
 import 'location_model.dart';
 
 class OrderDetailShipper {
-  Location? storeLocation;
-  Location? userLocation;
-  int? shipCost;
-  int? totalPrice;
-  String? status;
-  String? id;
-  String? user;
-  String? store;
-  List<CartModel>? cart;
-  DateTime? dateOrdered;
-  DateTime? createdAt;
-  DateTime? updatedAt;
+    String? id;
+    Location? storeLocation;
+    int? shipCost;
+    int? totalPrice;
+    String? status;
+    UserModel? user;
+    List<CartModel>? cart;
+    Contact? contact;
+    DateTime? dateOrdered;
+    StoreModel? store;
+    int? depreciationShip;
+    int? revenue;
 
-  OrderDetailShipper({
-    this.storeLocation,
-    this.userLocation,
-    this.shipCost,
-    this.totalPrice,
-    this.status,
-    this.id,
-    this.user,
-    this.store,
-    this.cart,
-    this.dateOrdered,
-    this.createdAt,
-    this.updatedAt,
-  });
+    OrderDetailShipper({
+        this.id,
+        this.storeLocation,
+        this.shipCost,
+        this.totalPrice,
+        this.status,
+        this.user,
+        this.cart,
+        this.contact,
+        this.dateOrdered,
+        this.store,
+        this.depreciationShip,
+        this.revenue,
+    });
 
-  factory OrderDetailShipper.fromJson(Map<String, dynamic> json) =>
-      OrderDetailShipper(
+    factory OrderDetailShipper.fromJson(Map<String, dynamic> json) => OrderDetailShipper(
+        id: json["_id"],
         storeLocation: Location.fromJson(json["storeLocation"]),
-        userLocation: Location.fromJson(json["userLocation"]),
         shipCost: json["shipCost"],
         totalPrice: json["totalPrice"],
         status: json["status"],
-        id: json["_id"],
-        user: json["user"],
-        store: json["store"],
-        cart: List<CartModel>.from(
-            json["cart"].map((x) => CartModel.fromJson(x))),
+        user: UserModel.fromJson(json["user"]),
+        cart: List<CartModel>.from(json["cart"].map((x) => CartModel.fromJson(x))),
+        contact: Contact.fromJson(json["contact"]),
         dateOrdered: DateTime.parse(json["dateOrdered"]),
-        createdAt: DateTime.parse(json["createdAt"]),
-        updatedAt: DateTime.parse(json["updatedAt"]),
-      );
+        store: StoreModel.fromJson(json['store']),
+        depreciationShip: json["depreciationShip"],
+        revenue: json["revenue"],
+    );
 
-  Map<String, dynamic> toJson() => {
-        "storeLocation": storeLocation!.toJson(),
-        "userLocation": userLocation!.toJson(),
+    Map<String, dynamic> toJson() => {
+        "_id": id,
+        "storeLocation": storeLocation?.toJson(),
         "shipCost": shipCost,
         "totalPrice": totalPrice,
         "status": status,
-        "_id": id,
-        "user": user,
-        "store": store,
-        "cart": List<dynamic>.from((cart ?? []).map((x) => x.toJson())),
-        "dateOrdered": dateOrdered!.toIso8601String(),
-        "createdAt": createdAt!.toIso8601String(),
-        "updatedAt": updatedAt!.toIso8601String(),
-      };
+        "user": user?.toJson(),
+        "cart": List<dynamic>.from(cart?? [].map((x) => x.toJson())),
+        "contact": contact?.toJson(),
+        "dateOrdered": dateOrdered?.toIso8601String(),
+        "store": store?.toJson(),
+        "depreciationShip": depreciationShip,
+        "revenue": revenue,
+    };
 }
+

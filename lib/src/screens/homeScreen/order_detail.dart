@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:pbl6_app/src/controller/PlaceOrderController/place_order_controller.dart';
 import 'package:pbl6_app/src/controller/StoreController/cart_controller.dart';
 import 'package:pbl6_app/src/controller/UserController/ship_info_cart.dart';
+import 'package:pbl6_app/src/utils/custome_snackbar.dart';
 import 'package:pbl6_app/src/values/app_colors.dart';
 import 'package:pbl6_app/src/values/app_styles.dart';
 import 'package:pbl6_app/src/widgets/app_bar_default.dart';
@@ -162,14 +163,15 @@ class _OrderDetailState extends State<OrderDetail> {
                 var isVNPay = placeOrderController.isVNPayOption;
                 print(isVNPay);
                 if (isVNPay) {
-                  print('ck');
                   // pay with VNPay
                   placeOrderController.placeOrderWithVNPay().then((value) {
                     placeOrderController.onPayment(value);
                   });
                 } else {
-                  print('cash');
-                  // pay with cash
+                  CustomeSnackBar.showMessageTopBar(
+                      context: Get.context,
+                      title: 'Thông báo',
+                      message: 'Hiện tại chưa thể thanh toán bằng tiền mặt');
                 }
               },
               child: Text(

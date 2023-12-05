@@ -1,7 +1,7 @@
 import 'contact_model.dart';
 
 class UserModel {
-  String role;
+  String? role;
   String? id;
   String? firstName;
   String? lastName;
@@ -13,7 +13,7 @@ class UserModel {
   String? photo;
   UserModel(
       {
-      required this.role,
+      this.role,
       this.id,
       this.firstName,
       this.lastName,
