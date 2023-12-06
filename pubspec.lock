@@ -352,6 +352,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.17"
+  flutter_polyline_points:
+    dependency: "direct main"
+    description:
+      name: flutter_polyline_points
+      sha256: "0e07862139cb65a88789cd6efbe284c0b6f1fcb5ed5ec87781759c48190d84b9"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
+  flutter_svg:
+    dependency: "direct main"
+    description:
+      name: flutter_svg
+      sha256: d39e7f95621fc84376bc0f7d504f05c3a41488c562f4a8ad410569127507402c
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.9"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -748,6 +764,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.1"
+  location:
+    dependency: "direct main"
+    description:
+      name: location
+      sha256: "06be54f682c9073cbfec3899eb9bc8ed90faa0e17735c9d9fa7fe426f5be1dd1"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.0.3"
+  location_platform_interface:
+    dependency: transitive
+    description:
+      name: location_platform_interface
+      sha256: "8aa1d34eeecc979d7c9fe372931d84f6d2ebbd52226a54fe1620de6fdc0753b1"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.1.2"
+  location_web:
+    dependency: transitive
+    description:
+      name: location_web
+      sha256: ec484c66e8a4ff1ee5d044c203f4b6b71e3a0556a97b739a5bc9616de672412b
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.2.0"
   logging:
     dependency: transitive
     description:
@@ -836,6 +876,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.8.3"
+  path_parsing:
+    dependency: transitive
+    description:
+      name: path_parsing
+      sha256: e3e67b1629e6f7e8100b367d3db6ba6af4b1f0bb80f64db18ef1fbabd2fa9ccf
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
   path_provider:
     dependency: transitive
     description:
@@ -1289,6 +1337,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.0"
+  vector_graphics:
+    dependency: transitive
+    description:
+      name: vector_graphics
+      sha256: "0f0c746dd2d6254a0057218ff980fc7f5670fd0fcf5e4db38a490d31eed4ad43"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.9+1"
+  vector_graphics_codec:
+    dependency: transitive
+    description:
+      name: vector_graphics_codec
+      sha256: "0edf6d630d1bfd5589114138ed8fada3234deacc37966bec033d3047c29248b7"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.9+1"
+  vector_graphics_compiler:
+    dependency: transitive
+    description:
+      name: vector_graphics_compiler
+      sha256: d24333727332d9bd20990f1483af4e09abdb9b1fc7c3db940b56ab5c42790c26
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.9+1"
   vector_math:
     dependency: transitive
     description:
