@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:get/get.dart';
 import 'package:pbl6_app/src/data/repository/order_repository.dart';
-import 'package:pbl6_app/src/model/order_model.dart';
+import 'package:pbl6_app/src/utils/loading_full_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import '../../model/order_detail_shipper.dart';
@@ -16,8 +16,8 @@ class OrderShipperController extends GetxController {
   OrderShipperController(
       {required this.orderRepo, required this.shipperController});
 
-  final List<OrderModel> _listOrder = [];
-  List<OrderModel> get listOrder => _listOrder;
+  // final List<OrderModel> _listOrder = [];
+  // List<OrderModel> get listOrder => _listOrder;
 
   OrderDetailShipper _orderShipper = OrderDetailShipper();
   OrderDetailShipper get orderShipper => _orderShipper;
@@ -44,14 +44,32 @@ class OrderShipperController extends GetxController {
     }
   }
 
-  changeStatusOrder(String idOrder, String idShipper) async {
+  Future changeStatusOrder(String idOrder) async {
     try {
-      var response = await orderRepo.changeStatusShipper(idOrder, idShipper);
+      LoadingFullScreen.showLoading();
+      var response = await orderRepo.changeStatusShipper(
+          idOrder, shipperController.id.value);
 
       var jsonBody = jsonDecode(response.body);
-
+      LoadingFullScreen.cancelLoading();
       if (response.statusCode == 200) {
-      } else {}
-    } catch (e) {}
+        var status = jsonBody['data']['status'];
+        _orderShipper.status = status;
+        update();
+        if (status == "Finished") {
+          shipperController.updateOrderDetail(OrderDetailShipper());
+        } else {
+          shipperController.updateOrderDetail(_orderShipper);
+        }
+        return _orderShipper;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      LoadingFullScreen.cancelLoading();
+      return false;
+    } finally {
+      // LoadingFullScreen.cancelLoading();
+    }
   }
 }

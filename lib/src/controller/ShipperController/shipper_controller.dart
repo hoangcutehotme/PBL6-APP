@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:pbl6_app/src/data/api/api_client.dart';
-import 'package:pbl6_app/src/model/contact_model.dart';
+import 'package:pbl6_app/src/model/contact_model.dart' as ContactModel;
+import 'package:pbl6_app/src/model/order_detail_shipper.dart';
 import 'package:pbl6_app/src/model/shipper.dart';
 import 'package:pbl6_app/src/model/shipper_order.dart';
 import 'package:pbl6_app/src/values/app_string.dart';
@@ -33,10 +34,12 @@ class ShipperController extends GetxController {
   // list order shipper
   List<OrderShipper> _listOrder = [];
   List<OrderShipper> get listOrder => _listOrder;
-
-  Contact _contactChoose = Contact();
-
-  Contact get contacChoose => _contactChoose;
+  // current shipper order
+  OrderDetailShipper _currentOrder = OrderDetailShipper();
+  OrderDetailShipper get currentOrder => _currentOrder;
+  // current contact
+  ContactModel.Contact _contactChoose = ContactModel.Contact();
+  ContactModel.Contact get contacChoose => _contactChoose;
 
   final GlobalKey<FormState> changeInfoKey = GlobalKey<FormState>();
 
@@ -228,19 +231,20 @@ class ShipperController extends GetxController {
 
   // change the address to delivery
 
-  changeAddressContactDefault(Contact contact) {
+  changeAddressContactDefault(ContactModel.Contact contact) {
     // _contactChoose = Contact();
     _contactChoose = contact;
     update();
   }
 
   getListOrder() async {
+    isLoading(true);
     try {
       ApiClient apiClient = Get.find();
       var url = "${ApiEndPoints.baseUrl}/shipper/${id.value}/find-orders";
 
       var response = await http.get(Uri.parse(url), headers: apiClient.header);
-
+      isLoading(false);
       if (response.statusCode == 200) {
         var json = jsonDecode(response.body);
         _listOrder = orderShipperFromJson(jsonEncode(json['data']));
@@ -250,8 +254,15 @@ class ShipperController extends GetxController {
             context: Get.context, title: "Error", message: '');
       }
     } catch (e) {
+      isLoading(false);
       CustomeSnackBar.showErrorSnackBar(
           context: Get.context, title: "Error", message: '');
     }
   }
+
+  updateOrderDetail(OrderDetailShipper order) {
+    _currentOrder = order;
+    update();
+  }
+  
 }

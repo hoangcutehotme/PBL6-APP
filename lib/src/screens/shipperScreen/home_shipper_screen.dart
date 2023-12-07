@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:pbl6_app/src/controller/OrderController/order_shipper_controller.dart';
 import 'package:pbl6_app/src/controller/ShipperController/shipper_address_controllerd.dart';
 import 'package:pbl6_app/src/controller/ShipperController/shipper_controller.dart';
+import 'package:pbl6_app/src/controller/func/func_useful.dart';
 import 'package:pbl6_app/src/model/shipper_order.dart';
 import 'package:pbl6_app/src/values/app_assets.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
@@ -70,6 +72,7 @@ class _ScreenDetailOrderAndShipperState extends State<ShipperHomePage> {
               borderRadius:
                   const BorderRadius.vertical(top: Radius.circular(18)),
               panelBuilder: (controller) {
+                // check order if order is exist, show the way to go else show the list order
                 return _panelWidget(controller);
               },
             );
@@ -99,11 +102,29 @@ class _ScreenDetailOrderAndShipperState extends State<ShipperHomePage> {
     return ListView(
       controller: controller,
       children: <Widget>[
-        Center(
-            child: Text(
-          'Đơn hàng',
-          style: AppStyles.textBold.copyWith(fontSize: 18),
-        )),
+        SizedBox(
+          width: 50,
+          child: Stack(
+            children: [
+              Center(
+                  heightFactor: 1.5,
+                  child: Text(
+                    'Đơn hàng',
+                    style: AppStyles.textBold.copyWith(fontSize: 18),
+                  )),
+              Positioned(
+                  right: 10,
+                  child: IconButton(
+                    onPressed: () {
+                      shipperController.getListOrder();
+                    },
+                    icon: Container(
+                      child: const Icon(Icons.refresh),
+                    ),
+                  )),
+            ],
+          ),
+        ),
         const SizedBox(
           height: 15,
         ),
@@ -123,17 +144,8 @@ class _ScreenDetailOrderAndShipperState extends State<ShipperHomePage> {
                           child: CircularProgressIndicator(),
                         );
                       } else {
-                        // return ElevatedButton(
-                        //     style: ElevatedButton.styleFrom(
-                        //         backgroundColor: AppColors.mainColor1),
-                        //     onPressed: () {
-                        //       Get.to(() => const OrderDetailShipperScreen(),
-                        //           arguments: "656aeb0634082744d44ababa");
-                        //     },
-                        //     child: const Text('Nhận đơn'));
-
                         return const Center(
-                          child: Text("No order"),
+                          child: Text("Hiện tại không có đơn hàng gần đây"),
                         );
                       }
                     },
@@ -155,6 +167,9 @@ class _ScreenDetailOrderAndShipperState extends State<ShipperHomePage> {
   Widget _itemOrder(OrderShipper order) {
     Size size = MediaQuery.of(context).size;
     double sizeOfOrder = size.width * 0.8;
+    OrderShipperController orderShipperController = Get.put(
+        OrderShipperController(
+            orderRepo: Get.find(), shipperController: Get.find()));
     return Column(
       children: [
         const SizedBox(
@@ -177,14 +192,14 @@ class _ScreenDetailOrderAndShipperState extends State<ShipperHomePage> {
                       .copyWith(fontWeight: FontWeight.w600),
                 ),
                 Text(
-                  ' ${order.id}',
+                  '${order.id}',
                   style: AppStyles.textMedium,
                 ),
                 const SizedBox(
                   height: 10,
                 ),
                 Text(
-                  'Trạng thái : ${order.statusShipper(order.status!)}',
+                  'Trạng thái : ${FuncUseful.formatStatus(order.status)}',
                   style: AppStyles.textMedium,
                 ),
                 const SizedBox(
@@ -231,17 +246,21 @@ class _ScreenDetailOrderAndShipperState extends State<ShipperHomePage> {
             style:
                 ElevatedButton.styleFrom(backgroundColor: AppColors.mainColor1),
             onPressed: () {
-              // if (order.id != null) {
-              //   Get.to(() => const OrderDetailShipperScreen(),
-              //       arguments: order.id);
-              // } else {
-              //   CustomeSnackBar.showWarningTopBar(
-              //       context: Get.context,
-              //       title: 'Thông báo',
-              //       message: 'Không thể nhận đơn này');
-              // }
+              if (order.id != null) {
+                Get.to(() => const OrderDetailShipperScreen(),
+                    arguments: order.id);
+              } else {
+                CustomeSnackBar.showWarningTopBar(
+                    context: Get.context,
+                    title: 'Thông báo',
+                    message: 'Không thể nhận đơn này');
+              }
             },
-            child: const Text('Nhận đơn'))
+            child: Text(
+              'Nhận đơn',
+              style: AppStyles.textBoldButton
+                  .copyWith(fontWeight: FontWeight.w500),
+            ))
       ],
     );
   }

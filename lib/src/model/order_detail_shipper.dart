@@ -73,6 +73,10 @@ class OrderDetailShipper {
   DateTime? dateOrdered;
   int? depreciationShip;
   int? revenue;
+  DateTime? dateCheckout;
+  DateTime? datePrepared;
+  DateTime? dateDeliveried;
+  DateTime? dateFinished;
 
   OrderDetailShipper({
     this.id,
@@ -87,6 +91,10 @@ class OrderDetailShipper {
     this.dateOrdered,
     this.depreciationShip,
     this.revenue,
+    this.dateCheckout,
+    this.datePrepared,
+    this.dateDeliveried,
+    this.dateFinished,
   });
 
   factory OrderDetailShipper.fromJson(Map<String, dynamic> json) =>
@@ -103,6 +111,18 @@ class OrderDetailShipper {
         dateOrdered: DateTime.parse(json["dateOrdered"]),
         depreciationShip: json["depreciationShip"],
         revenue: json["revenue"],
+        dateCheckout: json["dateCheckout"] == null
+            ? null
+            : DateTime.parse(json["dateCheckout"]),
+        datePrepared: json["datePrepared"] == null
+            ? null
+            : DateTime.parse(json["datePrepared"]),
+        dateDeliveried: json["dateDeliveried"] == null
+            ? null
+            : DateTime.parse(json["dateDeliveried"]),
+        dateFinished: json["dateFinished"] == null
+            ? null
+            : DateTime.parse(json["dateFinished"]),
       );
 
   Map<String, dynamic> toJson() => {

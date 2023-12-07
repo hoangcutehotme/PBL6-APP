@@ -4,9 +4,11 @@ import 'package:get/get.dart';
 import 'package:pbl6_app/src/controller/func/func_useful.dart';
 import 'package:pbl6_app/src/model/order_detail_shipper.dart';
 import 'package:pbl6_app/src/values/app_colors.dart';
+import 'package:pbl6_app/src/values/app_string.dart';
 import 'package:pbl6_app/src/widgets/app_bar_default.dart';
 
 import '../../controller/OrderController/order_shipper_controller.dart';
+import '../../utils/custome_snackbar.dart';
 import '../../values/app_styles.dart';
 import '../../widgets/image_loading_network.dart';
 
@@ -38,7 +40,6 @@ class _OrderDetailShipperScreenState extends State<OrderDetailShipperScreen> {
   Widget build(BuildContext context) {
     OrderShipperController orderController = Get.put(OrderShipperController(
         orderRepo: Get.find(), shipperController: Get.find()));
-    // orderController.showOrderDetail(id);
 
     return Scaffold(
       appBar: AppWidget.appBar('Chi tiết đơn hàng'),
@@ -50,7 +51,6 @@ class _OrderDetailShipperScreenState extends State<OrderDetailShipperScreen> {
               builder: (_) {
                 var detailOrder = orderController.orderShipper;
                 var store = detailOrder.store;
-
                 var user = detailOrder.user;
                 var cart = detailOrder.cart;
 
@@ -61,134 +61,194 @@ class _OrderDetailShipperScreenState extends State<OrderDetailShipperScreen> {
                     : Padding(
                         padding: const EdgeInsets.all(10.0),
                         child: Column(children: [
-                          Container(
-                            child: Row(
-                              children: [
-                                const Icon(
-                                  Icons.check_circle,
-                                  color: Colors.orange,
-                                ),
-                                const SizedBox(
-                                  width: 5,
-                                ),
-                                Text(
-                                  'Trạng thái đơn hàng ',
-                                  style: AppStyles.textMedium.copyWith(
-                                      color: Colors.orange,
-                                      fontWeight: FontWeight.w600),
-                                ),
-                                const Spacer(),
-                                Text(
-                                  FuncUseful.formatStatus(detailOrder.status),
-                                  style: AppStyles.textMedium
-                                      .copyWith(fontWeight: FontWeight.w600),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 10),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  border: Border.all(
-                                      width: 2, color: Colors.blueAccent)),
-                              child: Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Địa chỉ:',
-                                        style: AppStyles.textBold
-                                            .copyWith(fontSize: 16),
-                                      ),
-                                      Text(
-                                        store?.name ?? '',
-                                        style: AppStyles.textBold.copyWith(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                      Text(
-                                        store?.address ?? '',
-                                        style: AppStyles.textMedium,
-                                      ),
-                                    ]),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 10),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  border: Border.all(
-                                      width: 2, color: AppColors.mainColor1)),
-                              child: Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Giao đến:',
-                                        style: AppStyles.textBold
-                                            .copyWith(fontSize: 16),
-                                      ),
-                                      Text(
-                                        '${user?.lastName} ${user?.firstName}',
-                                        style: AppStyles.textBold.copyWith(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                      Text(
-                                        store?.address ?? '',
-                                        style: AppStyles.textMedium.copyWith(
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                    ]),
-                              ),
-                            ),
-                          ),
+                          _statusOrder(detailOrder),
+                          _infoStore(store),
+                          _infoOrderer(user, store),
                           _orderDetail(cart ?? []),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 10),
-                            child: Row(
-                              children: [
-                                Text(
-                                  'Phí ship : ${FuncUseful.formartStringPrice(detailOrder.shipCost)}đ',
-                                  style: AppStyles.textMedium
-                                      .copyWith(fontWeight: FontWeight.w600),
-                                )
-                              ],
-                            ),
+                          _totalPriceAndShipFee(detailOrder),
+                          const SizedBox(
+                            height: 20,
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 10, top: 10),
-                            child: Row(
-                              // mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Text('Tổng cộng : ',
-                                    style: AppStyles.textMedium.copyWith(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 18)),
-                                Text(
-                                    "${FuncUseful.formartStringPrice(detailOrder.totalPrice!)}đ",
-                                    style: AppStyles.textMedium.copyWith(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 18)),
-                              ],
-                            ),
-                          ),
+                          _buttonStatusOrder(detailOrder, orderController),
                         ]),
                       );
               }),
         ],
       )),
     );
+  }
+
+  Column _totalPriceAndShipFee(OrderDetailShipper detailOrder) {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 10),
+          child: Row(
+            children: [
+              Text(
+                'Phí ship : ${FuncUseful.formartStringPrice(detailOrder.shipCost)}đ',
+                style:
+                    AppStyles.textMedium.copyWith(fontWeight: FontWeight.w600),
+              )
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 10, top: 10),
+          child: Row(
+            // mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Text('Tổng cộng : ',
+                  style: AppStyles.textMedium
+                      .copyWith(fontWeight: FontWeight.w600, fontSize: 18)),
+              Text("${FuncUseful.formartStringPrice(detailOrder.totalPrice!)}đ",
+                  style: AppStyles.textMedium
+                      .copyWith(fontWeight: FontWeight.w600, fontSize: 18)),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Padding _infoOrderer(User? user, Store? store) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      child: Container(
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(width: 2, color: AppColors.mainColor1)),
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(
+              'Giao đến:',
+              style: AppStyles.textBold.copyWith(fontSize: 16),
+            ),
+            Text(
+              '${user?.lastName} ${user?.firstName}',
+              style: AppStyles.textBold
+                  .copyWith(fontSize: 16, fontWeight: FontWeight.w500),
+            ),
+            Text(
+              store?.address ?? '',
+              style: AppStyles.textMedium.copyWith(fontWeight: FontWeight.w500),
+            ),
+          ]),
+        ),
+      ),
+    );
+  }
+
+  Padding _infoStore(Store? store) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      child: Container(
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(width: 2, color: Colors.blueAccent)),
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(
+              'Địa chỉ:',
+              style: AppStyles.textBold.copyWith(fontSize: 16),
+            ),
+            Text(
+              store?.name ?? '',
+              style: AppStyles.textBold
+                  .copyWith(fontSize: 16, fontWeight: FontWeight.w500),
+            ),
+            Text(
+              store?.address ?? '',
+              style: AppStyles.textMedium,
+            ),
+          ]),
+        ),
+      ),
+    );
+  }
+
+  Row _statusOrder(OrderDetailShipper detailOrder) {
+    return Row(
+      children: [
+        const Icon(
+          Icons.check_circle,
+          color: Colors.orange,
+        ),
+        const SizedBox(
+          width: 5,
+        ),
+        Text(
+          'Trạng thái',
+          style: AppStyles.textMedium
+              .copyWith(color: Colors.orange, fontWeight: FontWeight.w600),
+        ),
+        const Spacer(),
+        Text(
+          FuncUseful.formatStatus(detailOrder.status),
+          style: AppStyles.textMedium
+              .copyWith(fontWeight: FontWeight.w600, fontSize: 14),
+        ),
+      ],
+    );
+  }
+
+  _buttonStatusOrder(OrderDetailShipper detailOrder,
+      OrderShipperController orderShipperController) {
+    return GetBuilder<OrderShipperController>(builder: (_) {
+      return detailOrder.status == AppString.statusOrder.keys.elementAt(0) ||
+              detailOrder.status == AppString.statusOrder.keys.elementAt(1)
+          ? ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.mainColor1,
+              ),
+              onPressed: () {
+                orderShipperController.changeStatusOrder(detailOrder.id!);
+              },
+              child: const Text('Nhận đơn'))
+          : detailOrder.status == AppString.statusOrder.keys.elementAt(2)
+              ? ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.mainColor1,
+                  ),
+                  onPressed: () {
+                    orderShipperController
+                        .changeStatusOrder(detailOrder.id!)
+                        .then((value) => CustomeSnackBar.showSuccessSnackTopBar(
+                            context: Get.context,
+                            title: 'Success',
+                            message: 'Xác nhận đã nhận hàng'));
+                  },
+                  child: const Text('Đã nhận hàng từ cửa hàng'))
+              : detailOrder.status == AppString.statusOrder.keys.elementAt(3)
+                  ? ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.mainColor1,
+                      ),
+                      onPressed: () {
+                        orderShipperController
+                            .changeStatusOrder(detailOrder.id!)
+                            .then((value) =>
+                                CustomeSnackBar.showSuccessSnackTopBar(
+                                    context: Get.context,
+                                    title: 'Success',
+                                    message: 'Đã hoàn thành giao hàng'));
+                      },
+                      child: const Text('Xác nhận đã giao hàng thành công'))
+                  : ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.mainColor1,
+                      ),
+                      onPressed: () {
+                        Get.offAndToNamed('/shipperNaviPage');
+
+                        // Get.offAllAndNamed('/shipperNaviPage');
+                      },
+                      child: const Text('Tìm kiếm đơn khác'));
+    });
   }
 
   _orderDetail(List<Cart> carts) {
