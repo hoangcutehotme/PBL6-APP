@@ -29,6 +29,8 @@ class _ScreenDetailOrderAndShipperState extends State<ShipperHomePage> {
       Get.put(ShipperAddressController());
   late Completer<GoogleMapController> _controllerMap;
 
+  ShipperController shipperController = Get.find();
+
   @override
   void initState() {
     super.initState();
@@ -43,62 +45,54 @@ class _ScreenDetailOrderAndShipperState extends State<ShipperHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    
     Size size = MediaQuery.of(context).size;
     final panelHeigtClose = size.height * 0.1;
     const panelHeigtExpand = 330.0;
+
     return Scaffold(
-      body: FutureBuilder<Position?>(
-        future: _addressUserController.determinePosition(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            // Show error message if there is an error determining user's position
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else {
-            Position userPosition = snapshot.data!;
-            _addressUserController.setNewMarkerLocation(userPosition);
-            return SlidingUpPanel(
-              backdropTapClosesPanel: false,
-              minHeight: panelHeigtClose,
-              maxHeight: panelHeigtExpand,
-              body: Stack(
-                children: [
-                  _googleMap(userPosition),
-                  _currentAddress(size, userPosition),
-                ],
-              ),
-              margin: const EdgeInsets.symmetric(horizontal: 8),
-              borderRadius:
-                  const BorderRadius.vertical(top: Radius.circular(18)),
-              panelBuilder: (controller) {
-                // check order if order is exist, show the way to go else show the list order
-                return _panelWidget(controller);
+      body: SlidingUpPanel(
+        backdropTapClosesPanel: true,
+        minHeight: panelHeigtClose,
+        maxHeight: panelHeigtExpand,
+        body: Stack(
+          children: [
+            FutureBuilder<Position?>(
+              future: _addressUserController.determinePosition(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else {
+                  Position userPosition = snapshot.data!;
+                  _addressUserController.setNewMarkerLocation(userPosition);
+                  return Stack(
+                    children: [
+                      _googleMap(userPosition),
+                      _currentAddress(size, userPosition),
+                    ],
+                  );
+                }
               },
-            );
-          }
+            ),
+          ],
+        ),
+        margin: const EdgeInsets.symmetric(horizontal: 8),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(18)),
+        panelBuilder: (controller) {
+          // check order if order is exist, show the way to go else show the list order
+          // return Container();
+          return _panelWidget(controller);
         },
       ),
-
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () async {
-      //     _addressUserController.determinePosition().then((value) async {
-      //       print('Address : ' +
-      //           value.latitude.toString() +
-      //           " " +
-      //           value.longitude.toString());
-
-      //       _addressUserController.setCameraToNewLocation(value);
-      //       _addressUserController.setNewMarkerLocation(value);
-      //     });
-      //   },
-      //   child: const Icon(Icons.my_location_rounded),
-      // ),
     );
   }
 
   ListView _panelWidget(ScrollController controller) {
-    ShipperController shipperController = Get.find();
+    // ShipperController shipperController = Get.find();
     return ListView(
       controller: controller,
       children: <Widget>[
@@ -118,9 +112,7 @@ class _ScreenDetailOrderAndShipperState extends State<ShipperHomePage> {
                     onPressed: () {
                       shipperController.getListOrder();
                     },
-                    icon: Container(
-                      child: const Icon(Icons.refresh),
-                    ),
+                    icon: const Icon(Icons.refresh),
                   )),
             ],
           ),
@@ -131,7 +123,7 @@ class _ScreenDetailOrderAndShipperState extends State<ShipperHomePage> {
         SizedBox(
           height: 240,
           child: GetBuilder<ShipperController>(
-              initState: (state) => shipperController.getListOrder(),
+              // initState: (state) => shipperController.getListOrder(),
               builder: (_) {
                 var listOrder = shipperController.listOrder;
 
@@ -306,6 +298,21 @@ class _ScreenDetailOrderAndShipperState extends State<ShipperHomePage> {
         zoom: 18,
       ),
       markers: _addressUserController.marker.toSet(),
+      onMapCreated: (GoogleMapController controller) {
+        if (!_controllerMap.isCompleted) {
+          _controllerMap.complete(controller);
+        }
+      },
+    );
+  }
+
+  GoogleMap _googleMapWithLatLng(LatLng userPosition) {
+    return GoogleMap(
+      initialCameraPosition: CameraPosition(
+        target: LatLng(userPosition.latitude, userPosition.longitude),
+        zoom: 13,
+      ),
+      // markers: _addressUserController.marker.toSet(),
       onMapCreated: (GoogleMapController controller) {
         if (!_controllerMap.isCompleted) {
           _controllerMap.complete(controller);

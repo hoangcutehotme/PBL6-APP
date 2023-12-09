@@ -22,37 +22,31 @@ class FuncUseful {
     return data;
   }
 
-  static void showLoading(bool loading) {
-    loading
-        ? showDialog(
-            context: Get.context!,
-            builder: (context) {
-              return const Center(child: CircularProgressIndicator());
-            })
-        : Get.back();
-  }
-
   static String formatStatus(String? status) {
     Map<String, String> statusMap = AppString.statusOrder;
 
     return statusMap.containsKey(status) ? statusMap[status]! : "Đang xử lý";
-    // return status == "Pending"
-    //     ? "Đang xử lý"
-    //     : status == "Refused"
-    //         ? "Từ chối đơn hàng"
-    //         : status == "Preparing"
-    //             ? "Đang chuẩn bị đơn hàng"
-    //             : status == "Delivering"
-    //                 ? "Đang trên đường giao hàng"
-    //                 : status == "Finished"
-    //                     ? "Đã giao hàng thành công"
-    //                     : status == "Waiting"
-    //                         ? "Đang chờ người giao hàng"
-    //                         : "Đang xử lý";
+
   }
 
   static String formartStringPrice(int? price) {
     String formattedPrice = NumberFormat('#,##0', 'vi_VN').format(price);
     return formattedPrice;
   }
+
+  static String stringDateTimeToDayMonthYear(DateTime date) {
+    return '${date.day}/${date.month}/${date.year}';
+  }
+
+  static String stringDateTimeToTime(DateTime date) {
+    return '${date.hour}:${date.minute}:${date.second}';
+  }
+  static String stringDateTimeToDay(DateTime dateTime) {
+    return DateFormat('yyyy-MM-d').format(dateTime);
+  }
+
+  static String stringDateTimeToDayMonth(DateTime dateTime) {
+    return DateFormat('d/MM').format(dateTime);
+  }
+  
 }

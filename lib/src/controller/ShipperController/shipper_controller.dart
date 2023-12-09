@@ -52,20 +52,18 @@ class ShipperController extends GetxController {
   var isFormValid = false.obs;
 
   @override
-  Future<void> onInit() async {
+  onInit() async {
     emailController = TextEditingController();
     firstNameController = TextEditingController();
     lastnameController = TextEditingController();
     addressController = TextEditingController();
     phoneController = TextEditingController();
-    await getIdToken().then((_) async {
-      if (role.value == "Shipper") {
-        await getInfoShipperrById().then((value) {
-          setInitInfo();
-          getListOrder();
-        });
-      }
-    });
+
+    await getIdToken();
+    await getInfoShipperrById();
+    await getListOrder();
+
+    setInitInfo();
 
     super.onInit();
   }
@@ -175,51 +173,30 @@ class ShipperController extends GetxController {
     final SharedPreferences prefs = await _prefs;
     id.value = prefs.getString(AppString.SHAREPREF_USERID) ?? '';
     token.value = prefs.getString(AppString.SHAREPREF_TOKEN) ?? '';
-
+    role.value = prefs.getString(AppString.ROLE) ?? '';
     update();
   }
 
   Future<void> getInfoShipperrById() async {
     try {
-      var cookies = token.value;
+      // await getIdToken();
 
-      var headers = {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $cookies',
-      };
-      var url = Uri.parse("${ApiEndPoints.baseUrl}/user/${id.value}");
+      ApiClient apiClient = Get.find();
 
-      var response = await http.get(url, headers: headers);
+      var url = Uri.parse("${ApiEndPoints.baseUrl}/shipper/${id.value}");
+      var response = await http.get(url, headers: apiClient.header);
       var json = jsonDecode(response.body);
+
       if (response.statusCode == 200) {
         user.value = Shipper.fromJson(json);
+
         _contactChoose = user.value.contact!
             .firstWhere((element) => element.id == user.value.defaultContact);
-
         update();
-        // isLoading(false);
       } else {
-        // isLoading(false);
-
-        showDialog(
-            context: Get.context!,
-            builder: (context) {
-              return SimpleDialog(
-                title: const Text("Error UserController"),
-                children: [Text(response.body.toString())],
-              );
-            });
+        
       }
     } catch (e) {
-      // isLoading(false);
-      showDialog(
-          context: Get.context!,
-          builder: (context) {
-            return SimpleDialog(
-              title: const Text("Error user"),
-              children: [Text(e.toString())],
-            );
-          });
     }
   }
 
@@ -238,25 +215,21 @@ class ShipperController extends GetxController {
   }
 
   getListOrder() async {
-    isLoading(true);
     try {
       ApiClient apiClient = Get.find();
+
       var url = "${ApiEndPoints.baseUrl}/shipper/${id.value}/find-orders";
 
       var response = await http.get(Uri.parse(url), headers: apiClient.header);
-      isLoading(false);
       if (response.statusCode == 200) {
         var json = jsonDecode(response.body);
         _listOrder = orderShipperFromJson(jsonEncode(json['data']));
         update();
       } else {
-        CustomeSnackBar.showErrorSnackBar(
-            context: Get.context, title: "Error", message: '');
+        
       }
     } catch (e) {
-      isLoading(false);
-      CustomeSnackBar.showErrorSnackBar(
-          context: Get.context, title: "Error", message: '');
+      
     }
   }
 
@@ -264,5 +237,4 @@ class ShipperController extends GetxController {
     _currentOrder = order;
     update();
   }
-  
 }

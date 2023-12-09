@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 import 'package:pbl6_app/src/controller/func/func_useful.dart';
 import 'package:pbl6_app/src/model/order_detail_shipper.dart';
+import 'package:pbl6_app/src/utils/custome_dialog.dart';
 import 'package:pbl6_app/src/values/app_colors.dart';
 import 'package:pbl6_app/src/values/app_string.dart';
 import 'package:pbl6_app/src/widgets/app_bar_default.dart';
@@ -206,7 +207,15 @@ class _OrderDetailShipperScreenState extends State<OrderDetailShipperScreen> {
                 backgroundColor: AppColors.mainColor1,
               ),
               onPressed: () {
-                orderShipperController.changeStatusOrder(detailOrder.id!);
+                CustomeDialog.showCustomeDialog(
+                    context: Get.context,
+                    title: '',
+                    message: 'Bạn có muốn nhận đơn không ???',
+                    confirmText: 'Có',
+                    pressConfirm: () {
+                      orderShipperController.changeStatusOrder(detailOrder.id!);
+                      Get.back();
+                    });
               },
               child: const Text('Nhận đơn'))
           : detailOrder.status == AppString.statusOrder.keys.elementAt(2)

@@ -17,12 +17,11 @@ class ShipperNaviPage extends StatefulWidget {
 }
 
 class _HomeMainPageState extends State<ShipperNaviPage> {
-  final BottomNavigationBarController _controller =
+  BottomNavigationBarController controller =
       Get.put(BottomNavigationBarController());
-
   final List<Widget> _screens = [
     const ShipperHomePage(),
-    const OrderShipperScreen(),
+    const StatisticShipperScreen(),
     ShipperInfoScreen()
   ];
 
@@ -31,6 +30,7 @@ class _HomeMainPageState extends State<ShipperNaviPage> {
   @override
   Widget build(BuildContext context) {
     Get.put(ShipperController(shipperRepo: Get.find()), permanent: true);
+
     return GetBuilder<BottomNavigationBarController>(builder: (controller) {
       return Scaffold(
         bottomNavigationBar: BottomNavigationBar(
@@ -74,8 +74,8 @@ class _HomeMainPageState extends State<ShipperNaviPage> {
               ),
             ),
           ],
-          currentIndex: _controller.selectedIndex,
-          onTap: _controller.onItemTappedShipper,
+          currentIndex: controller.selectedIndex,
+          onTap: controller.onItemTappedShipper,
         ),
         body: GetBuilder<BottomNavigationBarController>(
           builder: (controller) => _screens[controller.selectedIndex],
