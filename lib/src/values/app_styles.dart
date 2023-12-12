@@ -23,4 +23,9 @@ class AppStyles {
       fontSize: 15,
       color: AppColors.mainColorBackground,
       fontWeight: FontWeight.bold);
+  static const TextStyle textSemiBold = TextStyle(
+      fontFamily: AppFonts.poppins,
+      fontSize: 16,
+      color: AppColors.colorTextBold,
+      fontWeight: FontWeight.w500);
 }

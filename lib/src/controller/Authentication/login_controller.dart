@@ -124,7 +124,6 @@ class LoginController extends GetxController {
               title: "Success",
               message: "Đăng nhập thành công");
           Get.offAllNamed("/");
-          
         } else {
           LoadingFullScreen.cancelLoading();
           CustomeSnackBar.showErrorSnackBar(
@@ -132,18 +131,19 @@ class LoginController extends GetxController {
               title: "Error",
               message: 'Sai tài khoản, mật khẩu');
         }
-      } else {
+      } else if (response.statusCode == 401) {
         LoadingFullScreen.cancelLoading();
         CustomeSnackBar.showErrorSnackBar(
             context: Get.context,
             title: "Error",
-            message: json['message'].toString());
+            message: 'Sai tài khoản hoặc mật khẩu');
       }
     } catch (e) {
-      print(e.toString());
       LoadingFullScreen.cancelLoading();
       CustomeSnackBar.showErrorSnackBar(
-          context: Get.context, title: "Error", message: "");
+          context: Get.context,
+          title: "Error",
+          message: "Sai tài khoản hoặc mật khẩu");
     } finally {
       LoadingFullScreen.cancelLoading();
       isLoading(false);

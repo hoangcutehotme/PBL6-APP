@@ -1,6 +1,6 @@
-
 import 'package:flutter/material.dart';
 
+import '../controller/func/func_useful.dart';
 import '../model/product_model.dart';
 import '../values/app_colors.dart';
 import '../values/app_styles.dart';
@@ -29,7 +29,7 @@ class ProductWidget extends StatelessWidget {
               style: AppStyles.textMedium.copyWith(fontWeight: FontWeight.w600),
             ),
             Text(
-              "${product.price}đ",
+              "${FuncUseful.formartStringPrice(product.price)}đ",
               style: AppStyles.textMedium.copyWith(
                   fontWeight: FontWeight.w600, color: AppColors.mainColor1),
             ),

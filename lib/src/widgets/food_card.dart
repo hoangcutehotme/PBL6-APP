@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pbl6_app/src/model/product_model.dart';
 import 'package:pbl6_app/src/values/app_styles.dart';
+import '../controller/func/func_useful.dart';
 import '../values/app_colors.dart';
 import 'image_loading_network.dart';
 
@@ -15,23 +16,19 @@ class FoodCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: 180,
-      // padding: const EdgeInsets.only(right: 10),
-      decoration: const BoxDecoration(
-          // color: AppColors.mainColor1,
-          // borderRadius: BorderRadius.circular(10),
-          ),
       child: GestureDetector(
         onTap: () {
           //to detail view
-          Get.toNamed("/detailshop");
+          Get.toNamed("/detailshop", arguments: food.storeId);
         },
         child: Stack(
           alignment: Alignment.topCenter,
           children: [
             ImageLoadingNetwork(
-                image: food.images == null ? '' : food.images![0], size: const Size(160, 140)),
+                image: food.images == null ? '' : food.images![0],
+                size: const Size(160, 140)),
             Positioned(
               top: 130,
               left: 5,
@@ -58,7 +55,7 @@ class FoodCard extends StatelessWidget {
             Positioned(
               top: 175,
               child: Text(
-                "${food.price.toInt().toString()}đ",
+                "${FuncUseful.formartStringPrice(food.price.toInt())}đ",
                 style: AppStyles.textBold
                     .copyWith(fontSize: 16, color: AppColors.mainColor1),
                 // textAlign: TextAlign.center,

@@ -11,6 +11,7 @@ import 'package:pbl6_app/src/widgets/image_loading_network.dart';
 
 import '../../controller/StoreController/store_detail_controller.dart';
 import '../../controller/UserController/user_controller.dart';
+import '../../controller/func/func_useful.dart';
 import '../../widgets/food_cell_cart.dart';
 import '../userScreen/list_contact.dart';
 
@@ -161,9 +162,7 @@ class _OrderDetailState extends State<OrderDetail> {
                   minimumSize: Size(size.width * 0.9, 55)),
               onPressed: () {
                 var isVNPay = placeOrderController.isVNPayOption;
-                print(isVNPay);
                 if (isVNPay) {
-                  // pay with VNPay
                   placeOrderController.placeOrderWithVNPay().then((value) {
                     placeOrderController.onPayment(value);
                   });
@@ -175,7 +174,7 @@ class _OrderDetailState extends State<OrderDetail> {
                 }
               },
               child: Text(
-                "Đặt đơn - ${Get.find<CartController>().productTotal().toInt() + (shipController.currentInfo.shipCost ?? 0).toInt()}đ",
+                "Đặt đơn - ${FuncUseful.formartStringPrice(Get.find<CartController>().productTotal().toInt() + (shipController.currentInfo.shipCost ?? 0).toInt())}đ",
                 style: AppStyles.textMedium.copyWith(
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
@@ -278,7 +277,7 @@ class _OrderDetailState extends State<OrderDetail> {
                           .copyWith(fontSize: 14, fontWeight: FontWeight.w400),
                     ),
                     trailing: Text(
-                      "${(cartProduct.price.toInt()) * (cartProduct.quantity)}đ",
+                      "${FuncUseful.formartStringPrice(cartProduct.price.toInt() * cartProduct.quantity)}đ",
                       style: AppStyles.textMedium
                           .copyWith(fontSize: 15, fontWeight: FontWeight.w500),
                     ),
@@ -321,7 +320,8 @@ class _OrderDetailState extends State<OrderDetail> {
                     style: AppStyles.textMedium
                         .copyWith(fontWeight: FontWeight.w500)),
                 Expanded(child: Container()),
-                Text("${Get.find<CartController>().productTotal().toInt()}đ",
+                Text(
+                    "${FuncUseful.formartStringPrice(Get.find<CartController>().productTotal())}đ",
                     style: AppStyles.textMedium
                         .copyWith(fontWeight: FontWeight.w500)),
               ],
@@ -337,7 +337,8 @@ class _OrderDetailState extends State<OrderDetail> {
                     style: AppStyles.textMedium
                         .copyWith(fontWeight: FontWeight.w500)),
                 Expanded(child: Container()),
-                Text((shipController.currentInfo.shipCost ?? 0).toString(),
+                Text(
+                    "${FuncUseful.formartStringPrice((shipController.currentInfo.shipCost ?? 0))}đ",
                     style: AppStyles.textMedium
                         .copyWith(fontWeight: FontWeight.w500)),
               ],
@@ -355,7 +356,7 @@ class _OrderDetailState extends State<OrderDetail> {
                 ),
                 Expanded(child: Container()),
                 Text(
-                    "${Get.find<CartController>().productTotal().toInt() + (shipController.currentInfo.shipCost ?? 0).toInt()}đ",
+                    "${FuncUseful.formartStringPrice(Get.find<CartController>().productTotal().toInt() + (shipController.currentInfo.shipCost ?? 0).toInt())}đ",
                     style: AppStyles.textBold
                         .copyWith(fontSize: 15, color: AppColors.mainColor1)),
               ],

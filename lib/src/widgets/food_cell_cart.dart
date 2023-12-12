@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:pbl6_app/src/utils/custome_snackbar.dart';
 
 import '../controller/StoreController/cart_controller.dart';
+import '../controller/func/func_useful.dart';
 import '../model/cart_model.dart';
 import '../values/app_assets.dart';
 import '../values/app_colors.dart';
@@ -54,6 +55,7 @@ class FoodInfoCellCart extends StatelessWidget {
                       TextEditingController noteController =
                           TextEditingController();
                       noteController.text = product.notes ?? '';
+
                       Get.bottomSheet(
                         SingleChildScrollView(
                           child: Column(
@@ -62,10 +64,6 @@ class FoodInfoCellCart extends StatelessWidget {
                                 height: 50,
                                 decoration: const BoxDecoration(
                                   color: Colors.white,
-                                  // borderRadius: BorderRadius.only(
-                                  //   topLeft: Radius.circular(15),
-                                  //   topRight: Radius.circular(15),
-                                  // ),
                                 ),
                                 child: Stack(
                                   children: [
@@ -75,18 +73,38 @@ class FoodInfoCellCart extends StatelessWidget {
                                               fontWeight: FontWeight.w600)),
                                     ),
                                     Positioned(
+                                      left: 0,
+                                      child: TextButton(
+                                          onPressed: () {
+                                            noteController.text = '';
+                                            controller.updateNote(
+                                                product.id, '');
+                                          },
+                                          child: Text(
+                                            "Xoá",
+                                            style: AppStyles.textMedium
+                                                .copyWith(
+                                                    color: AppColors.mainColor1,
+                                                    fontWeight:
+                                                        FontWeight.w600),
+                                          )),
+                                    ),
+                                    Positioned(
                                       right: 0,
                                       child: TextButton(
                                           onPressed: () {
-                                            CustomeSnackBar.showSuccessSnackTopBar(
-                                                context: Get.context,
-                                                title: 'Success',
-                                                message:
-                                                    'Cập nhật ghi chú thành công');
-                                            FocusManager.instance.primaryFocus
-                                                ?.unfocus();
-                                            controller.updateNote(product.id,
-                                                noteController.text);
+                                            if (noteController.text != '') {
+                                              CustomeSnackBar
+                                                  .showSuccessSnackTopBar(
+                                                      context: Get.context,
+                                                      title: 'Success',
+                                                      message:
+                                                          'Cập nhật ghi chú thành công');
+                                              FocusManager.instance.primaryFocus
+                                                  ?.unfocus();
+                                              controller.updateNote(product.id,
+                                                  noteController.text);
+                                            }
                                           },
                                           child: Text(
                                             "Thêm",
@@ -108,6 +126,8 @@ class FoodInfoCellCart extends StatelessWidget {
                                     color: Colors.white,
                                   ),
                                   child: TextField(
+                                    maxLines: null,
+                                    keyboardType: TextInputType.multiline,
                                     controller: noteController,
                                     decoration: InputDecoration(
                                       contentPadding:
@@ -125,13 +145,18 @@ class FoodInfoCellCart extends StatelessWidget {
                         isScrollControlled: true,
                       );
                     },
-                    child: Text("Ghi chú",
+                    child: Text(
+                        product.notes == ''
+                            ? 'Ghi chú'
+                            : product.notes ?? 'Ghi chú',
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
                         style: AppStyles.textSmall
                             .copyWith(fontStyle: FontStyle.italic))),
                 Row(
                   children: [
                     Text(
-                      "${product.price.toInt()}đ",
+                      "${FuncUseful.formartStringPrice(product.price)}đ",
                       style: AppStyles.textMedium.copyWith(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,

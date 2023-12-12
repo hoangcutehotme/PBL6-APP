@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pbl6_app/src/controller/ShipperController/shipper_controller.dart';
 
 import 'package:pbl6_app/src/controller/func/func_useful.dart';
 import 'package:pbl6_app/src/model/order_detail_shipper.dart';
@@ -46,6 +47,7 @@ class _OrderDetailShipperScreenState extends State<OrderDetailShipperScreen> {
       appBar: AppWidget.appBar('Chi tiết đơn hàng'),
       body: SingleChildScrollView(
           child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           GetBuilder<OrderShipperController>(
               initState: (state) => orderController.showOrderDetail(id),
@@ -64,7 +66,7 @@ class _OrderDetailShipperScreenState extends State<OrderDetailShipperScreen> {
                         child: Column(children: [
                           _statusOrder(detailOrder),
                           _infoStore(store),
-                          _infoOrderer(user, store),
+                          _infoOrderer(user, detailOrder),
                           _orderDetail(cart ?? []),
                           _totalPriceAndShipFee(detailOrder),
                           const SizedBox(
@@ -112,7 +114,7 @@ class _OrderDetailShipperScreenState extends State<OrderDetailShipperScreen> {
     );
   }
 
-  Padding _infoOrderer(User? user, Store? store) {
+  Padding _infoOrderer(User? user, OrderDetailShipper orderDetail) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       child: Container(
@@ -121,22 +123,30 @@ class _OrderDetailShipperScreenState extends State<OrderDetailShipperScreen> {
             border: Border.all(width: 2, color: AppColors.mainColor1)),
         child: Padding(
           padding: const EdgeInsets.all(10.0),
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(
-              'Giao đến:',
-              style: AppStyles.textBold.copyWith(fontSize: 16),
-            ),
-            Text(
-              '${user?.lastName} ${user?.firstName}',
-              style: AppStyles.textBold
-                  .copyWith(fontSize: 16, fontWeight: FontWeight.w500),
-            ),
-            Text(
-              store?.address ?? '',
-              style: AppStyles.textMedium.copyWith(fontWeight: FontWeight.w500),
-            ),
-          ]),
+          child: Row(
+            children: [
+              Expanded(
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Giao đến:',
+                        style: AppStyles.textBold.copyWith(fontSize: 16),
+                      ),
+                      Text(
+                        '${user?.lastName} ${user?.firstName}',
+                        style: AppStyles.textBold.copyWith(
+                            fontSize: 16, fontWeight: FontWeight.w500),
+                      ),
+                      Text(
+                        orderDetail.contact?.address ?? '',
+                        style: AppStyles.textMedium
+                            .copyWith(fontWeight: FontWeight.w500),
+                      ),
+                    ]),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -204,6 +214,8 @@ class _OrderDetailShipperScreenState extends State<OrderDetailShipperScreen> {
               detailOrder.status == AppString.statusOrder.keys.elementAt(1)
           ? ElevatedButton(
               style: ElevatedButton.styleFrom(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 25, vertical: 8),
                 backgroundColor: AppColors.mainColor1,
               ),
               onPressed: () {
@@ -217,10 +229,14 @@ class _OrderDetailShipperScreenState extends State<OrderDetailShipperScreen> {
                       Get.back();
                     });
               },
-              child: const Text('Nhận đơn'))
+              child: Text('Xác nhận nhận đơn',
+                  style: AppStyles.textSemiBold
+                      .copyWith(color: AppColors.mainColorBackground)))
           : detailOrder.status == AppString.statusOrder.keys.elementAt(2)
               ? ElevatedButton(
                   style: ElevatedButton.styleFrom(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 25, vertical: 8),
                     backgroundColor: AppColors.mainColor1,
                   ),
                   onPressed: () {
@@ -231,10 +247,16 @@ class _OrderDetailShipperScreenState extends State<OrderDetailShipperScreen> {
                             title: 'Success',
                             message: 'Xác nhận đã nhận hàng'));
                   },
-                  child: const Text('Đã nhận hàng từ cửa hàng'))
+                  child: Text(
+                    'Đã nhận hàng từ cửa hàng',
+                    style: AppStyles.textSemiBold
+                        .copyWith(color: AppColors.mainColorBackground),
+                  ))
               : detailOrder.status == AppString.statusOrder.keys.elementAt(3)
                   ? ElevatedButton(
                       style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 25, vertical: 8),
                         backgroundColor: AppColors.mainColor1,
                       ),
                       onPressed: () {
@@ -246,17 +268,24 @@ class _OrderDetailShipperScreenState extends State<OrderDetailShipperScreen> {
                                     title: 'Success',
                                     message: 'Đã hoàn thành giao hàng'));
                       },
-                      child: const Text('Xác nhận đã giao hàng thành công'))
+                      child: Text('Xác nhận đã giao hàng thành công',
+                          style: AppStyles.textSemiBold
+                              .copyWith(color: AppColors.mainColorBackground)))
                   : ElevatedButton(
                       style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 25, vertical: 8),
                         backgroundColor: AppColors.mainColor1,
                       ),
                       onPressed: () {
                         Get.offAndToNamed('/shipperNaviPage');
+                        Get.find<ShipperController>().getListOrder();
 
                         // Get.offAllAndNamed('/shipperNaviPage');
                       },
-                      child: const Text('Tìm kiếm đơn khác'));
+                      child: Text('Tìm kiếm đơn khác',
+                          style: AppStyles.textSemiBold
+                              .copyWith(color: AppColors.mainColorBackground)));
     });
   }
 
