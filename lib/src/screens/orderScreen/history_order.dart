@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pbl6_app/src/controller/OrderController/order_controller.dart';
+import 'package:pbl6_app/src/controller/func/func_useful.dart';
 import 'package:pbl6_app/src/values/app_colors.dart';
 import 'package:pbl6_app/src/values/app_styles.dart';
 
@@ -34,14 +35,16 @@ class _HistoryOrderTabState extends State<HistoryOrderTab> {
                         child: Column(children: [
                           Row(
                             children: [
-                              const Text(
+                              Text(
                                 "Đơn hàng",
-                                style: AppStyles.textMedium,
+                                style: AppStyles.textMedium
+                                    .copyWith(fontWeight: FontWeight.w500),
                               ),
                               Expanded(child: Container()),
                               Text(
                                   "${order.dateOrdered!.day}/${order.dateOrdered!.month}/${order.dateOrdered!.year} - ${order.dateOrdered!.hour}:${order.dateOrdered!.minute}",
-                                  style: AppStyles.textMedium)
+                                  style: AppStyles.textMedium
+                                      .copyWith(fontWeight: FontWeight.w500))
                             ],
                           ),
                           Row(children: [
@@ -57,11 +60,13 @@ class _HistoryOrderTabState extends State<HistoryOrderTab> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text((order.store?.name ?? '').toString(),
-                                      style: AppStyles.textMedium),
+                                      style: AppStyles.textMedium.copyWith(
+                                          fontWeight: FontWeight.w500)),
                                   const SizedBox(
                                     height: 50,
                                   ),
-                                  Text(order.totalPrice.toString(),
+                                  Text(
+                                      "${FuncUseful.formartStringPrice(order.totalPrice)}đ",
                                       style: AppStyles.textMedium.copyWith(
                                           color: AppColors.mainColor1,
                                           fontWeight: FontWeight.w600)),
@@ -74,13 +79,9 @@ class _HistoryOrderTabState extends State<HistoryOrderTab> {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               const Spacer(),
-                              Text(
-                                  order.status == "Pending"
-                                      ? "Đang xử lý"
-                                      : (order.status == "Refused"
-                                          ? "Từ chối đơn hàng"
-                                          : "Đang xử lý"),
-                                  style: AppStyles.textMedium),
+                              Text(FuncUseful.formatStatus(order.status),
+                                  style: AppStyles.textMedium
+                                      .copyWith(fontWeight: FontWeight.w500)),
                             ],
                           )
                         ])),

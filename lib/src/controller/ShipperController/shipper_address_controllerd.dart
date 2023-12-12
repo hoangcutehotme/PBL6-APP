@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
@@ -86,6 +85,7 @@ class ShipperAddressController extends GetxController {
         "${ApiEndPoints.baseUrl}/shipper/654fadcef9dbb10008002b48/lat/${position.latitude}/lng/${position.longitude}";
     ApiClient apiClient = Get.find();
     try {
+      print('set location shipper');
       var response = await http.post(Uri.parse(url), headers: apiClient.header);
       if (response.statusCode == 200) {
       } else {

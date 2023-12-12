@@ -8,7 +8,7 @@ class OrderRepo extends GetxService {
 
   OrderRepo({required this.apiClient});
 
-  getOrderDetailShipper(String id) async {
+  getListOrderShipper(String id) async {
     var url = "${ApiEndPoints.baseUrl}/shipper/$id/find-orders";
     try {
       var response = await http.get(Uri.parse(url), headers: apiClient.header);
@@ -18,4 +18,33 @@ class OrderRepo extends GetxService {
     }
     // return await apiClient.getData(url);
   }
+
+  getOrderDetailShipper(String id) async {
+
+    var url = "${ApiEndPoints.baseUrl}/order/$id";
+
+    try {
+      var response = await http.get(Uri.parse(url), headers: apiClient.header);
+      return response;
+    } catch (e) {
+
+      return const Response(statusCode: 1);
+
+    }
+  }
+
+  changeStatusShipper(String idOrder,String idShipper) async {
+    var url = "${ApiEndPoints.baseUrl}/order/$idOrder/shipper/$idShipper";
+
+    try {
+      var response = await http.put(Uri.parse(url), headers: apiClient.header);
+      return response;
+    } catch (e) {
+      return const Response(statusCode: 1);
+    }
+  }
+
+
+
+
 }

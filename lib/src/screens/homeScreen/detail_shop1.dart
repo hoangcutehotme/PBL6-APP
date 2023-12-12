@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pbl6_app/src/controller/StoreController/cart_controller.dart';
 import 'package:pbl6_app/src/controller/StoreController/store_detail_controller.dart';
+import 'package:pbl6_app/src/controller/func/func_useful.dart';
 import 'package:pbl6_app/src/model/product_model.dart';
 import 'package:pbl6_app/src/model/store_model.dart';
 import 'package:pbl6_app/src/values/app_assets.dart';
@@ -24,12 +25,10 @@ class _DetailShopState extends State<DetailShop> {
   bool showCart = false;
   ScrollController? _scrollController;
   String storeId = '';
-  // UserController userController = Get.find();
 
   @override
   void initState() {
     super.initState();
-
     storeId = Get.arguments;
 
     _scrollController = ScrollController();
@@ -57,7 +56,6 @@ class _DetailShopState extends State<DetailShop> {
         initState: (_) => storeController.updateStore(storeId),
         builder: (_) {
           StoreModel store = storeController.store;
-          print(store);
           List<ProductModel> products = storeController.listProduct;
 
           return CustomScrollView(
@@ -415,9 +413,11 @@ class _DetailShopState extends State<DetailShop> {
                             Expanded(child: Container()),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Text('${controller.productTotal()}đ',
-                                  style: AppStyles.textMedium
-                                      .copyWith(fontWeight: FontWeight.w500)),
+                              child: Text(
+                                  '${FuncUseful.formartStringPrice(controller.productTotal())}đ',
+                                  style: AppStyles.textMedium.copyWith(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 16)),
                             ),
                           ]),
                     ),
@@ -447,7 +447,6 @@ class _DetailShopState extends State<DetailShop> {
       },
     );
   }
-
 }
 
 class _FlexibleHeadBar extends StatelessWidget {

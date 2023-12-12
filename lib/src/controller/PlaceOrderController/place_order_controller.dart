@@ -4,6 +4,7 @@ import 'package:pbl6_app/src/controller/StoreController/cart_controller.dart';
 import 'package:pbl6_app/src/controller/UserController/ship_info_cart.dart';
 import 'package:pbl6_app/src/utils/api_endpoints.dart';
 import 'package:pbl6_app/src/utils/custome_snackbar.dart';
+import 'package:pbl6_app/src/utils/loading_full_screen.dart';
 import 'package:vnpay_flutter/vnpay_flutter.dart';
 import '../../screens/homeScreen/order_success.dart';
 import '../StoreController/store_detail_controller.dart';
@@ -39,8 +40,7 @@ class PlaceOrderController extends GetxController {
   Future<dynamic> placeOrderWithVNPay() async {
     var body = {
       "cart": getCart(),
-      "coordinates":
-          shippingFeeController.currentInfo.contact!.location!.coordinates,
+      "contact": shippingFeeController.currentInfo.contact?.id,
       "totalPrice": (cartController.productTotal() +
           shippingFeeController.currentInfo.shipCost!.toInt()),
       "shipCost": shippingFeeController.currentInfo.shipCost
@@ -54,25 +54,26 @@ class PlaceOrderController extends GetxController {
 
     var url =
         "${ApiEndPoints.baseUrl}/order/user/${Get.find<UserController>().id.value}/store/${Get.find<StoreDetailController>().storeId}";
-
+    LoadingFullScreen.showLoading();
     try {
       var jsonBody = jsonEncode(body);
       var response =
           await http.post(Uri.parse(url), headers: headers, body: jsonBody);
 
       var json = jsonDecode(response.body);
+      
       if (response.statusCode == 200) {
-        var data = json['data'];
         var urlNew = json['url'].toString();
-        print(urlNew);
         return urlNew;
       } else {
-        print("Errror");
+        print("Error");
       }
       return '';
     } catch (e) {
       print("error $e");
       return '';
+    } finally {
+      LoadingFullScreen.cancelLoading();
     }
   }
 
@@ -83,12 +84,18 @@ class PlaceOrderController extends GetxController {
         VNPAYFlutter.instance.show(
           paymentUrl: paymentUrl,
           onPaymentSuccess: (params) async {
-            print("Success>>>>>>>>>$params");
+            CustomeSnackBar.showMessageTopBar(
+                context: Get.context,
+                title: 'Thông báo',
+                message: 'Thanh toán thành công');
             await checkoutAfterPayment(params)
                 .then((value) => Get.to(() => const OrderSuccess()));
           },
           onPaymentError: (params) {
-            // Get.back();
+            CustomeSnackBar.showMessageTopBar(
+                context: Get.context,
+                title: 'Thông báo',
+                message: 'Thanh toán không thành công');
           },
           onWebPaymentComplete: () {},
         );
@@ -98,7 +105,12 @@ class PlaceOrderController extends GetxController {
             title: 'Error',
             message: 'Thanh toán không thành công');
       }
-    } catch (e) {}
+    } catch (e) {
+      CustomeSnackBar.showWarningTopBar(
+          context: Get.context,
+          title: 'Error throw',
+          message: 'Thanh toán không thành công');
+    }
   }
 
   Future checkoutAfterPayment(Map<String, dynamic> params) async {

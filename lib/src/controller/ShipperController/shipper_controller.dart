@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:pbl6_app/src/data/api/api_client.dart';
-import 'package:pbl6_app/src/model/contact_model.dart';
+import 'package:pbl6_app/src/model/contact_model.dart' as ContactModel;
+import 'package:pbl6_app/src/model/order_detail_shipper.dart';
 import 'package:pbl6_app/src/model/shipper.dart';
 import 'package:pbl6_app/src/model/shipper_order.dart';
 import 'package:pbl6_app/src/values/app_string.dart';
@@ -33,10 +34,12 @@ class ShipperController extends GetxController {
   // list order shipper
   List<OrderShipper> _listOrder = [];
   List<OrderShipper> get listOrder => _listOrder;
-
-  Contact _contactChoose = Contact();
-
-  Contact get contacChoose => _contactChoose;
+  // current shipper order
+  OrderDetailShipper _currentOrder = OrderDetailShipper();
+  OrderDetailShipper get currentOrder => _currentOrder;
+  // current contact
+  ContactModel.Contact _contactChoose = ContactModel.Contact();
+  ContactModel.Contact get contacChoose => _contactChoose;
 
   final GlobalKey<FormState> changeInfoKey = GlobalKey<FormState>();
 
@@ -49,20 +52,18 @@ class ShipperController extends GetxController {
   var isFormValid = false.obs;
 
   @override
-  Future<void> onInit() async {
+  onInit() async {
     emailController = TextEditingController();
     firstNameController = TextEditingController();
     lastnameController = TextEditingController();
     addressController = TextEditingController();
     phoneController = TextEditingController();
-    await getIdToken().then((_) async {
-      if (role.value == "Shipper") {
-        await getInfoShipperrById().then((value) {
-          setInitInfo();
-          getListOrder();
-        });
-      }
-    });
+
+    await getIdToken();
+    await getInfoShipperrById();
+    await getListOrder();
+
+    setInitInfo();
 
     super.onInit();
   }
@@ -172,51 +173,30 @@ class ShipperController extends GetxController {
     final SharedPreferences prefs = await _prefs;
     id.value = prefs.getString(AppString.SHAREPREF_USERID) ?? '';
     token.value = prefs.getString(AppString.SHAREPREF_TOKEN) ?? '';
-
+    role.value = prefs.getString(AppString.ROLE) ?? '';
     update();
   }
 
   Future<void> getInfoShipperrById() async {
     try {
-      var cookies = token.value;
+      // await getIdToken();
 
-      var headers = {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $cookies',
-      };
-      var url = Uri.parse("${ApiEndPoints.baseUrl}/user/${id.value}");
+      ApiClient apiClient = Get.find();
 
-      var response = await http.get(url, headers: headers);
+      var url = Uri.parse("${ApiEndPoints.baseUrl}/shipper/${id.value}");
+      var response = await http.get(url, headers: apiClient.header);
       var json = jsonDecode(response.body);
+
       if (response.statusCode == 200) {
         user.value = Shipper.fromJson(json);
+
         _contactChoose = user.value.contact!
             .firstWhere((element) => element.id == user.value.defaultContact);
-
         update();
-        // isLoading(false);
       } else {
-        // isLoading(false);
-
-        showDialog(
-            context: Get.context!,
-            builder: (context) {
-              return SimpleDialog(
-                title: const Text("Error UserController"),
-                children: [Text(response.body.toString())],
-              );
-            });
+        
       }
     } catch (e) {
-      // isLoading(false);
-      showDialog(
-          context: Get.context!,
-          builder: (context) {
-            return SimpleDialog(
-              title: const Text("Error user"),
-              children: [Text(e.toString())],
-            );
-          });
     }
   }
 
@@ -228,7 +208,7 @@ class ShipperController extends GetxController {
 
   // change the address to delivery
 
-  changeAddressContactDefault(Contact contact) {
+  changeAddressContactDefault(ContactModel.Contact contact) {
     // _contactChoose = Contact();
     _contactChoose = contact;
     update();
@@ -237,21 +217,24 @@ class ShipperController extends GetxController {
   getListOrder() async {
     try {
       ApiClient apiClient = Get.find();
+
       var url = "${ApiEndPoints.baseUrl}/shipper/${id.value}/find-orders";
 
       var response = await http.get(Uri.parse(url), headers: apiClient.header);
-
       if (response.statusCode == 200) {
         var json = jsonDecode(response.body);
         _listOrder = orderShipperFromJson(jsonEncode(json['data']));
         update();
       } else {
-        CustomeSnackBar.showErrorSnackBar(
-            context: Get.context, title: "Error", message: '');
+        
       }
     } catch (e) {
-      CustomeSnackBar.showErrorSnackBar(
-          context: Get.context, title: "Error", message: '');
+      
     }
+  }
+
+  updateOrderDetail(OrderDetailShipper order) {
+    _currentOrder = order;
+    update();
   }
 }

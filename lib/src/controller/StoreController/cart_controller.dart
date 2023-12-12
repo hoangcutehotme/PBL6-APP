@@ -14,42 +14,38 @@ class CartController extends GetxController {
 
   Map<String, CartModel> get products => _products;
 
-  // final _cart = {}.obs;
+  // saveCart() async {
+  //   final SharedPreferences prefs = await _prefs;
+  //   var saveData = jsonEncode(_products);
+  //   var listCartJson = prefs.getStringList(AppString.cart_pref);
+  //   var listCart = [];
+  //   if (listCartJson != null) {
+  //     for (var value in listCartJson) {
+  //       listCart.add(jsonDecode(value));
+  //     }
+  //     // Map<String, dynamic> cartMap = jsonDecode(listCart);
+  //     // Map<String, CartModel> cart = {};
+  //     // cartMap.forEach((key, value) {
+  //     //   cart[key] = CartModel.fromJson(value);
+  //     // });
+  //   } else {
+  //     await prefs.setStringList(AppString.cart_pref, [saveData]);
+  //   }
+  // }
 
-  // get cart => _cart;
-
-  saveCart() async {
-    final SharedPreferences prefs = await _prefs;
-    var saveData = jsonEncode(_products);
-    var listCartJson = prefs.getStringList(AppString.cart_pref);
-    var listCart = [];
-    if (listCartJson != null) {
-      for (var value in listCartJson) {
-        listCart.add(jsonDecode(value));
-      }
-      // Map<String, dynamic> cartMap = jsonDecode(listCart);
-      // Map<String, CartModel> cart = {};
-      // cartMap.forEach((key, value) {
-      //   cart[key] = CartModel.fromJson(value);
-      // });
-    } else {
-      await prefs.setStringList(AppString.cart_pref, [saveData]);
-    }
-  }
-
-  Future<Map<String, CartModel>> getCart() async {
-    final SharedPreferences prefs = await _prefs;
-    List<String>? cartJson = prefs.getStringList(AppString.cart_pref);
-    if (cartJson != null) {
-      // Map<String, dynamic> cartMap = jsonDecode(cartJson);
-      // Map<String, CartModel> cart = {};
-      // cartMap.forEach((key, value) {
-      //   cart[key] = CartModel.fromJson(value);
-      // });
-      // return cart;
-    }
-    return {};
-  }
+  // Future<Map<String, CartModel>> getCart() async {
+  //   final SharedPreferences prefs = await _prefs;
+  //   List<String>? cartJson = prefs.getStringList(AppString.cart_pref);
+  //   if (cartJson != null) {
+  //     // Map<String, dynamic> cartMap = jsonDecode(cartJson);
+  //     // Map<String, CartModel> cart = {};
+  //     // cartMap.forEach((key, value) {
+  //     //   cart[key] = CartModel.fromJson(value);
+  //     // });
+  //     // return cart;
+  //   }
+  //   return {};
+  // }
 
   int productTotal() {
     var total = 0;
@@ -61,12 +57,7 @@ class CartController extends GetxController {
   }
 
   checkShowCart() {
-    print("show cart");
     return products.isEmpty ? false : true;
-  }
-
-  showProductCart() {
-    print(_products);
   }
 
   addProduct(ProductModel product) {

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pbl6_app/src/values/app_colors.dart';
 
 class LoadingFullScreen {
   static void showLoading() {

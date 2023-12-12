@@ -4,6 +4,7 @@ import 'package:pbl6_app/src/controller/StoreController/cart_controller.dart';
 import 'package:pbl6_app/src/model/product_model.dart';
 import 'package:pbl6_app/src/widgets/image_loading_network.dart';
 
+import '../controller/func/func_useful.dart';
 import '../values/app_assets.dart';
 import '../values/app_colors.dart';
 import '../values/app_styles.dart';
@@ -30,7 +31,8 @@ class FoodInfoCell extends StatelessWidget {
           ClipRRect(
               borderRadius: BorderRadius.circular(5),
               child: ImageLoadingNetwork(
-                  image: product.images[0], size: const Size(160, 130))),
+                  image: product.images == null ? '' : product.images![0],
+                  size: const Size(160, 130))),
           Expanded(
               child: Padding(
             padding: const EdgeInsets.only(left: 8),
@@ -46,7 +48,7 @@ class FoodInfoCell extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      "${product.price.toInt()}đ",
+                      "${FuncUseful.formartStringPrice(product.price)}đ",
                       style: AppStyles.textMedium.copyWith(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,

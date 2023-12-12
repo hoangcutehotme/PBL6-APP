@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pbl6_app/src/controller/ProductController/product_controller.dart';
-import 'package:pbl6_app/src/model/product_model.dart';
+
 import 'package:pbl6_app/src/values/app_colors.dart';
 import 'package:pbl6_app/src/values/app_styles.dart';
-import 'package:pbl6_app/src/widgets/image_loading_network.dart';
+
 import 'package:pbl6_app/src/widgets/skelton.dart';
 
 import '../../widgets/product_category_card.dart';
