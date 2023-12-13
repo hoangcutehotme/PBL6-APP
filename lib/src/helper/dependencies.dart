@@ -24,7 +24,7 @@ Future<void> init() async {
   Get.lazyPut(() => UserRespo(apiClient: Get.find()));
   Get.lazyPut(() => ShipperRepo(apiClient: Get.find()));
   Get.lazyPut(() => OrderRepo(apiClient: Get.find()));
-  Get.lazyPut(() => OrderStatisticRepo(apiClient: Get.find(), sharedPreferences: Get.find()));
+  Get.lazyPut(() => OrderStatisticRepo(apiClient: Get.find()));
 
   // Controller
   Get.lazyPut(
@@ -34,11 +34,8 @@ Future<void> init() async {
   );
 
   Get.lazyPut(
-    () => StaticOrderShipperController(orderStatisticRepo: Get.find()
-      
-    ),
+    () => StaticOrderShipperController(orderStatisticRepo: Get.find()),
   );
-  
 
   Get.lazyPut(() => OrderShipperController(
         orderRepo: Get.find(),

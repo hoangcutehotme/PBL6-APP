@@ -7,13 +7,14 @@ import 'package:http/http.dart' as http;
 
 class OrderStatisticRepo extends GetxService {
   final ApiClient apiClient;
-  final SharedPreferences sharedPreferences;
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
   OrderStatisticRepo(
-      {required this.sharedPreferences, required this.apiClient});
+      {required this.apiClient});
 
   Future getStatisticDaily() async {
-    var idShipper = sharedPreferences.getString(AppString.SHAREPREF_USERID);
+    final SharedPreferences prefs = await _prefs;
+    var idShipper = prefs.getString(AppString.SHAREPREF_USERID);
     var url = "${ApiEndPoints.baseUrl}/shipper/$idShipper/daily";
     try {
       var response = await http.get(Uri.parse(url), headers: apiClient.header);
@@ -25,7 +26,8 @@ class OrderStatisticRepo extends GetxService {
   }
 
   Future getStatisticWeek() async {
-    var idShipper = sharedPreferences.getString(AppString.SHAREPREF_USERID);
+    final SharedPreferences prefs = await _prefs;
+    var idShipper = prefs.getString(AppString.SHAREPREF_USERID);
     var url = "${ApiEndPoints.baseUrl}/shipper/$idShipper/weekly";
     try {
       var response = await http.get(Uri.parse(url), headers: apiClient.header);
@@ -36,7 +38,8 @@ class OrderStatisticRepo extends GetxService {
   }
 
   Future getStatisticMonth() async {
-    var idShipper = sharedPreferences.getString(AppString.SHAREPREF_USERID);
+    final SharedPreferences prefs = await _prefs;
+    var idShipper = prefs.getString(AppString.SHAREPREF_USERID);
     var url = "${ApiEndPoints.baseUrl}/shipper/$idShipper/monthly";
     try {
       var response = await http.get(Uri.parse(url), headers: apiClient.header);

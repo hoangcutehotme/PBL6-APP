@@ -13,6 +13,7 @@ import '../../widgets/category_card.dart';
 import '../../widgets/food_card.dart';
 import '../../widgets/skelton.dart';
 import '../../widgets/store_card.dart';
+import '../userScreen/list_contact.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -166,40 +167,40 @@ class _HomeScreenState extends State<HomeScreen> {
 
   ListView _skeletonFoodSection() {
     return ListView.separated(
-                scrollDirection: Axis.horizontal,
-                itemCount: 4,
-                separatorBuilder: (BuildContext context, int index) {
-                  return const SizedBox(
-                    width: 20,
-                  );
-                },
-                itemBuilder: (context, index) {
-                  return const Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Skelton(
-                        width: 160,
-                        height: 140,
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Skelton(
-                        width: 140,
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Center(
-                        child: Skelton(
-                          width: 140,
-                        ),
-                      )
-                    ],
-                  );
-                },
-              );
+      scrollDirection: Axis.horizontal,
+      itemCount: 4,
+      separatorBuilder: (BuildContext context, int index) {
+        return const SizedBox(
+          width: 20,
+        );
+      },
+      itemBuilder: (context, index) {
+        return const Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Skelton(
+              width: 160,
+              height: 140,
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Skelton(
+              width: 140,
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Center(
+              child: Skelton(
+                width: 140,
+              ),
+            )
+          ],
+        );
+      },
+    );
   }
 
   Column _storeSection() {
@@ -354,7 +355,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
             onTap: () {
-              Get.toNamed('/changeaddress');
+              Get.to(() => const ListContactScreen());
             },
           ),
         ),
