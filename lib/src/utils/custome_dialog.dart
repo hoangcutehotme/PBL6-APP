@@ -28,7 +28,7 @@ class CustomeDialog {
   }
 
   static void showCustomDialog1({
-    required BuildContext context,
+    required BuildContext? context,
     required String title,
     required String message,
     required Function() pressConfirm,
@@ -49,10 +49,7 @@ class CustomeDialog {
             ),
           ),
           TextButton(
-            onPressed: () {
-              pressConfirm();
-              Get.back(); // Close the dialog after the confirmation action
-            },
+            onPressed: pressConfirm,
             child: const Text('Ok', style: AppStyles.textMedium),
           ),
         ],

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pbl6_app/src/controller/StoreController/cart_controller.dart';
 import 'package:pbl6_app/src/controller/StoreController/store_detail_controller.dart';
+import 'package:pbl6_app/src/controller/UserController/user_controller.dart';
 import 'package:pbl6_app/src/controller/func/func_useful.dart';
 import 'package:pbl6_app/src/model/product_model.dart';
 import 'package:pbl6_app/src/model/store_model.dart';
@@ -11,6 +12,7 @@ import 'package:pbl6_app/src/values/app_styles.dart';
 import 'package:pbl6_app/src/widgets/image_loading_network.dart';
 import 'package:pbl6_app/src/widgets/skelton.dart';
 
+import '../../utils/custome_dialog.dart';
 import '../../widgets/food_cell.dart';
 
 class DetailShop extends StatefulWidget {
@@ -44,6 +46,8 @@ class _DetailShopState extends State<DetailShop> {
       }
     });
   }
+
+  UserController userController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -425,7 +429,18 @@ class _DetailShopState extends State<DetailShop> {
                         flex: 2,
                         child: GestureDetector(
                           onTap: () {
-                            Get.toNamed("/detailorder");
+                            if (userController.id.value == "") {
+                              CustomeDialog.showCustomDialog1(
+                                context: Get.context,
+                                title: 'Thông báo',
+                                message: 'Bạn chưa đăng nhập - Đăng nhập ngay ',
+                                pressConfirm: () {
+                                  Get.toNamed("/signin");
+                                },
+                              );
+                            } else {
+                              Get.toNamed("/detailorder");
+                            }
                           },
                           child: Container(
                             height: 58,

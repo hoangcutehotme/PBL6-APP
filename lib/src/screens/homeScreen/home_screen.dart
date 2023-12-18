@@ -8,6 +8,7 @@ import 'package:pbl6_app/src/model/food_category_model.dart';
 import 'package:pbl6_app/src/screens/searchScreen/seach_section.dart';
 import 'package:pbl6_app/src/values/app_styles.dart';
 import '../../model/store_model.dart';
+import '../../utils/custome_dialog.dart';
 import '../../values/app_colors.dart';
 import '../../widgets/category_card.dart';
 import '../../widgets/food_card.dart';
@@ -337,11 +338,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 GetBuilder<UserController>(builder: (_) {
                   if (controller.contacChoose.address == null) {
                     return const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                        ));
+                        width: 20, height: 20, child: Text(''));
                   } else {
                     return Flexible(
                       child: Text(
@@ -355,7 +352,15 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
             onTap: () {
-              Get.to(() => const ListContactScreen());
+              controller.id.value == ''
+                  ? CustomeDialog.showCustomDialog1(
+                      context: context,
+                      title: 'Thông báo',
+                      message: 'Bạn chưa đăng ký - Đăng ký ngay ',
+                      pressConfirm: () {
+                        Get.toNamed("/signup");
+                      })
+                  : Get.to(() => const ListContactScreen());
             },
           ),
         ),
