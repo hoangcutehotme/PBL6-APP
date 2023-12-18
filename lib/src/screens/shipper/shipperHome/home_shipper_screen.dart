@@ -13,12 +13,12 @@ import 'package:pbl6_app/src/values/app_assets.dart';
 import 'package:pbl6_app/src/values/app_values.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
-import '../../model/order_detail_shipper.dart';
-import '../../utils/custome_dialog.dart';
-import '../../utils/custome_snackbar.dart';
-import '../../values/app_colors.dart';
-import '../../values/app_string.dart';
-import '../../values/app_styles.dart';
+import '../../../model/order_detail_shipper.dart';
+import '../../../utils/custome_dialog.dart';
+import '../../../utils/custome_snackbar.dart';
+import '../../../values/app_colors.dart';
+import '../../../values/app_string.dart';
+import '../../../values/app_styles.dart';
 import 'order_detail_shipper_screen.dart';
 
 class ShipperHomePage extends StatefulWidget {
@@ -54,13 +54,13 @@ class _ScreenDetailOrderAndShipperState extends State<ShipperHomePage> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     var panelHeigtClose = AppValues.APP_VALUES_HEIGHT_MIN_BOTTOM_SHEET;
-    var panelHeigtExpand = size.height * 0.5.toDouble();
-
+    var panelHeigtExpand = size.height * 0.6.toDouble();
     return Scaffold(
       body: SlidingUpPanel(
         backdropTapClosesPanel: true,
         minHeight: panelHeigtClose,
-        maxHeight: panelHeigtExpand,
+        maxHeight:
+            shipperController.currentOrder.id != null ? panelHeigtExpand : 300,
         body: Stack(
           children: [
             FutureBuilder<Position?>(
@@ -92,7 +92,7 @@ class _ScreenDetailOrderAndShipperState extends State<ShipperHomePage> {
           // check order if order is exist, show the way to go else show the list order
           // return Container();
           return GetBuilder<ShipperController>(
-              initState: (state) => shipperController.getListOrder(),
+              initState: (state) => shipperController.getListOrderNearShipper(),
               builder: (_) {
                 return shipperController.currentOrder.id == null
                     ? _panelWidget(controller)
@@ -214,6 +214,41 @@ class _ScreenDetailOrderAndShipperState extends State<ShipperHomePage> {
                   const SizedBox(
                     height: 10,
                   ),
+                  GestureDetector(
+                    onTap: () {
+                      if (currentOrder.id != null) {
+                        Get.to(() => const OrderDetailShipperScreen(),
+                            arguments: currentOrder.id);
+                      } else {
+                        CustomeSnackBar.showWarningTopBar(
+                            context: Get.context,
+                            title: 'Thông báo',
+                            message: 'Hiện không thể nhận đơn này');
+                      }
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 10),
+                      child: Column(
+                        children: [
+                          Image.asset(
+                            AppAssets.getImg('order_icon.png', 'icons'),
+                            height: 30,
+                            width: 30,
+                          ),
+                          const Text(
+                            'Xem chi tiết',
+                            style: AppStyles.textMedium,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const Divider(
+                    thickness: 2,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
                   Center(
                     child: _buttonStatusOrder(currentOrder),
                   )
@@ -295,9 +330,7 @@ class _ScreenDetailOrderAndShipperState extends State<ShipperHomePage> {
                       ),
                       onPressed: () {
                         Get.offAndToNamed('/shipperNaviPage');
-                        shipperController.getListOrder();
-
-                        // Get.offAllAndNamed('/shipperNaviPage');
+                        shipperController.getListOrderNearShipper();
                       },
                       child: Text('Tìm kiếm đơn khác',
                           style: AppStyles.textSemiBold
@@ -321,7 +354,7 @@ class _ScreenDetailOrderAndShipperState extends State<ShipperHomePage> {
                   right: 10,
                   child: IconButton(
                     onPressed: () {
-                      shipperController.getListOrder();
+                      shipperController.getListOrderNearShipper();
                     },
                     icon: const Icon(Icons.refresh),
                   )),

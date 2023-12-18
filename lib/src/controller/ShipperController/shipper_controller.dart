@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -11,8 +12,10 @@ import 'package:pbl6_app/src/values/app_string.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:pbl6_app/src/utils/custome_snackbar.dart';
 import 'package:pbl6_app/src/utils/loading_full_screen.dart';
+import 'package:dio/dio.dart' as dio;
 
 import '../../data/repository/shipper_respository.dart';
+import '../../model/order_detail_shipper2.dart';
 import '../../utils/api_endpoints.dart';
 
 class ShipperController extends GetxController {
@@ -42,12 +45,19 @@ class ShipperController extends GetxController {
   ContactModel.Contact get contacChoose => _contactChoose;
 
   final GlobalKey<FormState> changeInfoKey = GlobalKey<FormState>();
-
+  File? _vehicleImage, _behindCCCDImage, _frontCCCDImage, _licenseImage;
+  File? get vehicleImage => _vehicleImage;
+  File? get behindCCCDImage => _behindCCCDImage;
+  File? get frontCCCDImage => _frontCCCDImage;
+  File? get licenseImage => _licenseImage;
   late TextEditingController emailController,
       firstNameController,
       lastnameController,
       addressController,
-      phoneController;
+      phoneController,
+      vehicleType,
+      vehicleNumber,
+      licenseNumber;
 
   var isFormValid = false.obs;
 
@@ -58,10 +68,13 @@ class ShipperController extends GetxController {
     lastnameController = TextEditingController();
     addressController = TextEditingController();
     phoneController = TextEditingController();
+    vehicleType = TextEditingController();
+    vehicleNumber = TextEditingController();
+    licenseNumber = TextEditingController();
 
     await getIdToken();
     await getInfoShipperrById();
-    await getListOrder();
+    await getListOrderNearShipper();
 
     setInitInfo();
 
@@ -74,6 +87,10 @@ class ShipperController extends GetxController {
     lastnameController.text = user.value.lastName.toString();
     addressController.text = user.value.contact?[0].address.toString() ?? '';
     phoneController.text = user.value.contact?[0].phoneNumber.toString() ?? '';
+    vehicleType.text = user.value.vehicleType.toString();
+    vehicleNumber.text = user.value.vehicleNumber.toString();
+    licenseNumber.text = user.value.licenseNumber.toString();
+
     update();
   }
 
@@ -134,25 +151,27 @@ class ShipperController extends GetxController {
 
   updateUser(String idUser) async {
     LoadingFullScreen.showLoading();
-    var body = {
+    var url = "${ApiEndPoints.baseUrl}/shipper/$idUser";
+
+    FormData formData = FormData({
       "firstName": firstNameController.text.trim(),
       "lastName": lastnameController.text.trim(),
       "address": addressController.text.trim(),
-      "phoneNumber": phoneController.text.trim()
-    };
+      "phoneNumber": phoneController.text.trim(),
+      "vehicleType": vehicleType.text.trim(),
+      "vehicleNumber": vehicleNumber.text.trim(),
+      "licenseNumber": licenseNumber.text.trim(),
+    });
     var cookies = token.value;
 
     var headers = {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $cookies',
     };
+    dio.Dio().options.headers = headers;
+    var response = await dio.Dio().patch(url, data: formData);
 
-    var url = Uri.parse("${ApiEndPoints.baseUrl}/user/$idUser");
-
-    final respose =
-        await http.patch(url, body: jsonEncode(body), headers: headers);
-
-    if (respose.statusCode == 200) {
+    if (response.statusCode == 200) {
       isChange.value = false;
       Get.back();
       LoadingFullScreen.cancelLoading();
@@ -193,11 +212,8 @@ class ShipperController extends GetxController {
         _contactChoose = user.value.contact!
             .firstWhere((element) => element.id == user.value.defaultContact);
         update();
-      } else {
-        
-      }
-    } catch (e) {
-    }
+      } else {}
+    } catch (e) {}
   }
 
   void changeEdit() {
@@ -214,7 +230,7 @@ class ShipperController extends GetxController {
     update();
   }
 
-  getListOrder() async {
+  getListOrderNearShipper() async {
     try {
       ApiClient apiClient = Get.find();
 
@@ -225,16 +241,14 @@ class ShipperController extends GetxController {
         var json = jsonDecode(response.body);
         _listOrder = orderShipperFromJson(jsonEncode(json['data']));
         update();
-      } else {
-        
-      }
-    } catch (e) {
-      
-    }
+      } else {}
+    } catch (e) {}
   }
 
   updateOrderDetail(OrderDetailShipper order) {
     _currentOrder = order;
     update();
   }
+
+
 }

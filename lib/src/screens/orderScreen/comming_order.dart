@@ -22,7 +22,7 @@ class _CommingOrderTabState extends State<CommingOrderTab> {
       // body: OrderItem(),
 
       body: GetBuilder<OrderController>(
-          initState: (state) => controller.fetchListOrder('Pending', '', '', 1),
+          initState: (state) => controller.fetchListOrder('Waiting', '', '', 1),
           builder: (_) {
             var listOrder = controller.listOrder;
             if (listOrder.isEmpty) {
@@ -47,7 +47,7 @@ class _CommingOrderTabState extends State<CommingOrderTab> {
                                 ),
                                 Expanded(child: Container()),
                                 Text(
-                                    "${order.dateOrdered!.day}/${order.dateOrdered!.month}/${order.dateOrdered!.year} - ${order.dateOrdered!.hour}:${order.dateOrdered!.minute}",
+                                    "${FuncUseful.stringDateTimeToDayMonthYear(order.dateOrdered!)} - ${FuncUseful.stringDateTimeToTime(order.dateOrdered!)}",
                                     style: AppStyles.textMedium
                                         .copyWith(fontWeight: FontWeight.w500))
                               ],

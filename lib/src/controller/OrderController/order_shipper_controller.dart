@@ -7,10 +7,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import '../../data/api/api_client.dart';
 import '../../model/order_detail_shipper.dart';
+import '../../model/order_detail_shipper2.dart';
 import '../../model/shipper_order.dart';
 import '../../utils/api_endpoints.dart';
 import '../../utils/custome_snackbar.dart';
 import '../ShipperController/shipper_controller.dart';
+import '../func/func_useful.dart';
 
 class OrderShipperController extends GetxController {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
@@ -25,6 +27,9 @@ class OrderShipperController extends GetxController {
 
   OrderDetailShipper _orderShipper = OrderDetailShipper();
   OrderDetailShipper get orderShipper => _orderShipper;
+
+  List<OrderShipper2> _listOrderShipperInDay = [];
+  List<OrderShipper2> get listOrderShipperInDay => _listOrderShipperInDay;
 
   var isLoading = false.obs;
   var client = http.Client();
@@ -99,6 +104,31 @@ class OrderShipperController extends GetxController {
       return false;
     } finally {
       // LoadingFullScreen.cancelLoading();
+    }
+  }
+
+  getListOrderInDay(DateTime date) async {
+    try {
+      ApiClient apiClient = Get.find();
+      var id = shipperController.id.value;
+      var url =
+          "${ApiEndPoints.baseUrl}/order/shipper/$id?end=${FuncUseful.stringDateTimeToDayMonthYear2(date)}&start=${FuncUseful.stringDateTimeToDayMonthYear2(date)}";
+      var response = await http.get(Uri.parse(url), headers: apiClient.header);
+
+      if (response.statusCode == 200) {
+        var json = jsonDecode(response.body);
+        _listOrderShipperInDay = [];
+        update();
+        _listOrderShipperInDay =
+            orderShipper2FromJson(jsonEncode(json['data']));
+        _listOrderShipperInDay = _listOrderShipperInDay.reversed.toList();
+        update();
+      } else {
+        CustomeSnackBar.showErrorSnackBar(
+            context: Get.context, title: "Error ", message: '');
+      }
+    } catch (e) {
+      print(e);
     }
   }
 }

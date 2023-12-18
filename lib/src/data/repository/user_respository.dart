@@ -15,8 +15,8 @@ class UserRespo extends GetxService {
   }
 
   Future<Response> addAddressContact(String userId, dynamic body) async {
-    print("REPO");
     var url = "${ApiEndPoints.baseUrl}/user/add-contact/$userId";
-    return await apiClient.putData(url, jsonEncode(body));
+    var response = await apiClient.putData(url, jsonEncode(body));
+    return response;
   }
 }

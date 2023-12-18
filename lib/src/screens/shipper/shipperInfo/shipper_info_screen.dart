@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pbl6_app/src/controller/ShipperController/shipper_controller.dart';
+import 'package:pbl6_app/src/utils/custome_dialog.dart';
+import 'package:pbl6_app/src/widgets/image_loading_network.dart';
 
-import '../../controller/Authentication/login_controller.dart';
-import '../../values/app_assets.dart';
-import '../../values/app_colors.dart';
-import '../../values/app_styles.dart';
-import '../userScreen/change_user_info.dart';
+import '../../../controller/Authentication/login_controller.dart';
+import '../../../values/app_assets.dart';
+import '../../../values/app_colors.dart';
+import '../../../values/app_styles.dart';
+import 'change_shipper_info.dart';
 
 class ShipperInfoScreen extends StatelessWidget {
   ShipperInfoScreen({super.key});
@@ -26,7 +28,7 @@ class ShipperInfoScreen extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Get.to(() => const ChangeUserInfo());
+                    Get.to(() => const ChangeShipperInfo());
                   },
                   child: Container(
                     decoration: BoxDecoration(
@@ -47,7 +49,13 @@ class ShipperInfoScreen extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () {
-                    _controller.logout();
+                    CustomeDialog.showCustomDialog1(
+                        context: context,
+                        title: 'Thông báo',
+                        message: 'Bạn có chắc Đăng xuất ??',
+                        pressConfirm: () {
+                          _controller.logout();
+                        });
                   },
                   child: Container(
                     decoration: BoxDecoration(
@@ -91,11 +99,18 @@ class ShipperInfoScreen extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Image.asset(
-                  AppAssets.getImg("user_avartar2.png", "images"),
-                  width: 80,
-                  height: 80,
-                ),
+                shipperController.user.value.photo == null
+                    ? Image.asset(
+                        AppAssets.getImg("user_avartar2.png", "images"),
+                        width: 80,
+                        height: 80,
+                      )
+                    : CircleAvatar(
+                        radius: 40,
+                        child: ImageLoadingNetwork(
+                            image: shipperController.user.value.photo!,
+                            size: const Size(180, 180)),
+                      ),
                 const SizedBox(
                   width: 10,
                 ),

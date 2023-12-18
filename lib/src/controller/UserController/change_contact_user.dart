@@ -62,18 +62,8 @@ class ChangeContact extends GetxController {
         "phoneNumber": phoneController.text.trim()
       };
       var controller = Get.find<UserController>();
-      controller.addNewContact(body);
-
-      // if (response.statusCode == 200) {
-
-      //   CustomeSnackBar.showSuccessSnackTopBar(
-      //       context: Get.context, title: 'Success', message: 'Thêm thành công');
-      // } else {
-      //   CustomeSnackBar.showWarningTopBar(
-      //       context: Get.context,
-      //       title: 'Error',
-      //       message: 'Thêm không thành công');
-      // }
+      await controller.addNewContact(body);
+      
     } catch (e) {
       print(e);
     }

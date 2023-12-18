@@ -11,7 +11,7 @@ import 'package:pbl6_app/src/screens/homeScreen/order_detail.dart';
 import 'package:pbl6_app/src/screens/homeScreen/order_success.dart';
 import 'package:pbl6_app/src/screens/navigation/HomeMainPage.dart';
 import 'package:pbl6_app/src/screens/searchScreen/search_screen.dart';
-import 'package:pbl6_app/src/screens/shipperScreen/home_shipper_screen.dart';
+import 'package:pbl6_app/src/screens/shipper/shipperHome/home_shipper_screen.dart';
 import 'package:pbl6_app/src/screens/signUpScreens/fill_info.dart';
 import 'package:pbl6_app/src/screens/signUpScreens/forgot_password.dart';
 import 'package:pbl6_app/src/screens/signUpScreens/sign_in_screen.dart';
@@ -21,7 +21,7 @@ import 'package:pbl6_app/src/screens/warningScreen/error_screen.dart';
 import 'package:pbl6_app/src/values/app_colors.dart';
 import 'package:pbl6_app/src/values/app_fonts.dart';
 import 'package:pbl6_app/src/values/app_styles.dart';
-import 'src/screens/shipperScreen/navigation_shipper.dart';
+import 'src/screens/shipper/navigation_shipper.dart';
 import 'src/screens/signUpScreens/sign_up_screen.dart';
 import 'src/screens/signUpScreens/verify_otp.dart';
 

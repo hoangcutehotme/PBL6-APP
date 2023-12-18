@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pbl6_app/src/screens/shipperScreen/daily_statistic_tab.dart';
-import 'package:pbl6_app/src/screens/shipperScreen/month_statistic_tab.dart';
-import 'package:pbl6_app/src/screens/shipperScreen/week_statistic_tab.dart';
+import 'package:pbl6_app/src/screens/shipper/orderStatistic/daily_statistic_tab.dart';
+import 'package:pbl6_app/src/screens/shipper/orderStatistic/week_statistic_tab.dart';
 import 'package:pbl6_app/src/values/app_colors.dart';
 import 'package:pbl6_app/src/values/app_styles.dart';
 
@@ -16,11 +15,11 @@ class _OrderShipperScreenState extends State<StatisticShipperScreen> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,
+      length: 2,
       child: Scaffold(
         body: Column(children: [
           const SizedBox(
-            height: 30,
+            height: 20,
           ),
           Container(
             padding: const EdgeInsets.only(left: 10, top: 10),
@@ -29,7 +28,7 @@ class _OrderShipperScreenState extends State<StatisticShipperScreen> {
               children: [
                 Container(
                   child: Text(
-                    'Thông kê đơn hàng',
+                    'Thống kê thu nhập',
                     style: AppStyles.textBold.copyWith(fontSize: 22),
                   ),
                 ),
@@ -42,7 +41,6 @@ class _OrderShipperScreenState extends State<StatisticShipperScreen> {
             child: TabBar(
               labelPadding: const EdgeInsets.symmetric(horizontal: 2),
               indicatorColor: Colors.white,
-              indicator: null,
               automaticIndicatorColorAdjustment: false,
               padding: const EdgeInsets.only(top: 10),
               labelColor: AppColors.mainColor1,
@@ -54,16 +52,14 @@ class _OrderShipperScreenState extends State<StatisticShipperScreen> {
                 Tab(
                   text: "Tuần",
                 ),
-                Tab(text: 'Tháng')
               ],
             ),
           ),
           Expanded(
             child: TabBarView(
               children: [
-                DailyStatisticTab(),
+                const DailyStatisticTab(),
                 WeekStatisticTab(),
-                MonthStatisticTab()
               ],
             ),
           ),

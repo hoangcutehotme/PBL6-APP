@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pbl6_app/src/controller/ShipperController/shipper_controller.dart';
-import 'package:pbl6_app/src/screens/shipperScreen/home_shipper_screen.dart';
-import 'package:pbl6_app/src/screens/shipperScreen/order_shipper_screen.dart';
-import 'package:pbl6_app/src/screens/shipperScreen/shipper_info_screen.dart';
+import 'package:pbl6_app/src/screens/shipper/shipperHome/home_shipper_screen.dart';
+import 'package:pbl6_app/src/screens/shipper/orderStatistic/order_statistic_shipper_screen.dart';
+import 'package:pbl6_app/src/screens/shipper/shipperInfo/shipper_info_screen.dart';
 import 'package:pbl6_app/src/values/app_assets.dart';
 
 import '../../controller/bottom_navi_bar_controller.dart';

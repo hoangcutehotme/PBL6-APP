@@ -43,14 +43,17 @@ class CustomeDialog {
             onPressed: () {
               Get.back(); // Close the current dialog
             },
-            child: const Text('Thoát'),
+            child: const Text(
+              'Huỷ',
+              style: AppStyles.textMedium,
+            ),
           ),
           TextButton(
             onPressed: () {
               pressConfirm();
               Get.back(); // Close the dialog after the confirmation action
             },
-            child: const Text('Ok'),
+            child: const Text('Ok', style: AppStyles.textMedium),
           ),
         ],
       ),

@@ -9,10 +9,10 @@ import 'package:pbl6_app/src/values/app_colors.dart';
 import 'package:pbl6_app/src/values/app_string.dart';
 import 'package:pbl6_app/src/widgets/app_bar_default.dart';
 
-import '../../controller/OrderController/order_shipper_controller.dart';
-import '../../utils/custome_snackbar.dart';
-import '../../values/app_styles.dart';
-import '../../widgets/image_loading_network.dart';
+import '../../../controller/OrderController/order_shipper_controller.dart';
+import '../../../utils/custome_snackbar.dart';
+import '../../../values/app_styles.dart';
+import '../../../widgets/image_loading_network.dart';
 
 class OrderDetailShipperScreen extends StatefulWidget {
   const OrderDetailShipperScreen({
@@ -49,36 +49,40 @@ class _OrderDetailShipperScreenState extends State<OrderDetailShipperScreen> {
           child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          GetBuilder<OrderShipperController>(
-              initState: (state) => orderController.showOrderDetail(id),
-              builder: (_) {
-                var detailOrder = orderController.orderShipper;
-                var store = detailOrder.store;
-                var user = detailOrder.user;
-                var cart = detailOrder.cart;
-
-                return detailOrder.id == null
-                    ? const Center(
-                        child: CircularProgressIndicator(),
-                      )
-                    : Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Column(children: [
-                          _statusOrder(detailOrder),
-                          _infoStore(store),
-                          _infoOrderer(user, detailOrder),
-                          _orderDetail(cart ?? []),
-                          _totalPriceAndShipFee(detailOrder),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          _buttonStatusOrder(detailOrder, orderController),
-                        ]),
-                      );
-              }),
+          orderDetaill(orderController),
         ],
       )),
     );
+  }
+
+  GetBuilder<OrderShipperController> orderDetaill(OrderShipperController orderController) {
+    return GetBuilder<OrderShipperController>(
+            initState: (state) => orderController.showOrderDetail(id),
+            builder: (_) {
+              var detailOrder = orderController.orderShipper;
+              var store = detailOrder.store;
+              var user = detailOrder.user;
+              var cart = detailOrder.cart;
+
+              return detailOrder.id == null
+                  ? const Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Column(children: [
+                        _statusOrder(detailOrder),
+                        _infoStore(store),
+                        _infoOrderer(user, detailOrder),
+                        _orderDetail(cart ?? []),
+                        _totalPriceAndShipFee(detailOrder),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        _buttonStatusOrder(detailOrder, orderController),
+                      ]),
+                    );
+            });
   }
 
   Column _totalPriceAndShipFee(OrderDetailShipper detailOrder) {
@@ -279,7 +283,7 @@ class _OrderDetailShipperScreenState extends State<OrderDetailShipperScreen> {
                       ),
                       onPressed: () {
                         Get.offAndToNamed('/shipperNaviPage');
-                        Get.find<ShipperController>().getListOrder();
+                        Get.find<ShipperController>().getListOrderNearShipper();
 
                         // Get.offAllAndNamed('/shipperNaviPage');
                       },

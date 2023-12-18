@@ -267,22 +267,28 @@ class UserController extends GetxController {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ${token.value}',
       };
-      var response1 = await respo.addAddressContact(id.value, body);
-      // var response = await http.put(Uri.parse(url),
-      //     body: jsonEncode(body), headers: headers);
+      // var response1 = await respo.addAddressContact(id.value, body);
+      var response = await http.put(Uri.parse(url),
+          body: jsonEncode(body), headers: headers);
 
-      if (response1.statusCode == 200) {
-        user.value = UserModel.fromJson(jsonDecode(response1.body));
+      if (response.statusCode == 200) {
+        user.value = UserModel.fromJson(jsonDecode(response.body));
+        
+        update();
+
         CustomeSnackBar.showSuccessSnackTopBar(
             context: Get.context, title: 'Success', message: 'Thêm thành công');
+        return true;
       } else {
         CustomeSnackBar.showWarningTopBar(
             context: Get.context,
             title: 'Error',
             message: 'Thêm không thành công');
+        return false;
       }
     } catch (e) {
       print(e);
+      return false;
     }
   }
 }

@@ -7,7 +7,7 @@ class AppString {
     "Preparing": "Đang chuẩn bị đơn hàng",
     "Delivering": "Đang trên đường giao hàng",
     "Finished": "Đã giao hàng thành công",
-    "Refused": "Từ chối đơn hàng",
+    "Refused": "Đơn hàng bị từ chối",
   };
 
   // sharepreference

@@ -26,7 +26,6 @@ class FuncUseful {
     Map<String, String> statusMap = AppString.statusOrder;
 
     return statusMap.containsKey(status) ? statusMap[status]! : "Đang xử lý";
-
   }
 
   static String formartStringPrice(int? price) {
@@ -34,13 +33,18 @@ class FuncUseful {
     return formattedPrice;
   }
 
-  static String stringDateTimeToDayMonthYear(DateTime date) {
-    return '${date.day}/${date.month}/${date.year}';
+  static String stringDateTimeToDayMonthYear(DateTime? date) {
+    return date == null ? '' : '${date.day}/${date.month}/${date.year}';
+  }
+
+  static String stringDateTimeToDayMonthYear2(DateTime date) {
+    return DateFormat('d-MM-yyyy').format(date);
   }
 
   static String stringDateTimeToTime(DateTime date) {
-    return '${date.hour}:${date.minute}:${date.second}';
+    return DateFormat.Hms().format(date);
   }
+
   static String stringDateTimeToDay(DateTime dateTime) {
     return DateFormat('yyyy-MM-d').format(dateTime);
   }
@@ -48,5 +52,8 @@ class FuncUseful {
   static String stringDateTimeToDayMonth(DateTime dateTime) {
     return DateFormat('d/MM').format(dateTime);
   }
-  
+
+  static String stringDateTimeToDayAndTime(DateTime dateTime) {
+    return "${DateFormat('d/MM/yyyy').format(dateTime)} ${DateFormat.Hms().format(dateTime)}";
+  }
 }

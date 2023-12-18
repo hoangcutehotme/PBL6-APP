@@ -6,7 +6,9 @@ import 'package:pbl6_app/src/values/app_colors.dart';
 import 'package:pbl6_app/src/values/app_styles.dart';
 
 import '../../controller/Authentication/login_controller.dart';
+import '../../utils/custome_dialog.dart';
 import '../../values/app_assets.dart';
+import 'change_password.dart';
 import 'list_contact.dart';
 
 class UserScreen extends StatefulWidget {
@@ -86,7 +88,34 @@ class _UserScreenState extends State<UserScreen> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    _controller.logout();
+                    Get.to(() => const ChangePasswordUser());
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: AppColors.mainColorBackground,
+                        borderRadius: BorderRadius.circular(5)),
+                    child: const ListTile(
+                      contentPadding: EdgeInsets.only(left: 25),
+                      title: Text("Thay đổi mật khẩu"),
+                      trailing: Icon(
+                        Icons.arrow_forward_ios_rounded,
+                        color: AppColors.colorTextBold,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    CustomeDialog.showCustomDialog1(
+                        context: context,
+                        title: 'Thông báo',
+                        message: 'Bạn có chắc Đăng xuất ??',
+                        pressConfirm: () {
+                          _controller.logout();
+                        });
                   },
                   child: Container(
                     decoration: BoxDecoration(
@@ -139,13 +168,7 @@ class _UserScreenState extends State<UserScreen> {
                   width: 10,
                 ),
                 Obx(
-                  () =>
-                      // _userController.isLoading.value
-                      //     ? const CircularProgressIndicator(
-                      //         color: AppColors.borderGray,
-                      //       )
-                      //     :
-                      Text(
+                  () => Text(
                     _userController.id.value == ''
                         ? 'Người dùng'
                         : "${_userController.user.value.lastName ?? ''} ${_userController.user.value.firstName ?? ''}",

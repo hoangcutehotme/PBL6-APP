@@ -42,7 +42,7 @@ class _HistoryOrderTabState extends State<HistoryOrderTab> {
                               ),
                               Expanded(child: Container()),
                               Text(
-                                  "${order.dateOrdered!.day}/${order.dateOrdered!.month}/${order.dateOrdered!.year} - ${order.dateOrdered!.hour}:${order.dateOrdered!.minute}",
+                                  "${FuncUseful.stringDateTimeToDayMonthYear(order.dateOrdered!)}  ${FuncUseful.stringDateTimeToTime(order.dateOrdered!)}",
                                   style: AppStyles.textMedium
                                       .copyWith(fontWeight: FontWeight.w500))
                             ],
