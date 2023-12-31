@@ -9,8 +9,7 @@ class OrderStatisticRepo extends GetxService {
   final ApiClient apiClient;
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
-  OrderStatisticRepo(
-      {required this.apiClient});
+  OrderStatisticRepo({required this.apiClient});
 
   Future getStatisticDaily() async {
     final SharedPreferences prefs = await _prefs;
@@ -18,7 +17,6 @@ class OrderStatisticRepo extends GetxService {
     var url = "${ApiEndPoints.baseUrl}/shipper/$idShipper/daily";
     try {
       var response = await http.get(Uri.parse(url), headers: apiClient.header);
-      print("response shipper : $response");
       return response;
     } catch (e) {
       return const Response(statusCode: 1);
@@ -50,7 +48,7 @@ class OrderStatisticRepo extends GetxService {
     // return await apiClient.getData(url);
   }
 
-  getOrderDetailShipper(String id) async {
+  getOrderDetail(String id) async {
     var url = "${ApiEndPoints.baseUrl}/order/$id";
 
     try {

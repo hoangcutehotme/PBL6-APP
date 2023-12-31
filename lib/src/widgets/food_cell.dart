@@ -4,7 +4,7 @@ import 'package:pbl6_app/src/controller/StoreController/cart_controller.dart';
 import 'package:pbl6_app/src/model/product_model.dart';
 import 'package:pbl6_app/src/widgets/image_loading_network.dart';
 
-import '../controller/func/func_useful.dart';
+import '../helper/func/func_useful.dart';
 import '../values/app_assets.dart';
 import '../values/app_colors.dart';
 import '../values/app_styles.dart';

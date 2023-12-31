@@ -37,7 +37,7 @@ class _UserScreenState extends State<UserScreen> {
           title: 'Thông báo',
           message: 'Bạn chưa đăng ký - Đăng ký ngay ',
           pressConfirm: () {
-            Get.toNamed("/signup");
+            Get.toNamed("/signin");
           },
         );
       });

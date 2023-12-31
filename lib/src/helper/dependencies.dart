@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:pbl6_app/src/controller/ConnectionController/connection_controller.dart';
 import 'package:pbl6_app/src/controller/ShipperController/shipper_controller.dart';
 import 'package:pbl6_app/src/controller/ShipperController/statistic_order_shipper_controller.dart';
 import 'package:pbl6_app/src/controller/UserController/user_controller.dart';
@@ -7,13 +8,14 @@ import 'package:pbl6_app/src/data/repository/shipper_respository.dart';
 import 'package:pbl6_app/src/data/repository/user_respository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../controller/OrderController/order_controller.dart';
+import '../controller/OrderController/order_user_controller.dart';
 import '../controller/OrderController/order_shipper_controller.dart';
 import '../data/api/api_client.dart';
 import '../data/repository/order_repository.dart';
 import '../utils/api_endpoints.dart';
 
 Future<void> init() async {
+  Get.put<ConnectionController>(ConnectionController(), permanent: true);
   final sharedPreferences = await SharedPreferences.getInstance();
 
   Get.lazyPut(() => sharedPreferences);

@@ -5,7 +5,7 @@ import 'package:pbl6_app/src/controller/OrderController/order_shipper_controller
 import 'package:pbl6_app/src/controller/ShipperController/statistic_order_shipper_controller.dart';
 import 'package:pbl6_app/src/widgets/bar_char_example.dart';
 
-import '../../../controller/func/func_useful.dart';
+import '../../../helper/func/func_useful.dart';
 import '../../../values/app_colors.dart';
 import '../../../values/app_styles.dart';
 import 'list_order_in_day.dart';
@@ -40,68 +40,69 @@ class _DailyStatisticTabState extends State<DailyStatisticTab> {
     return Scaffold(
       body: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         _datePickerTimeline(),
-        GetBuilder<StaticOrderShipperController>(builder: (_) {
-          statisticController.getDataDay();
-          var dataDay = statisticController.dataDay;
+        GetBuilder<StaticOrderShipperController>(
+            initState: (state) => statisticController.dailyStatistic(),
+            builder: (_) {
+              var dataDay = statisticController.dataDay;
 
-          return statisticController.listDataDay == []
-              ? const Center(
-                  child: CircularProgressIndicator(),
-                )
-              : Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Thu nhập hiện tại ${FuncUseful.stringDateTimeToDayMonthYear(statisticController.selectedDate)}',
-                            style: AppStyles.textMedium.copyWith(
-                                fontSize: 18, fontWeight: FontWeight.w600),
+              return statisticController.listDataDay == []
+                  ? const Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Thu nhập hiện tại ${FuncUseful.stringDateTimeToDayMonthYear(statisticController.selectedDate)}',
+                                style: AppStyles.textMedium.copyWith(
+                                    fontSize: 18, fontWeight: FontWeight.w600),
+                              ),
+                              AspectRatio(
+                                aspectRatio: 1.1,
+                                child: BarChartSample1(
+                                  listData: statisticController.listDataDay,
+                                ),
+                              ),
+                              Text(
+                                  'Tổng cộng : ${FuncUseful.formartStringPrice(dataDay.revenue ?? 0)}đ',
+                                  style: AppStyles.textMedium
+                                      .copyWith(fontWeight: FontWeight.w600)),
+                              Text(
+                                  'Số đơn hàng đã hoàn thành : ${FuncUseful.formartStringPrice(dataDay.count ?? 0)}',
+                                  style: AppStyles.textMedium
+                                      .copyWith(fontWeight: FontWeight.w600)),
+                              TextButton(
+                                onPressed: () {
+                                  orderShipperController.getListOrderInDay(
+                                      statisticController.selectedDate);
+                                  Get.to(() => ListOrderInDay(
+                                      selectedDate:
+                                          statisticController.selectedDate));
+                                },
+                                child: Row(
+                                  children: [
+                                    Text("Xem danh sách đơn hàng",
+                                        style: AppStyles.textMedium.copyWith(
+                                            color: AppColors.mainColor1,
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 18)),
+                                    const Icon(
+                                      Icons.arrow_forward_ios_sharp,
+                                      color: AppColors.mainColor1,
+                                    )
+                                  ],
+                                ),
+                              )
+                            ],
                           ),
-                          AspectRatio(
-                            aspectRatio: 1.1,
-                            child: BarChartSample1(
-                              listData: statisticController.listDataDay,
-                            ),
-                          ),
-                          Text(
-                              'Tổng cộng : ${FuncUseful.formartStringPrice(dataDay.revenue ?? 0)}đ',
-                              style: AppStyles.textMedium
-                                  .copyWith(fontWeight: FontWeight.w600)),
-                          Text(
-                              'Số đơn hàng đã hoàn thành : ${FuncUseful.formartStringPrice(dataDay.count ?? 0)}',
-                              style: AppStyles.textMedium
-                                  .copyWith(fontWeight: FontWeight.w600)),
-                          TextButton(
-                            onPressed: () {
-                              orderShipperController.getListOrderInDay(
-                                  statisticController.selectedDate);
-                              Get.to(() => ListOrderInDay(
-                                  selectedDate:
-                                      statisticController.selectedDate));
-                            },
-                            child: Row(
-                              children: [
-                                Text("Xem danh sách đơn hàng",
-                                    style: AppStyles.textMedium.copyWith(
-                                        color: AppColors.mainColor1,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 18)),
-                                const Icon(
-                                  Icons.arrow_forward_ios_sharp,
-                                  color: AppColors.mainColor1,
-                                )
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ],
-                );
-        }),
+                        ),
+                      ],
+                    );
+            }),
       ]),
     );
   }

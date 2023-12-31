@@ -11,7 +11,7 @@ import 'package:pbl6_app/src/widgets/image_loading_network.dart';
 
 import '../../controller/StoreController/store_detail_controller.dart';
 import '../../controller/UserController/user_controller.dart';
-import '../../controller/func/func_useful.dart';
+import '../../helper/func/func_useful.dart';
 import '../../widgets/food_cell_cart.dart';
 import '../userScreen/list_contact.dart';
 
@@ -45,8 +45,6 @@ class _OrderDetailState extends State<OrderDetail> {
     });
   }
 
-  @override
-  // UserController userController = Get.find();
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;

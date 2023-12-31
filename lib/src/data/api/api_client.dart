@@ -25,9 +25,6 @@ class ApiClient extends GetConnect implements GetxService {
       'Authorization': 'Bearer $token'
     };
   }
-  // updateToken(String newToken) {
-  //   token = newToken;
-  // }
 
   saveToken(String newToken) {
     token = newToken;

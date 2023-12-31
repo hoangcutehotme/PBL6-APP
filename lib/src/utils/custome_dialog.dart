@@ -18,9 +18,6 @@ class CustomeDialog {
       titleStyle:
           AppStyles.textMedium.copyWith(color: AppColors.mainColorBackground),
       textCancel: 'Huỷ',
-      // onCancel: () {
-      //   Get.back();
-      // },
       textConfirm: confirmText,
       radius: 10,
       onConfirm: pressConfirm,

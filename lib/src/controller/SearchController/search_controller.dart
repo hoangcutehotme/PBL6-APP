@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:pbl6_app/src/utils/custome_snackbar.dart';
 
 import '../../utils/api_endpoints.dart';
 
@@ -20,12 +19,13 @@ class SearchFoodStoreController extends GetxController {
       Map<String, dynamic> body = json.decode(response.body);
 
       if (response.statusCode == 200) {
-        List<dynamic> bodyData = body['data']['data'];
+        List<dynamic> bodyData = body['data'];
 
         List<Map<String, dynamic>> result = bodyData.map((item) {
           return {
             "name": item["name"] as String,
-            "storeId": item["storeId"] ?? ''
+            "storeId": item["store"]['_id'] ?? '',
+            "nameStore": item["store"]['name'] ?? "",
           };
         }).toList();
 
@@ -38,9 +38,6 @@ class SearchFoodStoreController extends GetxController {
         return [];
       }
     } catch (e) {
-      print(e);
-      CustomeSnackBar.showErrorSnackBar(
-          context: Get.context, title: 'Error', message: e.toString());
       return [];
     }
   }

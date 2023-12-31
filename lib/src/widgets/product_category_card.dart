@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../controller/func/func_useful.dart';
+import '../helper/func/func_useful.dart';
 import '../model/product_model.dart';
 import '../values/app_colors.dart';
 import '../values/app_styles.dart';
@@ -9,8 +9,13 @@ import 'image_loading_network.dart';
 class ProductWidget extends StatelessWidget {
   final ProductModel product;
   final Function() press;
+  Size size;
 
-  const ProductWidget({super.key, required this.product, required this.press});
+  ProductWidget(
+      {super.key,
+      required this.product,
+      required this.press,
+      this.size = const Size(160, 160)});
 
   @override
   Widget build(BuildContext context) {

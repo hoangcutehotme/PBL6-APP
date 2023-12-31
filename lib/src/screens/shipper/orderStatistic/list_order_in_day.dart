@@ -5,7 +5,7 @@ import 'package:pbl6_app/src/widgets/app_bar_default.dart';
 
 import '../../../controller/OrderController/order_shipper_controller.dart';
 import '../../../controller/ShipperController/statistic_order_shipper_controller.dart';
-import '../../../controller/func/func_useful.dart';
+import '../../../helper/func/func_useful.dart';
 import '../../../values/app_colors.dart';
 import 'order_detail.dart';
 
@@ -57,13 +57,14 @@ class ListOrderInDay extends StatelessWidget {
                               var order = listOrderInDay[index];
                               return GestureDetector(
                                 onTap: () {
-                                  Get.to(() => const OrderDetail2(), arguments: order.id);
+                                  Get.to(() => const OrderDetail2(),
+                                      arguments: order.id);
                                 },
                                 child: Container(
                                     decoration: BoxDecoration(
                                       border: Border.all(
                                           width: 2,
-                                          color: AppColors.mainColor1),
+                                          color: AppColors.borderGray),
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                     child: Row(
@@ -83,21 +84,24 @@ class ListOrderInDay extends StatelessWidget {
                                                           fontWeight:
                                                               FontWeight.w600),
                                                 ),
-                                                Text(
-                                                  order.store?.name ?? '',
-                                                  style: AppStyles.textMedium
-                                                      .copyWith(
-                                                          fontSize: 17,
-                                                          fontWeight:
-                                                              FontWeight.w600),
-                                                ),
-                                                Text(
-                                                  "Đặt lúc: ${FuncUseful.stringDateTimeToDayAndTime(order.dateOrdered!)}",
-                                                  style: AppStyles.textMedium
-                                                      .copyWith(
-                                                          fontSize: 17,
-                                                          fontWeight:
-                                                              FontWeight.w600),
+                                                // Text(
+                                                //   order.store?.name ?? '',
+                                                //   style: AppStyles.textMedium
+                                                //       .copyWith(
+                                                //           fontSize: 17,
+                                                //           fontWeight:
+                                                //               FontWeight.w600),
+                                                // ),
+                                                // Text(
+                                                //   "Đặt lúc: ${FuncUseful.stringDateTimeToDayAndTime(order.dateOrdered!)}",
+                                                //   style: AppStyles.textMedium
+                                                //       .copyWith(
+                                                //           fontSize: 17,
+                                                //           fontWeight:
+                                                //               FontWeight.w600),
+                                                // ),
+                                                const SizedBox(
+                                                  height: 30,
                                                 ),
                                                 Row(
                                                   children: [
@@ -121,7 +125,10 @@ class ListOrderInDay extends StatelessWidget {
                                                               fontSize: 17,
                                                               fontWeight:
                                                                   FontWeight
-                                                                      .w600),
+                                                                      .w600,
+                                                              color: FuncUseful
+                                                                  .colorStatus(order
+                                                                      .status)),
                                                     ),
                                                   ],
                                                 )

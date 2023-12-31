@@ -8,7 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
 class ProductController extends GetxController {
-  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  // final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   var isLoading = false.obs;
 
   var client = http.Client();
@@ -19,8 +19,6 @@ class ProductController extends GetxController {
 
   List get productList => _productList;
 
-  // int _quantity = 0;
-  // int get quantity => _quantity;
 
   @override
   void onInit() {
@@ -32,7 +30,6 @@ class ProductController extends GetxController {
 
   @override
   void onClose() {
-    // TODO: implement onClose
     super.onClose();
     list.value = [];
   }
@@ -48,7 +45,6 @@ class ProductController extends GetxController {
       var json = jsonDecode(response.body);
 
       if (response.statusCode == 200) {
-        var data = response.body;
         list.value = productsModelFromJson(jsonEncode(json['data']['data']));
       } else {
         showDialog(
@@ -61,7 +57,6 @@ class ProductController extends GetxController {
             });
       }
     } catch (e) {
-      print(e.toString());
       showDialog(
           context: Get.context!,
           builder: (context) {

@@ -26,7 +26,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    Get.put(UserController(respo: Get.find()), permanent: true);
+    Get.put(UserController(respo: Get.find()));
+    // Get.put(UserController(respo: Get.find()), permanent: true);
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: CustomScrollView(

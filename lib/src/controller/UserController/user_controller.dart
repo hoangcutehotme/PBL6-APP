@@ -273,7 +273,7 @@ class UserController extends GetxController {
 
       if (response.statusCode == 200) {
         user.value = UserModel.fromJson(jsonDecode(response.body));
-        
+
         update();
 
         CustomeSnackBar.showSuccessSnackTopBar(

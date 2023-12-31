@@ -2,14 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pbl6_app/src/controller/ShipperController/shipper_controller.dart';
 
-import 'package:pbl6_app/src/controller/func/func_useful.dart';
+import 'package:pbl6_app/src/helper/func/func_useful.dart';
 import 'package:pbl6_app/src/model/order_detail_shipper.dart';
 import 'package:pbl6_app/src/utils/custome_dialog.dart';
 import 'package:pbl6_app/src/values/app_colors.dart';
 import 'package:pbl6_app/src/values/app_string.dart';
 import 'package:pbl6_app/src/widgets/app_bar_default.dart';
 
+import '../../../controller/OrderController/order_change_stepper.dart';
 import '../../../controller/OrderController/order_shipper_controller.dart';
+import '../../../controller/ShipperController/shipper_address_controllerd.dart';
 import '../../../utils/custome_snackbar.dart';
 import '../../../values/app_styles.dart';
 import '../../../widgets/image_loading_network.dart';
@@ -55,34 +57,93 @@ class _OrderDetailShipperScreenState extends State<OrderDetailShipperScreen> {
     );
   }
 
-  GetBuilder<OrderShipperController> orderDetaill(OrderShipperController orderController) {
+  GetBuilder<OrderShipperController> orderDetaill(
+      OrderShipperController orderController) {
     return GetBuilder<OrderShipperController>(
-            initState: (state) => orderController.showOrderDetail(id),
-            builder: (_) {
-              var detailOrder = orderController.orderShipper;
-              var store = detailOrder.store;
-              var user = detailOrder.user;
-              var cart = detailOrder.cart;
+        initState: (state) => orderController.showOrderDetail(id),
+        builder: (_) {
+          var detailOrder = orderController.orderShipper;
+          var store = detailOrder.store;
+          var user = detailOrder.user;
+          var cart = detailOrder.cart;
 
-              return detailOrder.id == null
-                  ? const Center(
+          return detailOrder.id == null
+              ? const Center(
+                  child: CircularProgressIndicator(),
+                )
+              : Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Column(children: [
+                    _statusOrder(detailOrder),
+                    _infoStore(store),
+                    _infoOrderer(user, detailOrder),
+                    _orderDetail(cart ?? []),
+                    _totalPriceAndShipFee(detailOrder),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    // _listStatusOrder(context, detailOrder),
+                    _buttonStatusOrder(detailOrder, orderController),
+                  ]),
+                );
+        });
+  }
+
+  Theme _listStatusOrder(BuildContext context, OrderDetailShipper order) {
+    ChangeStepperOrder changeStepperOrder =
+        Get.put(ChangeStepperOrder(orderRepo: Get.find()));
+    return Theme(
+      data: Theme.of(context).copyWith(
+          colorScheme: const ColorScheme.light(primary: AppColors.mainColor1)),
+      child: GetBuilder<ChangeStepperOrder>(
+          initState: (state) => changeStepperOrder.getStepWithOrder(order),
+          builder: (_) {
+            var steps = changeStepperOrder.listStep;
+            var currentStep = changeStepperOrder.currentStep;
+            var order = changeStepperOrder.order;
+            return steps.isEmpty
+                ? const SizedBox(
+                    height: 300,
+                    child: Center(
                       child: CircularProgressIndicator(),
-                    )
-                  : Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Column(children: [
-                        _statusOrder(detailOrder),
-                        _infoStore(store),
-                        _infoOrderer(user, detailOrder),
-                        _orderDetail(cart ?? []),
-                        _totalPriceAndShipFee(detailOrder),
-                        const SizedBox(
-                          height: 20,
+                    ),
+                  )
+                : const Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 15),
+                        child: Row(
+                          children: [
+                            // Text(
+                            //   'Trạng thái',
+                            //   style: AppStyles.textMedium.copyWith(
+                            //       fontSize: 16, fontWeight: FontWeight.w600),
+                            // ),
+                            // const Spacer(),
+                            // Text(FuncUseful.formatStatus(order.status),
+                            //     style: AppStyles.textMedium.copyWith(
+                            //         fontSize: 16,
+                            //         fontWeight: FontWeight.w600,
+                            //         color:
+                            //             FuncUseful.colorStatus(order.status)))
+                          ],
                         ),
-                        _buttonStatusOrder(detailOrder, orderController),
-                      ]),
-                    );
-            });
+                      ),
+                      // Stepper(
+                      //   steps: changeStepperOrder.listStep,
+                      //   controlsBuilder: (context, details) {
+                      //     return Container();
+                      //   },
+                      //   currentStep: currentStep,
+                      // ),
+                      // _orderDetail(
+                      //   changeStepperOrder.order,
+                      // ),
+                    ],
+                  );
+          }),
+    );
   }
 
   Column _totalPriceAndShipFee(OrderDetailShipper detailOrder) {
@@ -124,7 +185,8 @@ class _OrderDetailShipperScreenState extends State<OrderDetailShipperScreen> {
       child: Container(
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
-            border: Border.all(width: 2, color: AppColors.mainColor1)),
+            border: Border.all(
+                width: 2, color: AppColors.colorDirectionToCustomer)),
         child: Padding(
           padding: const EdgeInsets.all(10.0),
           child: Row(
@@ -139,6 +201,11 @@ class _OrderDetailShipperScreenState extends State<OrderDetailShipperScreen> {
                       ),
                       Text(
                         '${user?.lastName} ${user?.firstName}',
+                        style: AppStyles.textBold.copyWith(
+                            fontSize: 16, fontWeight: FontWeight.w500),
+                      ),
+                      Text(
+                        '${orderDetail.contact!.phoneNumber}',
                         style: AppStyles.textBold.copyWith(
                             fontSize: 16, fontWeight: FontWeight.w500),
                       ),
@@ -162,7 +229,8 @@ class _OrderDetailShipperScreenState extends State<OrderDetailShipperScreen> {
       child: Container(
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
-            border: Border.all(width: 2, color: Colors.blueAccent)),
+            border:
+                Border.all(width: 2, color: AppColors.colorDirectionToStore)),
         child: Padding(
           padding: const EdgeInsets.all(10.0),
           child:
@@ -213,6 +281,7 @@ class _OrderDetailShipperScreenState extends State<OrderDetailShipperScreen> {
 
   _buttonStatusOrder(OrderDetailShipper detailOrder,
       OrderShipperController orderShipperController) {
+    ShipperAddressController shipperAddressController = Get.find();
     return GetBuilder<OrderShipperController>(builder: (_) {
       return detailOrder.status == AppString.statusOrder.keys.elementAt(0) ||
               detailOrder.status == AppString.statusOrder.keys.elementAt(1)
@@ -228,9 +297,17 @@ class _OrderDetailShipperScreenState extends State<OrderDetailShipperScreen> {
                     title: '',
                     message: 'Bạn có muốn nhận đơn không ???',
                     confirmText: 'Có',
-                    pressConfirm: () {
-                      orderShipperController.changeStatusOrder(detailOrder.id!);
+                    pressConfirm: () async {
                       Get.back();
+                      await orderShipperController
+                          .changeStatusOrder(detailOrder.id!)
+                          .then((value) =>
+                              CustomeSnackBar.showSuccessSnackTopBar(
+                                  context: Get.context,
+                                  title: 'Thành công',
+                                  message: 'Xác nhận nhận đơn'));
+                      await shipperAddressController
+                          .getDirectionToStoreAndUser();
                     });
               },
               child: Text('Xác nhận nhận đơn',
@@ -248,7 +325,7 @@ class _OrderDetailShipperScreenState extends State<OrderDetailShipperScreen> {
                         .changeStatusOrder(detailOrder.id!)
                         .then((value) => CustomeSnackBar.showSuccessSnackTopBar(
                             context: Get.context,
-                            title: 'Success',
+                            title: 'Thành công',
                             message: 'Xác nhận đã nhận hàng'));
                   },
                   child: Text(
@@ -269,7 +346,7 @@ class _OrderDetailShipperScreenState extends State<OrderDetailShipperScreen> {
                             .then((value) =>
                                 CustomeSnackBar.showSuccessSnackTopBar(
                                     context: Get.context,
-                                    title: 'Success',
+                                    title: 'Thành công',
                                     message: 'Đã hoàn thành giao hàng'));
                       },
                       child: Text('Xác nhận đã giao hàng thành công',
@@ -284,8 +361,6 @@ class _OrderDetailShipperScreenState extends State<OrderDetailShipperScreen> {
                       onPressed: () {
                         Get.offAndToNamed('/shipperNaviPage');
                         Get.find<ShipperController>().getListOrderNearShipper();
-
-                        // Get.offAllAndNamed('/shipperNaviPage');
                       },
                       child: Text('Tìm kiếm đơn khác',
                           style: AppStyles.textSemiBold

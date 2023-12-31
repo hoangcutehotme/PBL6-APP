@@ -45,7 +45,7 @@ class SearchAddressController extends GetxController {
     if (response.statusCode == 200) {
       print(response.body);
     } else {
-      print(">>>>>>>>>>>" + response.body);
+      print(response.body);
     }
   }
 }

@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:pbl6_app/src/utils/custome_snackbar.dart';
 
 import '../controller/StoreController/cart_controller.dart';
-import '../controller/func/func_useful.dart';
+import '../helper/func/func_useful.dart';
 import '../model/cart_model.dart';
 import '../values/app_assets.dart';
 import '../values/app_colors.dart';

@@ -20,7 +20,7 @@ class Contact {
     });
 
     factory Contact.fromJson(Map<String, dynamic> json) => Contact(
-        location: LocationCoordinate.fromJson(json["location"]),
+        location: json["location"] == null ? null : LocationCoordinate.fromJson(json["location"]),
         id: json["_id"],
         address: json["address"],
         phoneNumber: json["phoneNumber"],

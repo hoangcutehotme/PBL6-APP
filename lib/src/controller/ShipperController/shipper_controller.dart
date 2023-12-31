@@ -15,7 +15,6 @@ import 'package:pbl6_app/src/utils/loading_full_screen.dart';
 import 'package:dio/dio.dart' as dio;
 
 import '../../data/repository/shipper_respository.dart';
-import '../../model/order_detail_shipper2.dart';
 import '../../utils/api_endpoints.dart';
 
 class ShipperController extends GetxController {
@@ -249,6 +248,4 @@ class ShipperController extends GetxController {
     _currentOrder = order;
     update();
   }
-
-
 }

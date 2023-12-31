@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 
 import '../../../controller/OrderController/order_shipper_controller.dart';
 import '../../../controller/ShipperController/shipper_controller.dart';
-import '../../../controller/func/func_useful.dart';
+import '../../../helper/func/func_useful.dart';
 import '../../../model/order_detail_shipper.dart';
 import '../../../utils/custome_dialog.dart';
 import '../../../utils/custome_snackbar.dart';

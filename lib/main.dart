@@ -5,7 +5,7 @@ import 'package:pbl6_app/splash_screen.dart';
 import 'package:pbl6_app/src/helper/dependencies.dart' as dep;
 import 'package:pbl6_app/src/screens/homeScreen/detail_category.dart';
 import 'package:pbl6_app/src/screens/homeScreen/detail_food.dart';
-import 'package:pbl6_app/src/screens/homeScreen/detail_shop1.dart';
+import 'package:pbl6_app/src/screens/homeScreen/detail_shop.dart';
 import 'package:pbl6_app/src/screens/homeScreen/home_screen.dart';
 import 'package:pbl6_app/src/screens/homeScreen/order_detail.dart';
 import 'package:pbl6_app/src/screens/homeScreen/order_success.dart';
@@ -27,7 +27,6 @@ import 'src/screens/signUpScreens/verify_otp.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  print("Dependencies <<<<<<<<<<<<<");
   await dep.init();
 
   ErrorWidget.builder = (details) {

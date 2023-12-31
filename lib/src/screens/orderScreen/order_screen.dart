@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pbl6_app/src/controller/OrderController/order_controller.dart';
+import 'package:pbl6_app/src/controller/OrderController/order_user_controller.dart';
 import 'package:pbl6_app/src/screens/orderScreen/comming_order.dart';
 import 'package:pbl6_app/src/screens/orderScreen/history_order.dart';
 import 'package:pbl6_app/src/values/app_colors.dart';

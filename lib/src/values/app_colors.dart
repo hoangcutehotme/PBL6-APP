@@ -11,4 +11,8 @@ class AppColors {
   static const placeholder = Color.fromRGBO(243, 244, 244, 1);
   static const grayBold = Color.fromRGBO(144, 138, 138, 1);
   static const colorSuccess = Color.fromARGB(255, 11, 181, 99);
+
+  static const colorStatusNormal = Color.fromARGB(255, 98, 194, 190);
+  static const colorDirectionToStore = Color.fromRGBO(236, 84, 84, 1);
+  static const colorDirectionToCustomer = Color.fromRGBO(1, 101, 252, 1);
 }

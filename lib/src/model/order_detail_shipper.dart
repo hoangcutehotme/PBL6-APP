@@ -1,5 +1,7 @@
 
 
+import 'package:pbl6_app/src/model/shipper.dart';
+
 import 'location_model.dart';
 
 class OrderDetailShipper {
@@ -15,6 +17,7 @@ class OrderDetailShipper {
   DateTime? dateOrdered;
   int? depreciationShip;
   int? revenue;
+  Shipper? shipper;
   DateTime? dateCheckout;
   DateTime? datePrepared;
   DateTime? dateDeliveried;
@@ -33,6 +36,7 @@ class OrderDetailShipper {
     this.dateOrdered,
     this.depreciationShip,
     this.revenue,
+    this.shipper,
     this.dateCheckout,
     this.datePrepared,
     this.dateDeliveried,
@@ -53,6 +57,7 @@ class OrderDetailShipper {
         dateOrdered: DateTime.parse(json["dateOrdered"]),
         depreciationShip: json["depreciationShip"],
         revenue: json["revenue"],
+        shipper: json["shipper"] == null ? null : Shipper.fromJson(json["shipper"]),
         dateCheckout: json["dateCheckout"] == null
             ? null
             : DateTime.parse(json["dateCheckout"]),
@@ -74,6 +79,7 @@ class OrderDetailShipper {
         "totalPrice": totalPrice,
         "status": status,
         "user": user?.toJson(),
+        "shipper": shipper?.toJson(),
         "store": store?.toJson(),
         "cart": List<dynamic>.from(cart ?? [].map((x) => x.toJson())),
         "contact": contact?.toJson(),
