@@ -15,8 +15,6 @@ class ChangeUserInfo extends StatefulWidget {
 }
 
 class _ChangeUserInfoState extends State<ChangeUserInfo> {
-  // UserController userController = Get.put(UserController());
-  // var user;
 
   @override
   Widget build(BuildContext context) {
@@ -170,6 +168,7 @@ class _ChangeUserInfoState extends State<ChangeUserInfo> {
                           pressConfirm: () async {
                             await userController
                                 .updateUser(userController.id.value);
+                            await userController.getInfoUserById();
                           },
                           confirmText: 'Ok',
                         );

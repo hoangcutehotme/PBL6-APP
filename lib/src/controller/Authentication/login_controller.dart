@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:pbl6_app/src/controller/UserController/user_controller.dart';
 import 'package:pbl6_app/src/utils/api_endpoints.dart';
 import 'package:http/http.dart' as http;
 import 'package:pbl6_app/src/utils/custome_snackbar.dart';
@@ -152,6 +153,7 @@ class LoginController extends GetxController {
     // Get.bot
     final SharedPreferences prefs = await _prefs;
     prefs.clear();
+    
     Get.offAllNamed('/signin');
   }
 

@@ -20,7 +20,6 @@ class UserScreen extends StatefulWidget {
 
 class _UserScreenState extends State<UserScreen> {
   final LoginController _controller = Get.put(LoginController());
-  // final UserController _userController = Get.put(UserController());
   final UserController _userController = Get.find();
 
   @override
