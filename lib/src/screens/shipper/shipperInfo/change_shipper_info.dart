@@ -34,7 +34,6 @@ class ChangeShipperInfo extends StatelessWidget {
                     message: 'Bạn chưa lưu, Bạn có muốn thoát mà không lưu',
                     pressConfirm: () {
                       Get.find<ShipperController>().setInitInfo();
-                      // Get.close(2);
                     },
                     confirmText: 'Ok');
               } else {
@@ -173,38 +172,41 @@ class ChangeShipperInfo extends StatelessWidget {
                     return userController.validateAddress(value!);
                   },
                 ),
-                TextFormField(
-                  decoration: const InputDecoration(labelText: 'Loại xe '),
-                  keyboardType: TextInputType.none,
-                  // initialValue: user.email,
-                  readOnly: userController.isEdit.value,
-                  controller: userController.vehicleType,
-                  onSaved: (value) {
-                    userController.vehicleType.text = value!;
-                  },
-                  onChanged: (value) {
-                    userController.isChange.value = true;
-                  },
-                  validator: (value) {
-                    return userController.validateAddress(value!);
-                  },
+                Obx(
+                  ()=> TextFormField(
+                    decoration: const InputDecoration(labelText: 'Loại xe '),
+                    keyboardType: TextInputType.none,
+                    // initialValue: user.email,
+                    readOnly: userController.isEdit.value,
+                    controller: userController.vehicleType,
+                    onSaved: (value) {
+                      userController.vehicleType.text = value!;
+                    },
+                    onChanged: (value) {
+                      userController.isChange.value = true;
+                    },
+                    validator: (value) {
+                      return userController.validateAddress(value!);
+                    },
+                  ),
                 ),
-                TextFormField(
-                  decoration:
-                      const InputDecoration(labelText: 'Số giấy phép lái xe '),
-                  keyboardType: TextInputType.number,
-                  // initialValue: user.email,
-                  readOnly: userController.isEdit.value,
-                  controller: userController.licenseNumber,
-                  onSaved: (value) {
-                    userController.licenseNumber.text = value!;
-                  },
-                  onChanged: (value) {
-                    userController.isChange.value = true;
-                  },
-                  validator: (value) {
-                    return userController.validateAddress(value!);
-                  },
+                Obx(
+                  ()=> TextFormField(
+                    decoration:
+                        const InputDecoration(labelText: 'Số giấy phép lái xe '),
+                    keyboardType: TextInputType.number,
+                    readOnly: userController.isEdit.value,
+                    controller: userController.licenseNumber,
+                    onSaved: (value) {
+                      userController.licenseNumber.text = value!;
+                    },
+                    onChanged: (value) {
+                      userController.isChange.value = true;
+                    },
+                    validator: (value) {
+                      return userController.validateAddress(value!);
+                    },
+                  ),
                 ),
                 Obx(
                   () => ElevatedButton(
@@ -242,7 +244,6 @@ class ChangeShipperInfo extends StatelessWidget {
               ],
             ),
           ),
-          // ),
         ),
       );
     });

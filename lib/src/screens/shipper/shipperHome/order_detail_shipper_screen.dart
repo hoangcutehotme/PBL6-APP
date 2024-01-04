@@ -340,14 +340,17 @@ class _OrderDetailShipperScreenState extends State<OrderDetailShipperScreen> {
                             horizontal: 25, vertical: 8),
                         backgroundColor: AppColors.mainColor1,
                       ),
-                      onPressed: () {
-                        orderShipperController
+                      onPressed: () async {
+                        await orderShipperController
                             .changeStatusOrder(detailOrder.id!)
                             .then((value) =>
                                 CustomeSnackBar.showSuccessSnackTopBar(
                                     context: Get.context,
                                     title: 'Thành công',
                                     message: 'Đã hoàn thành giao hàng'));
+                        await Get.find<ShipperController>()
+                            .getListOrderNearShipper();
+                        await shipperAddressController.setMarkerShipper();
                       },
                       child: Text('Xác nhận đã giao hàng thành công',
                           style: AppStyles.textSemiBold
@@ -358,9 +361,12 @@ class _OrderDetailShipperScreenState extends State<OrderDetailShipperScreen> {
                             horizontal: 25, vertical: 8),
                         backgroundColor: AppColors.mainColor1,
                       ),
-                      onPressed: () {
+                      onPressed: () async {
                         Get.offAndToNamed('/shipperNaviPage');
-                        Get.find<ShipperController>().getListOrderNearShipper();
+                        await shipperAddressController.setMarkerShipper();
+                        await shipperAddressController.setLocationShipper();
+                        await Get.find<ShipperController>()
+                            .getListOrderNearShipper();
                       },
                       child: Text('Tìm kiếm đơn khác',
                           style: AppStyles.textSemiBold

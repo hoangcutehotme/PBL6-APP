@@ -6,6 +6,7 @@ import 'package:pbl6_app/src/values/app_colors.dart';
 import '../../controller/OrderController/order_user_controller.dart';
 import '../../values/app_styles.dart';
 import '../../widgets/image_loading_network.dart';
+import 'order_info_screen.dart';
 
 class CommingOrderTab extends StatefulWidget {
   const CommingOrderTab({super.key});
@@ -34,7 +35,11 @@ class _CommingOrderTabState extends State<CommingOrderTab> {
                     var order = listOrder[index];
 
                     return GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        Get.to(() => OrderInfoScreen(
+                              id: order.id!,
+                            ));
+                      },
                       child: Container(
                           height: 205,
                           padding: const EdgeInsets.all(10),

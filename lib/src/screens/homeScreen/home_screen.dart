@@ -37,7 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
             backgroundColor: AppColors.mainColorBackground,
             shadowColor: Colors.transparent,
             pinned: true,
-            collapsedHeight: 120,
+            collapsedHeight: 110,
             flexibleSpace: Column(children: [
               const SizedBox(
                 height: 25,
@@ -53,9 +53,6 @@ class _HomeScreenState extends State<HomeScreen> {
           SliverToBoxAdapter(
             child: Column(
               children: [
-                const SizedBox(
-                  height: 10,
-                ),
                 _categorySection(),
                 // Store
                 _storeSection(),

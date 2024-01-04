@@ -74,9 +74,7 @@ class ShipperController extends GetxController {
     await getIdToken();
     await getInfoShipperrById();
     await getListOrderNearShipper();
-
-    setInitInfo();
-
+    await setInitInfo();
     super.onInit();
   }
 
@@ -150,40 +148,50 @@ class ShipperController extends GetxController {
 
   updateUser(String idUser) async {
     LoadingFullScreen.showLoading();
-    var url = "${ApiEndPoints.baseUrl}/shipper/$idUser";
+    try {
+      var url = "${ApiEndPoints.baseUrl}/shipper/$idUser";
 
-    FormData formData = FormData({
-      "firstName": firstNameController.text.trim(),
-      "lastName": lastnameController.text.trim(),
-      "address": addressController.text.trim(),
-      "phoneNumber": phoneController.text.trim(),
-      "vehicleType": vehicleType.text.trim(),
-      "vehicleNumber": vehicleNumber.text.trim(),
-      "licenseNumber": licenseNumber.text.trim(),
-    });
-    var cookies = token.value;
+      FormData formData = FormData({
+        "firstName": firstNameController.text.trim(),
+        "lastName": lastnameController.text.trim(),
+        "address": addressController.text.trim(),
+        "phoneNumber": phoneController.text.trim(),
+        "vehicleType": vehicleType.text.trim(),
+        "vehicleNumber": vehicleNumber.text.trim(),
+        "licenseNumber": licenseNumber.text.trim(),
+      });
 
-    var headers = {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer $cookies',
-    };
-    dio.Dio().options.headers = headers;
-    var response = await dio.Dio().patch(url, data: formData);
+      ApiClient apiClient = Get.find();
 
-    if (response.statusCode == 200) {
-      isChange.value = false;
-      Get.back();
+      var headers = apiClient.header;
+      // var cookies = token.value;
+
+      // var headers = {
+      //   'Content-Type': 'application/json',
+      //   'Authorization': 'Bearer $cookies',
+      // };
+      dio.Dio().options.headers = headers;
+      var response = await dio.Dio().patch(url, data: formData);
+
       LoadingFullScreen.cancelLoading();
-      CustomeSnackBar.showSuccessSnackBar(
-          context: Get.context,
-          title: 'Success',
-          message: 'Cập nhật thông tin thành công');
-    } else {
+      if (response.statusCode == 200) {
+        isChange.value = false;
+        Get.back();
+        await getInfoShipperrById();
+        CustomeSnackBar.showSuccessSnackBar(
+            context: Get.context,
+            title: 'Success',
+            message: 'Cập nhật thông tin thành công');
+      } else {
+        CustomeSnackBar.showErrorSnackBar(
+            context: Get.context,
+            title: 'Error',
+            message: 'Cập nhật không thành công');
+      }
+    } catch (e) {
+      print(e);
+    } finally {
       LoadingFullScreen.cancelLoading();
-      CustomeSnackBar.showErrorSnackBar(
-          context: Get.context,
-          title: 'Error',
-          message: 'Cập nhật không thành công');
     }
   }
 
@@ -197,8 +205,6 @@ class ShipperController extends GetxController {
 
   Future<void> getInfoShipperrById() async {
     try {
-      // await getIdToken();
-
       ApiClient apiClient = Get.find();
 
       var url = Uri.parse("${ApiEndPoints.baseUrl}/shipper/${id.value}");

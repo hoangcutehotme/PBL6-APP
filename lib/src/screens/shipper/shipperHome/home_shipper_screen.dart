@@ -79,10 +79,7 @@ class _ScreenDetailOrderAndShipperState extends State<ShipperHomePage> {
                           ? const Center(
                               child: CircularProgressIndicator(),
                             )
-                          : _googleMap(positionShipper),
-                      // userPosition?.latitude == null
-                      //     ? null
-                      //     : _currentAddress(size, userPosition!),
+                          : _googleMap(positionShipper)
                     ],
                   );
                 }),
@@ -410,9 +407,7 @@ class _ScreenDetailOrderAndShipperState extends State<ShipperHomePage> {
         ),
         SizedBox(
           height: 240,
-          child: GetBuilder<ShipperController>(
-              // initState: (state) => shipperController.getListOrder(),
-              builder: (_) {
+          child: GetBuilder<ShipperController>(builder: (_) {
             var listOrder = shipperController.listOrder;
 
             if (listOrder.isEmpty) {
@@ -537,15 +532,16 @@ class _ScreenDetailOrderAndShipperState extends State<ShipperHomePage> {
                     GestureDetector(
                       onTap: () async {
                         await _addressShipperController.setMarkerShipper();
+
+                        await _addressShipperController.animateToLocation(
+                            order.storeLocation!.coordinates![0],
+                            order.storeLocation!.coordinates![1]);
                         await _addressShipperController.setMarker(
                             "locationStore",
                             _addressShipperController.storeIcon.value,
-                            order.storeLocation!.coordinates![1],
                             order.storeLocation!.coordinates![0],
-                            "Cửa hàng ở đây");
-                        await _addressShipperController.animateToLocation(
                             order.storeLocation!.coordinates![1],
-                            order.storeLocation!.coordinates![0]);
+                            "Cửa hàng ở đây");
                       },
                       child: Column(
                         children: [

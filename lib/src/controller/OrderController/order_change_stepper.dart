@@ -6,7 +6,6 @@ import 'package:get/get.dart';
 
 import 'package:pbl6_app/src/data/repository/order_repository.dart';
 import 'package:pbl6_app/src/helper/func/func_useful.dart';
-import 'package:pbl6_app/src/utils/custome_snackbar.dart';
 import 'package:pbl6_app/src/values/app_styles.dart';
 
 import '../../model/order_detail_shipper.dart';
@@ -58,9 +57,7 @@ class ChangeStepperOrder extends GetxController {
         _currentStep = 4;
       }
       update();
-    } else {
-      
-    }
+    } else {}
 
     List<Step> list = [
       Step(
@@ -138,14 +135,16 @@ class ChangeStepperOrder extends GetxController {
           title: const Text('Đã giao hàng thành công'),
           content: Container(
             margin: const EdgeInsets.only(left: 0),
-            child: Row(
-              children: [
-                Text(
-                  '${order.shipper!.lastName} ${order.shipper!.firstName} đã giao hàng thành công ',
-                  style: AppStyles.textMedium.copyWith(fontSize: 14),
-                ),
-              ],
-            ),
+            child: order.dateFinished == null
+                ? null
+                : Row(
+                    children: [
+                      Text(
+                        '${order.shipper!.lastName} ${order.shipper!.firstName} đã giao hàng thành công ',
+                        style: AppStyles.textMedium.copyWith(fontSize: 14),
+                      ),
+                    ],
+                  ),
           )
           // Column(
           //   crossAxisAlignment: CrossAxisAlignment.start,

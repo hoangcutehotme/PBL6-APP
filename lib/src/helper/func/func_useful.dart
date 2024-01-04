@@ -26,7 +26,7 @@ class FuncUseful {
   }
 
   static String stringDateTimeToTime(DateTime date) {
-    return DateFormat.Hms().format(date);
+    return DateFormat.Hm().format(date);
   }
 
   static String stringDateTimeToDay(DateTime dateTime) {

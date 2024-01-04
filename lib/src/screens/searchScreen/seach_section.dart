@@ -43,7 +43,6 @@ class SearchSection extends SearchDelegate {
         child: FutureBuilder<List<Map<String, dynamic>>>(
           future: _searchController.searchFoodAndStore(query),
           builder: (context, snapshot) {
-            print("Snapshot  ${snapshot.data}");
             if (query == "") return buildNoSuggestions();
 
             switch (snapshot.connectionState) {

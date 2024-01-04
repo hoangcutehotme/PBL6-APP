@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pbl6_app/src/controller/StoreController/cart_controller.dart';
+import 'package:pbl6_app/src/helper/func/func_useful.dart';
 import 'package:pbl6_app/src/model/comment_model.dart';
 import 'package:pbl6_app/src/model/product_model.dart';
 import 'package:pbl6_app/src/values/app_styles.dart';
@@ -240,7 +241,7 @@ SliverToBoxAdapter _InfoShop(ProductModel? product) {
           Row(
             children: [
               Text(
-                "${product.price.toInt()}đ",
+                "${FuncUseful.formartStringPrice(product.price.toInt())}đ",
                 style: AppStyles.textMedium.copyWith(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,

@@ -70,6 +70,12 @@ class _DetailShopState extends State<DetailShop> {
                 child: Column(
                   children: [
                     _InfoShop(store, size),
+                    // voucher
+                    // Column(
+                    //   children: [
+
+                    //   ],
+                    // )
                   ],
                 ),
               ),
@@ -104,53 +110,7 @@ class _DetailShopState extends State<DetailShop> {
             );
           },
         );
-        return SliverList(
-          delegate: SliverChildBuilderDelegate(
-            (BuildContext context, int index) {
-              return Container(
-                height: 140,
-                padding: const EdgeInsets.all(10),
-                child: Row(
-                  children: [
-                    const Skelton(
-                      width: 160,
-                      height: 120,
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Skelton(
-                              width: size.width * 0.5,
-                            ),
-                            const SizedBox(
-                              height: 8,
-                            ),
-                            const Skelton(
-                              width: 120,
-                            ),
-                            Expanded(child: Container()),
-                            const Row(
-                              children: [
-                                Skelton(
-                                  width: 100,
-                                ),
-                              ],
-                            )
-                          ],
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              );
-            },
-            childCount: 4,
-          ),
-        );
+        return _skeletonProductDetailShop(size: size);
       } else {
         return SliverList(
           delegate: SliverChildBuilderDelegate(
@@ -211,7 +171,6 @@ class _DetailShopState extends State<DetailShop> {
                 (store.ratingAverage ?? 0).toString(),
                 style: AppStyles.textMedium,
               ),
-              // const Text(" (100+ Bình luận)", style: AppStyles.textMedium),
               Text(
                 " | ",
                 style: AppStyles.textMedium
@@ -225,27 +184,7 @@ class _DetailShopState extends State<DetailShop> {
               Text(" ${store.openAt.toString()} - ${store.closeAt.toString()}",
                   style: AppStyles.textMedium),
               Expanded(child: Container()),
-              Container(
-                alignment: Alignment.centerRight,
-                child: TextButton(
-                  onPressed: () {
-                    // Handle button press
-                  },
-                  style: TextButton.styleFrom(
-                    foregroundColor: Colors.blue,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(
-                            8)), // Optional: customize button shape
-                  ),
-                  child: Image.asset(
-                    'assets/icons/heartIcon.png', // Path to your image asset
-                    width: 32, // Width of the image icon
-                    height: 32, // Height of the image icon
-                    color: AppColors
-                        .borderGray, // Optional: change the color of the image icon
-                  ),
-                ),
-              ),
+              
             ],
           ),
         ),
@@ -418,7 +357,7 @@ class _DetailShopState extends State<DetailShop> {
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
-                                  '${FuncUseful.formartStringPrice(controller.productTotal())}đ',
+                                  '${FuncUseful.formartStringPrice(controller.totalCart)}đ',
                                   style: AppStyles.textMedium.copyWith(
                                       fontWeight: FontWeight.w500,
                                       fontSize: 16)),
@@ -460,6 +399,65 @@ class _DetailShopState extends State<DetailShop> {
                 height: 0,
               );
       },
+    );
+  }
+}
+
+class _skeletonProductDetailShop extends StatelessWidget {
+  const _skeletonProductDetailShop({
+    required this.size,
+  });
+
+  final Size size;
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverList(
+      delegate: SliverChildBuilderDelegate(
+        (BuildContext context, int index) {
+          return Container(
+            height: 140,
+            padding: const EdgeInsets.all(10),
+            child: Row(
+              children: [
+                const Skelton(
+                  width: 160,
+                  height: 120,
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Skelton(
+                          width: size.width * 0.5,
+                        ),
+                        const SizedBox(
+                          height: 8,
+                        ),
+                        const Skelton(
+                          width: 120,
+                        ),
+                        Expanded(child: Container()),
+                        const Row(
+                          children: [
+                            Skelton(
+                              width: 100,
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                )
+              ],
+            ),
+          );
+        },
+        childCount: 4,
+      ),
     );
   }
 }

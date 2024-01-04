@@ -1,5 +1,3 @@
-
-
 import 'package:pbl6_app/src/model/shipper.dart';
 
 import 'location_model.dart';
@@ -57,7 +55,8 @@ class OrderDetailShipper {
         dateOrdered: DateTime.parse(json["dateOrdered"]),
         depreciationShip: json["depreciationShip"],
         revenue: json["revenue"],
-        shipper: json["shipper"] == null ? null : Shipper.fromJson(json["shipper"]),
+        shipper:
+            json["shipper"] == null ? null : Shipper.fromJson(json["shipper"]),
         dateCheckout: json["dateCheckout"] == null
             ? null
             : DateTime.parse(json["dateCheckout"]),
@@ -87,6 +86,16 @@ class OrderDetailShipper {
         "depreciationShip": depreciationShip,
         "revenue": revenue,
       };
+
+  int totalCart() {
+    int total = 0;
+
+    for (var element in cart!) {
+      total += element.price * element.quantity;
+    }
+
+    return total;
+  }
 }
 
 class Cart {

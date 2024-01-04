@@ -43,62 +43,136 @@ class _OrderInfoScreenState extends State<OrderInfoScreen> {
     );
   }
 
-  Theme _listStatusOrder(BuildContext context, ChangeStepperOrder changeStepperOrder) {
+  Theme _listStatusOrder(
+      BuildContext context, ChangeStepperOrder changeStepperOrder) {
     return Theme(
-          data: Theme.of(context).copyWith(
-              colorScheme:
-                  const ColorScheme.light(primary: AppColors.mainColor1)),
-          child: GetBuilder<ChangeStepperOrder>(
-              initState: (state) => changeStepperOrder.getStep(widget.id),
-              builder: (_) {
-                var steps = changeStepperOrder.listStep;
-                var currentStep = changeStepperOrder.currentStep;
-                var order = changeStepperOrder.order;
-                return steps.isEmpty
-                    ? const SizedBox(
-                        height: 300,
-                        child: Center(
-                          child: CircularProgressIndicator(),
-                        ),
-                      )
-                    : Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 15),
-                            child: Row(
-                              children: [
-                                Text(
-                                  'Trạng thái',
-                                  style: AppStyles.textMedium.copyWith(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600),
-                                ),
-                                const Spacer(),
-                                Text(FuncUseful.formatStatus(order.status),
-                                    style: AppStyles.textMedium.copyWith(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600,
-                                        color: FuncUseful.colorStatus(
-                                            order.status)))
-                              ],
+      data: Theme.of(context).copyWith(
+          colorScheme: const ColorScheme.light(primary: AppColors.mainColor1)),
+      child: GetBuilder<ChangeStepperOrder>(
+          initState: (state) => changeStepperOrder.getStep(widget.id),
+          builder: (_) {
+            var steps = changeStepperOrder.listStep;
+            var currentStep = changeStepperOrder.currentStep;
+            var order = changeStepperOrder.order;
+            return steps.isEmpty || order.id == null
+                ? const SizedBox(
+                    height: 300,
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  )
+                : Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // status order
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: Row(
+                          children: [
+                            Text(
+                              'Trạng thái',
+                              style: AppStyles.textMedium.copyWith(
+                                  fontSize: 16, fontWeight: FontWeight.w600),
                             ),
-                          ),
-                          Stepper(
-                            steps: changeStepperOrder.listStep,
-                            controlsBuilder: (context, details) {
-                              return Container();
-                            },
-                            currentStep: currentStep,
-                          ),
-                          _orderDetail(
-                            changeStepperOrder.order,
-                          ),
-                        ],
-                      );
-              }),
-        );
+                            const Spacer(),
+                            Text(FuncUseful.formatStatus(order.status),
+                                style: AppStyles.textMedium.copyWith(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                    color:
+                                        FuncUseful.colorStatus(order.status)))
+                          ],
+                        ),
+                      ),
+                      // stepper
+                      Stepper(
+                        steps: changeStepperOrder.listStep,
+                        controlsBuilder: (context, details) {
+                          return Container();
+                        },
+                        currentStep: currentStep,
+                      ),
+                      // list cart order
+                      _orderDetail(
+                        changeStepperOrder.order,
+                      ),
+                      _totalPaymentSection(changeStepperOrder.order),
+                      // show order
+                    ],
+                  );
+          }),
+    );
+  }
+
+  _totalPaymentSection(OrderDetailShipper order) {
+    return Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Text("Tổng cộng món",
+                  style: AppStyles.textMedium
+                      .copyWith(fontWeight: FontWeight.w500)),
+              Expanded(child: Container()),
+              Text("${FuncUseful.formartStringPrice(order.totalCart())}đ",
+                  style: AppStyles.textMedium
+                      .copyWith(fontWeight: FontWeight.w500)),
+            ],
+          ),
+          const Divider(
+            thickness: 1,
+            height: 20,
+            color: AppColors.borderGray,
+          ),
+          Row(
+            children: [
+              Text("Phí giao hàng",
+                  style: AppStyles.textMedium
+                      .copyWith(fontWeight: FontWeight.w500)),
+              Expanded(child: Container()),
+              Text("${FuncUseful.formartStringPrice(order.shipCost)}đ",
+                  style: AppStyles.textMedium
+                      .copyWith(fontWeight: FontWeight.w500)),
+            ],
+          ),
+          const Divider(
+            thickness: 1,
+            height: 20,
+            color: AppColors.borderGray,
+          ),
+          Row(
+            children: [
+              Text("Giảm giá",
+                  style: AppStyles.textMedium
+                      .copyWith(fontWeight: FontWeight.w500)),
+              Expanded(child: Container()),
+              Text(
+                  "-${FuncUseful.formartStringPrice((order.totalCart() + order.shipCost!.toInt() - order.totalPrice!.toInt()))}đ",
+                  style: AppStyles.textMedium
+                      .copyWith(fontWeight: FontWeight.w500)),
+            ],
+          ),
+          const Divider(
+            thickness: 1,
+            height: 20,
+            color: AppColors.borderGray,
+          ),
+          Row(
+            children: [
+              Text(
+                "Tộng cộng",
+                style: AppStyles.textBold.copyWith(fontSize: 16),
+              ),
+              Expanded(child: Container()),
+              Text("${FuncUseful.formartStringPrice(order.totalPrice)}đ",
+                  style: AppStyles.textBold
+                      .copyWith(fontSize: 15, color: AppColors.mainColor1)),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 
   _orderDetail(OrderDetailShipper order) {
@@ -121,6 +195,7 @@ class _OrderInfoScreenState extends State<OrderInfoScreen> {
                 ),
               ),
               AnimatedContainer(
+                padding: EdgeInsets.zero,
                 duration: const Duration(milliseconds: 100),
                 height: isListShortened
                     ? widthOrder.toDouble()

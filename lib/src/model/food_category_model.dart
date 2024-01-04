@@ -9,14 +9,14 @@ String categoryModelToJson(List<CategoryModel> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class CategoryModel {
-  String id;
-  String catName;
-  String photo;
+  String? id;
+  String? catName;
+  String? photo;
 
   CategoryModel({
-    required this.id,
-    required this.catName,
-    required this.photo,
+    this.id,
+    this.catName,
+    this.photo,
   });
 
   factory CategoryModel.fromJson(Map<String, dynamic> json) => CategoryModel(

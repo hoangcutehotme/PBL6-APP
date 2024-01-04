@@ -27,5 +27,5 @@ class AppString {
   static const String ROLE = "role";
 
   // api key AIzaSyB1HeHIghTdPtji7wT84i_FOAupZRwVBlY AIzaSyDxvSKzQyy-I3D5Lhr44rVJh2VXm1FXwYY
-  static const String API_KEY = "AIzaSyD-MpqVX9flDkmKXvPIv0nSLcRXgYBYxT8";
+  static const String API_KEY = "AIzaSyC6j6rRG_746mqp91Bjovr8yyD5GXhrXec";
 }

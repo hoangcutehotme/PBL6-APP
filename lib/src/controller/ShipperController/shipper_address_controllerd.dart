@@ -14,11 +14,9 @@ import 'package:pbl6_app/src/values/app_string.dart';
 import 'package:location/location.dart' as flutterlocation;
 
 class ShipperAddressController extends GetxController {
-  final Completer<GoogleMapController> controllerMap = Completer();
+  Completer<GoogleMapController> controllerMap = Completer();
 
   var marker = <Marker>{}.obs;
-  // Position? _locationShipper;
-  // Position? get locationShipper => _locationShipper;
 
   flutterlocation.LocationData? _currentLocation;
   flutterlocation.LocationData? get currentLocation => _currentLocation;
@@ -84,7 +82,7 @@ class ShipperAddressController extends GetxController {
           'Location permissions are permanently denied, we cannot request permissions.');
     }
     // await animateCurrentLocation();
-    getCurrentLocation();
+    await getCurrentLocation();
   }
 
   Future<String?> getNamePosition(flutterlocation.LocationData position) async {
@@ -102,8 +100,6 @@ class ShipperAddressController extends GetxController {
   }
 
   setMarkerShipper() async {
-    await animateCurrentLocation();
-
     clearMarker();
 
     marker.add(Marker(
@@ -114,6 +110,17 @@ class ShipperAddressController extends GetxController {
             LatLng(_currentLocation!.latitude!, _currentLocation!.longitude!)));
 
     update();
+  }
+
+  updateShipperLocation() async {
+    marker.removeWhere(
+        (marker) => marker.markerId == const MarkerId('shipperLocation'));
+    marker.add(Marker(
+        infoWindow: const InfoWindow(title: 'Vị trí của bạn'),
+        markerId: const MarkerId('shipperLocation'),
+        icon: shipperIcon.value,
+        position:
+            LatLng(_currentLocation!.latitude!, _currentLocation!.longitude!)));
   }
 
   setMarker(String idMarker, BitmapDescriptor icon, double lat, double long,
@@ -146,15 +153,6 @@ class ShipperAddressController extends GetxController {
         icon: storeIcon.value,
         position: const LatLng(16.073985612738287, 108.14985671349393)));
   }
-
-  // setCameraToNewLocation(Position position) async {
-  //   CameraPosition cameraPosition = CameraPosition(
-  //       target: LatLng(position.latitude, position.longitude), zoom: 18);
-
-  //   final GoogleMapController controller = await controllerMap.future;
-  //   await controller
-  //       .animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
-  // }
 
   setLocationShipper() async {
     await animateCurrentLocation();
@@ -223,6 +221,21 @@ class ShipperAddressController extends GetxController {
         travelMode: TravelMode.transit,
       );
 
+      if (result.points.isNotEmpty) {
+        for (var point in result.points) {
+          polylineCoordinatestoStore
+              .add(LatLng(point.latitude, point.longitude));
+        }
+      } else {
+        print("Error polyline1 >>>>>> ");
+        print(result.errorMessage);
+      }
+
+      addPolyLine(polylineCoordinatestoStore, AppColors.colorDirectionToStore,
+          "toStore");
+
+      await Future.delayed(const Duration(seconds: 3));
+
       PolylineResult result2 = await polylinePoints.getRouteBetweenCoordinates(
         AppString.API_KEY,
         PointLatLng(storeLocation[0], storeLocation[1]),
@@ -230,28 +243,15 @@ class ShipperAddressController extends GetxController {
         travelMode: TravelMode.transit,
       );
 
-      if (result.points.isNotEmpty) {
-        for (var point in result.points) {
-          polylineCoordinatestoStore
-              .add(LatLng(point.latitude, point.longitude));
-        }
-      } else {
-        print("Error polyline >>>>>> ");
-        print(result.errorMessage);
-      }
-
       if (result2.points.isNotEmpty) {
         for (var point in result2.points) {
           polylineCoordinatesStoretoCustomer
               .add(LatLng(point.latitude, point.longitude));
         }
       } else {
-        print("Error polyline >>>>>> ");
+        print("Error polyline2 >>>>>> ");
         print(result.errorMessage);
       }
-
-      addPolyLine(polylineCoordinatestoStore, AppColors.colorDirectionToStore,
-          "toStore");
 
       addPolyLine(polylineCoordinatesStoretoCustomer,
           AppColors.colorDirectionToCustomer, "storeToCustomer");
@@ -268,15 +268,27 @@ class ShipperAddressController extends GetxController {
     });
   }
 
+  updateMarkerShipper() {}
+
   animateCurrentLocation() async {
     GoogleMapController googleMapController = await controllerMap.future;
+
     location.onLocationChanged.listen((location) {
-      _currentLocation = location;
-      googleMapController.animateCamera(CameraUpdate.newCameraPosition(
-          CameraPosition(
-              zoom: 15,
-              target: LatLng(location.latitude!, location.longitude!))));
-      update();
+      if (_currentLocation == location) {
+        print('not change');
+        return;
+      } else {
+        print('change');
+        _currentLocation = location;
+        updateShipperLocation();
+
+        googleMapController.animateCamera(CameraUpdate.newCameraPosition(
+            CameraPosition(
+                zoom: 15,
+                target: LatLng(location.latitude!, location.longitude!))));
+
+        update();
+      }
     });
   }
 
