@@ -116,6 +116,21 @@ class _FillInfoUserScreenState extends State<FillInfoUserScreen> {
                           ),
                         ),
                       ),
+                      FillLabelText(
+                        size: Size(size.width * 0.85, 56),
+                        label: 'Số giấy phép lái xe',
+                        child: TextField(
+                          controller: _controller.licenseNumberController,
+                          decoration: InputDecoration(
+                            contentPadding:
+                                const EdgeInsets.symmetric(vertical: 10),
+                            hintText: "Số giấy phép lái xe",
+                            hintStyle: AppStyles.textMedium
+                                .copyWith(color: AppColors.colorTextBlur),
+                            border: InputBorder.none,
+                          ),
+                        ),
+                      ),
                       GetBuilder<RegisterController>(builder: (_) {
                         return Padding(
                           padding: const EdgeInsets.all(10.0),

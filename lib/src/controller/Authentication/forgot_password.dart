@@ -7,7 +7,6 @@ import 'package:pbl6_app/src/utils/custome_snackbar.dart';
 import 'package:pbl6_app/src/utils/loading_full_screen.dart';
 
 class ForgotPasswordController extends GetxController {
-  
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController passwordConfirmController = TextEditingController();
@@ -47,27 +46,27 @@ class ForgotPasswordController extends GetxController {
       if (response.statusCode == 200) {
         print("success");
         LoadingFullScreen.cancelLoading();
-        CustomeSnackBar.showSuccessSnackBar(
+        CustomeSnackBar.showSuccessSnackTopBar(
             context: Get.context,
             title: 'Success',
             message: json['message'].toString());
-        
+
         return true;
       } else {
         LoadingFullScreen.cancelLoading();
-        CustomeSnackBar.showErrorSnackBar(
+        CustomeSnackBar.showWarningTopBar(
             context: Get.context,
             title: 'Error',
             message: json['message'].toString());
-       
+
         return false;
       }
     } catch (e) {
       print(e.toString());
       LoadingFullScreen.cancelLoading();
-      CustomeSnackBar.showErrorSnackBar(
+      CustomeSnackBar.showWarningTopBar(
           context: Get.context, title: 'Error', message: e.toString());
-     
+
       return false;
     } finally {
       isLoading(false);
@@ -100,36 +99,36 @@ class ForgotPasswordController extends GetxController {
         if (json['status'] != 400) {
           LoadingFullScreen.cancelLoading();
           print("success");
-          CustomeSnackBar.showSuccessSnackBar(
+          CustomeSnackBar.showSuccessSnackTopBar(
               context: Get.context,
               title: 'Success',
               message: json['message'].toString());
-          
+
           return true;
         } else {
           LoadingFullScreen.cancelLoading();
-          CustomeSnackBar.showErrorSnackBar(
+          CustomeSnackBar.showWarningTopBar(
               context: Get.context,
               title: 'Error',
               message: json['message'].toString());
-          
+
           return false;
         }
       } else {
         LoadingFullScreen.cancelLoading();
-        CustomeSnackBar.showErrorSnackBar(
+        CustomeSnackBar.showWarningTopBar(
             context: Get.context,
             title: 'Error',
             message: json['message'].toString());
-        
+
         return false;
       }
     } catch (e) {
       print(e.toString());
       LoadingFullScreen.cancelLoading();
-      CustomeSnackBar.showErrorSnackBar(
+      CustomeSnackBar.showWarningTopBar(
           context: Get.context, title: 'Error', message: e.toString());
-     
+
       return false;
     } finally {
       LoadingFullScreen.cancelLoading();
@@ -160,24 +159,24 @@ class ForgotPasswordController extends GetxController {
       if (response.statusCode == 200) {
         print("success");
         LoadingFullScreen.cancelLoading();
-        CustomeSnackBar.showSuccessSnackBar(
+        CustomeSnackBar.showSuccessSnackTopBar(
             context: Get.context,
             title: 'Success',
             message: json['message'].toString());
-        
+
         return true;
       } else {
         LoadingFullScreen.cancelLoading();
-        CustomeSnackBar.showErrorSnackBar(
+        CustomeSnackBar.showWarningTopBar(
             context: Get.context,
             title: 'Error',
             message: json['message'].toString());
-        
+
         return false;
       }
     } catch (e) {
       LoadingFullScreen.cancelLoading();
-      CustomeSnackBar.showErrorSnackBar(
+      CustomeSnackBar.showWarningTopBar(
           context: Get.context, title: 'Error', message: e.toString());
       return false;
     } finally {

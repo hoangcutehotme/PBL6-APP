@@ -33,7 +33,7 @@ class SearchFoodStoreController extends GetxController {
 
         return uniqueResult.toList();
       } else {
-        // CustomeSnackBar.showErrorSnackBar(
+        // CustomeSnackBar.showWarningTopBar(
         //     context: Get.context, title: 'Error', message: 'No data');
         return [];
       }

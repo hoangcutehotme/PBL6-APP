@@ -43,7 +43,7 @@ class StoreDetailController extends GetxController {
         update();
         return _store;
       } else {
-        CustomeSnackBar.showErrorSnackBar(
+        CustomeSnackBar.showWarningTopBar(
             context: Get.context, title: 'Error', message: json['message']);
 
         // return StoreModel.fromJson(storeJson);
@@ -51,7 +51,7 @@ class StoreDetailController extends GetxController {
         // return null;
       }
     } catch (e) {
-      // CustomeSnackBar.showErrorSnackBar(
+      // CustomeSnackBar.showWarningTopBar(
       //     context: Get.context, title: 'Error sys', message: e.toString());
       // return StoreModel.fromJson(storeJson);
       return StoreModel();
