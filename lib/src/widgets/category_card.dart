@@ -27,14 +27,14 @@ class CategoryCard extends StatelessWidget {
         child: Column(
           children: [
             ImageLoadingNetwork(
-              image: categorie.photo,
+              image: categorie.photo ?? '',
               size: const Size(120, 120),
             ),
             const SizedBox(
               height: 10,
             ),
             Text(
-              categorie.catName,
+              categorie.catName ?? '',
               style: AppStyles.textMedium,
             )
           ],

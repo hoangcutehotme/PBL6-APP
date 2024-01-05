@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pbl6_app/src/controller/Authentication/login_controller.dart';
-import 'package:pbl6_app/src/screens/signUpScreens/sign_up_screen.dart';
-import 'package:pbl6_app/src/screens/signUpScreens/webview_signin.dart';
-import 'package:pbl6_app/src/values/app_assets.dart';
 import 'package:pbl6_app/src/values/app_colors.dart';
 import 'package:pbl6_app/src/values/app_styles.dart';
 import 'package:pbl6_app/src/widgets/rounded_button.dart';
@@ -25,24 +22,22 @@ class _SignInScreenState extends State<SignInScreen> {
       body: SingleChildScrollView(
           child: Center(
         child: Obx(
-          () => 
-              Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const SizedBox(
-                      height: 100,
-                    ),
-                    Text(
-                      'Đăng nhập',
-                      style: AppStyles.textBold
-                          .copyWith(color: AppColors.mainColor1),
-                    ),
-                    const SizedBox(
-                      height: 40,
-                    ),
-                    loginForm(context, size),
-                  ],
-                ),
+          () => Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(
+                height: 100,
+              ),
+              Text(
+                'Đăng nhập',
+                style: AppStyles.textBold.copyWith(color: AppColors.mainColor1),
+              ),
+              const SizedBox(
+                height: 40,
+              ),
+              loginForm(context, size),
+            ],
+          ),
         ),
       )),
     );
@@ -138,14 +133,7 @@ class _SignInScreenState extends State<SignInScreen> {
             ),
             GestureDetector(
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return const SignUpScreen();
-                    },
-                  ),
-                );
+                Get.toNamed("/signup");
               },
               child: Text("Tạo tài khoản",
                   style: AppStyles.textBold
@@ -156,29 +144,29 @@ class _SignInScreenState extends State<SignInScreen> {
         const SizedBox(
           height: 10,
         ),
-        const Text(
-          "Hoặc",
-          style: AppStyles.textMedium,
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        Container(
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(100),
-              border: Border.all(width: 1, color: AppColors.borderGray)),
-          child: GestureDetector(
-            child: Image.asset(
-              AppAssets.googleImage,
-              width: 60,
-              height: 60,
-            ),
-            onTap: () {
-              // await Get.find<LoginController>().handleSignIn();
-              Get.to(() => const WebViewSignIn());
-            },
-          ),
-        ),
+        // const Text(
+        //   "Hoặc",
+        //   style: AppStyles.textMedium,
+        // ),
+        // const SizedBox(
+        //   height: 10,
+        // ),
+        // Container(
+        //   decoration: BoxDecoration(
+        //       borderRadius: BorderRadius.circular(100),
+        //       border: Border.all(width: 1, color: AppColors.borderGray)),
+        //   child: GestureDetector(
+        //     child: Image.asset(
+        //       AppAssets.googleImage,
+        //       width: 60,
+        //       height: 60,
+        //     ),
+        //     onTap: () {
+        //       // await Get.find<LoginController>().handleSignIn();
+        //       // Get.to(() => const WebViewSignIn());
+        //     },
+        //   ),
+        // ),
       ],
     );
   }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pbl6_app/src/model/product_model.dart';
 import 'package:pbl6_app/src/values/app_styles.dart';
-import '../controller/func/func_useful.dart';
+import '../helper/func/func_useful.dart';
 import '../values/app_colors.dart';
 import 'image_loading_network.dart';
 

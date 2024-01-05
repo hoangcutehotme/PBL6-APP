@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:pbl6_app/src/model/food_category_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:pbl6_app/src/utils/api_endpoints.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class CategoryController extends GetxController {
   var listCategory = <CategoryModel>[].obs;
@@ -41,9 +40,7 @@ class CategoryController extends GetxController {
         listCategory.value = categoryModelFromJson(data);
 
         update();
-        // Assign data to the observable list
       } else {
-        // If the server did not return a 200 OK response, throw an exception.
         showDialog(
             context: Get.context!,
             builder: (context) {

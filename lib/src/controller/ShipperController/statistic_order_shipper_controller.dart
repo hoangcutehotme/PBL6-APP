@@ -21,11 +21,15 @@ class StaticOrderShipperController extends GetxController {
   List<StatisticModel> _listDataDay = [];
   List<StatisticModel> get listDataDay => _listDataDay;
 
+  
+
   List<StatisticModel> _dataWeek = [];
   List<StatisticModel> get dataWeek => _dataWeek;
 
   List<StatisticModel> _dataMonth = [];
   List<StatisticModel> get dataMonthDay => _dataMonth;
+
+  
 
   @override
   onInit() async {

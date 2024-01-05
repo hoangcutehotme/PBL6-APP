@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:pbl6_app/src/controller/StoreController/cart_controller.dart';
+import 'package:pbl6_app/src/controller/StoreController/voucher_controller.dart';
 import 'package:pbl6_app/src/controller/UserController/ship_info_cart.dart';
+import 'package:pbl6_app/src/data/repository/voucher_repository.dart';
 import 'package:pbl6_app/src/utils/api_endpoints.dart';
 import 'package:pbl6_app/src/utils/custome_snackbar.dart';
 import 'package:pbl6_app/src/utils/loading_full_screen.dart';
@@ -14,12 +16,19 @@ import 'package:http/http.dart' as http;
 class PlaceOrderController extends GetxController {
   final ShippingFeeController shippingFeeController;
   final CartController cartController;
+  final VoucherRepo voucherRepo;
+  final UserController userController;
+  final VoucherController voucherController;
+
   PlaceOrderController({
     required this.shippingFeeController,
     required this.cartController,
+    required this.voucherRepo,
+    required this.userController,
+    required this.voucherController,
   });
 
-  bool _isVNPayOption = false;
+  bool _isVNPayOption = true;
   bool get isVNPayOption => _isVNPayOption;
 
   getCart() {
@@ -41,8 +50,9 @@ class PlaceOrderController extends GetxController {
     var body = {
       "cart": getCart(),
       "contact": shippingFeeController.currentInfo.contact?.id,
-      "totalPrice": (cartController.productTotal() +
-          shippingFeeController.currentInfo.shipCost!.toInt()),
+      "totalPrice": (cartController.totalCart +
+          shippingFeeController.currentInfo.shipCost!.toInt() -
+          (voucherController.chooseVoucher.amount ?? 0)),
       "shipCost": shippingFeeController.currentInfo.shipCost
     };
 
@@ -61,10 +71,15 @@ class PlaceOrderController extends GetxController {
           await http.post(Uri.parse(url), headers: headers, body: jsonBody);
 
       var json = jsonDecode(response.body);
-      
+
       if (response.statusCode == 200) {
         var urlNew = json['url'].toString();
-        return urlNew;
+        var orderId = json['data']['_id'];
+        if (orderId == null) {
+          return [];
+        } else {
+          return [urlNew, orderId];
+        }
       } else {
         print("Error");
       }
@@ -77,19 +92,22 @@ class PlaceOrderController extends GetxController {
     }
   }
 
-  void onPayment(String paymentUrl) async {
-    // LoadingFullScreen.showLoading();
+  onPayment(String paymentUrl, String orderId) async {
+    var i = 0;
     try {
       if (paymentUrl != '') {
         VNPAYFlutter.instance.show(
           paymentUrl: paymentUrl,
           onPaymentSuccess: (params) async {
-            CustomeSnackBar.showMessageTopBar(
-                context: Get.context,
-                title: 'Thông báo',
-                message: 'Thanh toán thành công');
-            await checkoutAfterPayment(params)
-                .then((value) => Get.to(() => const OrderSuccess()));
+            await checkoutAfterPayment(params);
+            if (voucherController.chooseVoucher.id != null) {
+              print(i++);
+              await voucherRepo.useVoucher(
+                  voucherController.chooseVoucher.id!, orderId);
+            
+            }
+
+            await Get.offAll(() => const OrderSuccess(),arguments: orderId);
           },
           onPaymentError: (params) {
             CustomeSnackBar.showMessageTopBar(
@@ -108,7 +126,7 @@ class PlaceOrderController extends GetxController {
     } catch (e) {
       CustomeSnackBar.showWarningTopBar(
           context: Get.context,
-          title: 'Error throw',
+          title: 'Error',
           message: 'Thanh toán không thành công');
     }
   }
@@ -129,12 +147,13 @@ class PlaceOrderController extends GetxController {
 
       if (response.statusCode == 200) {
         var data = json['data'];
-        print(data);
+        return true;
       } else {
         print("Errror");
       }
     } catch (e) {
       print("Error >> $e");
+      throw Exception(e);
     }
   }
 

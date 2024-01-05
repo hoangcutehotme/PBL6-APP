@@ -84,10 +84,8 @@ class LoginController extends GetxController {
   }
 
   Future<void> login() async {
-    isLoading(true);
     LoadingFullScreen.showLoading();
     try {
-      print("login");
       var headers = {'Content-Type': 'application/json'};
       var url = Uri.parse("${ApiEndPoints.baseUrl}/auth/login");
       var body = {
@@ -154,6 +152,7 @@ class LoginController extends GetxController {
     // Get.bot
     final SharedPreferences prefs = await _prefs;
     prefs.clear();
+    
     Get.offAllNamed('/signin');
   }
 

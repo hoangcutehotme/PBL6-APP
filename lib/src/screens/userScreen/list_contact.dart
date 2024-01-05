@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pbl6_app/src/controller/UserController/ship_info_cart.dart';
 import 'package:pbl6_app/src/controller/UserController/user_controller.dart';
 import 'package:pbl6_app/src/model/contact_model.dart';
 import 'package:pbl6_app/src/values/app_assets.dart';
@@ -55,9 +56,11 @@ class ListContactScreen extends StatelessWidget {
                     ),
                   ),
                   child: ListTile(
-                    onTap: () {
+                    onTap: () async {
                       // Get.toNamed('/changecontact', arguments: Contact());
-                      userController.changeAddressContactDefault(contact);
+                      await userController.changeAddressContactDefault(contact);
+                      await Get.find<ShippingFeeController>()
+                          .getCurrentContact();
                     },
                     leading: const Icon(
                       Icons.location_on,

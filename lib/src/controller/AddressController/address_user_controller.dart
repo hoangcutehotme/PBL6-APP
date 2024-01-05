@@ -50,7 +50,6 @@ class AddressUserController extends GetxController {
     List<Placemark> placemarks = await placemarkFromCoordinates(
         position.latitude, position.longitude,
         localeIdentifier: 'vi_VN');
-    print(placemarks);
     return placemarks[0].street;
   }
 

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pbl6_app/src/controller/func/func_useful.dart';
+import 'package:pbl6_app/src/helper/func/func_useful.dart';
 import 'package:pbl6_app/src/values/app_colors.dart';
 
-import '../../controller/OrderController/order_controller.dart';
+import '../../controller/OrderController/order_user_controller.dart';
 import '../../values/app_styles.dart';
 import '../../widgets/image_loading_network.dart';
+import 'order_info_screen.dart';
 
 class CommingOrderTab extends StatefulWidget {
   const CommingOrderTab({super.key});
@@ -22,9 +23,10 @@ class _CommingOrderTabState extends State<CommingOrderTab> {
       // body: OrderItem(),
 
       body: GetBuilder<OrderController>(
-          initState: (state) => controller.fetchListOrder('Pending', '', '', 1),
+          initState: (state) =>
+              controller.fetchListOrderComming('Waiting', '', '', 1),
           builder: (_) {
-            var listOrder = controller.listOrder;
+            var listOrder = controller.listOrderComming;
             if (listOrder.isEmpty) {
               return const Center(child: Text('Chưa có đơn hàng đang đến'));
             } else {
@@ -33,7 +35,11 @@ class _CommingOrderTabState extends State<CommingOrderTab> {
                     var order = listOrder[index];
 
                     return GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        Get.to(() => OrderInfoScreen(
+                              id: order.id!,
+                            ));
+                      },
                       child: Container(
                           height: 205,
                           padding: const EdgeInsets.all(10),
@@ -43,13 +49,13 @@ class _CommingOrderTabState extends State<CommingOrderTab> {
                                 Text(
                                   "Đơn hàng",
                                   style: AppStyles.textMedium
-                                      .copyWith(fontWeight: FontWeight.w500),
+                                      .copyWith(fontWeight: FontWeight.w600),
                                 ),
                                 Expanded(child: Container()),
                                 Text(
-                                    "${order.dateOrdered!.day}/${order.dateOrdered!.month}/${order.dateOrdered!.year} - ${order.dateOrdered!.hour}:${order.dateOrdered!.minute}",
+                                    "${FuncUseful.stringDateTimeToDayMonthYear(order.dateOrdered!)} - ${FuncUseful.stringDateTimeToTime(order.dateOrdered!)}",
                                     style: AppStyles.textMedium
-                                        .copyWith(fontWeight: FontWeight.w500))
+                                        .copyWith(fontWeight: FontWeight.w600))
                               ],
                             ),
                             Row(children: [
@@ -85,8 +91,10 @@ class _CommingOrderTabState extends State<CommingOrderTab> {
                               children: [
                                 const Spacer(),
                                 Text(FuncUseful.formatStatus(order.status),
-                                    style: AppStyles.textMedium
-                                        .copyWith(fontWeight: FontWeight.w500)),
+                                    style: AppStyles.textMedium.copyWith(
+                                        fontWeight: FontWeight.w500,
+                                        color: FuncUseful.colorStatus(
+                                            order.status))),
                               ],
                             )
                           ])),

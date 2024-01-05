@@ -229,9 +229,12 @@ class _FillInfoUserScreenState extends State<FillInfoUserScreen> {
                       await Get.toNamed("/verifyotp");
                     } else {
                       await Get.find<RegisterController>()
-                          .registerShipperEmail();
-
-                      await Get.toNamed("/verifyotp");
+                          .registerShipperEmail()
+                          .then((value) {
+                        if (value) {
+                          Get.toNamed("/verifyotp");
+                        } else {}
+                      });
                     }
                   },
                   text: 'Xác nhận',

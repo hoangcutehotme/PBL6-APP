@@ -16,11 +16,14 @@ class OrderController extends GetxController {
   final OrderRepo orderRepo;
   OrderController({required this.orderRepo, required this.userController});
 
-  List<OrderModel> _listOrder = [];
-  List<OrderModel> get listOrder => _listOrder;
+  List<OrderModel> _listOrderHistory = [];
+  List<OrderModel> get listOrderHistory => _listOrderHistory;
 
-  OrderDetailShipper _orderShipper = OrderDetailShipper();
-  OrderDetailShipper get orderShipper => _orderShipper;
+  List<OrderModel> _listOrderComming = [];
+  List<OrderModel> get listOrderComming => _listOrderComming;
+
+  OrderDetailShipper _orderUser = OrderDetailShipper();
+  OrderDetailShipper get orderShipper => _orderUser;
 
   var isLoading = false.obs;
   var client = http.Client();
@@ -55,9 +58,9 @@ class OrderController extends GetxController {
 
       var json = jsonDecode(response.body);
       if (response.statusCode == 200) {
-        _listOrder = orderModelFromJson(jsonEncode(json['data']));
+        _listOrderHistory = orderModelFromJson(jsonEncode(json['data']));
         update();
-        return _listOrder;
+        return _listOrderHistory;
         // return listProduct;
       } else {
         return [];
@@ -73,15 +76,64 @@ class OrderController extends GetxController {
     }
   }
 
-  Future<OrderDetailShipper?> showOrderDetail(String id) async {
+  fetchListOrderComming(
+      String status, String start, String end, int page) async {
+    var prefs = await _prefs;
+
+    var token = prefs.getString(AppString.SHAREPREF_TOKEN);
+    var id = prefs.getString(AppString.SHAREPREF_USERID);
+
+    var url = "${ApiEndPoints.baseUrl}/order/user/$id";
+
     try {
-      var response = await orderRepo.getOrderDetailShipper(id);
+      Map<String, dynamic> params = {
+        'status': status,
+        'fields': 'status,dateOrdered,totalPrice',
+        'sort': '-createdAt',
+        'limit': '10',
+        'page': page.toString(),
+        'start': start,
+        'end': end,
+      };
+
+      Uri uri = Uri.parse(url).replace(queryParameters: params);
+
+      var header = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token'
+      };
+
+      var response = await http.get(uri, headers: header);
+
+      var json = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        _listOrderComming = orderModelFromJson(jsonEncode(json['data']));
+        update();
+        return _listOrderComming;
+        // return listProduct;
+      } else {
+        return [];
+        // throw Exception(
+        //     'Failed to get products. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error in getProductByStoreId: $e');
+      return [];
+      // Handle the error in a way that makes sense for your app
+    } finally {
+      // isLoading(false);
+    }
+  }
+
+  Future<OrderDetailShipper> showOrderDetail(String id) async {
+    try {
+      var response = await orderRepo.getOrderDetail(id);
 
       var jsonBody = jsonDecode(response.body);
 
       if (response.statusCode == 200) {
         var order = OrderDetailShipper.fromJson(jsonBody['data']);
-        _orderShipper = order;
+        _orderUser = order;
         update();
         return order;
       } else {
@@ -91,5 +143,4 @@ class OrderController extends GetxController {
       return OrderDetailShipper();
     }
   }
-  
 }

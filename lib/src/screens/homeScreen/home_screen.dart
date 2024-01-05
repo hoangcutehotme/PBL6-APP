@@ -8,6 +8,7 @@ import 'package:pbl6_app/src/model/food_category_model.dart';
 import 'package:pbl6_app/src/screens/searchScreen/seach_section.dart';
 import 'package:pbl6_app/src/values/app_styles.dart';
 import '../../model/store_model.dart';
+import '../../utils/custome_dialog.dart';
 import '../../values/app_colors.dart';
 import '../../widgets/category_card.dart';
 import '../../widgets/food_card.dart';
@@ -25,7 +26,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    Get.put(UserController(respo: Get.find()), permanent: true);
+    Get.put(UserController(respo: Get.find()));
+    // Get.put(UserController(respo: Get.find()), permanent: true);
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: CustomScrollView(
@@ -35,7 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
             backgroundColor: AppColors.mainColorBackground,
             shadowColor: Colors.transparent,
             pinned: true,
-            collapsedHeight: 120,
+            collapsedHeight: 110,
             flexibleSpace: Column(children: [
               const SizedBox(
                 height: 25,
@@ -51,9 +53,6 @@ class _HomeScreenState extends State<HomeScreen> {
           SliverToBoxAdapter(
             child: Column(
               children: [
-                const SizedBox(
-                  height: 10,
-                ),
                 _categorySection(),
                 // Store
                 _storeSection(),
@@ -337,11 +336,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 GetBuilder<UserController>(builder: (_) {
                   if (controller.contacChoose.address == null) {
                     return const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                        ));
+                        width: 20, height: 20, child: Text(''));
                   } else {
                     return Flexible(
                       child: Text(
@@ -355,7 +350,15 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
             onTap: () {
-              Get.to(() => const ListContactScreen());
+              controller.id.value == ''
+                  ? CustomeDialog.showCustomDialog1(
+                      context: context,
+                      title: 'Thông báo',
+                      message: 'Bạn chưa đăng ký - Đăng ký ngay ',
+                      pressConfirm: () {
+                        Get.toNamed("/signup");
+                      })
+                  : Get.to(() => const ListContactScreen());
             },
           ),
         ),

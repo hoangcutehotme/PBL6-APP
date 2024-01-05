@@ -18,9 +18,6 @@ class CustomeDialog {
       titleStyle:
           AppStyles.textMedium.copyWith(color: AppColors.mainColorBackground),
       textCancel: 'Huỷ',
-      // onCancel: () {
-      //   Get.back();
-      // },
       textConfirm: confirmText,
       radius: 10,
       onConfirm: pressConfirm,
@@ -28,7 +25,7 @@ class CustomeDialog {
   }
 
   static void showCustomDialog1({
-    required BuildContext context,
+    required BuildContext? context,
     required String title,
     required String message,
     required Function() pressConfirm,
@@ -43,14 +40,14 @@ class CustomeDialog {
             onPressed: () {
               Get.back(); // Close the current dialog
             },
-            child: const Text('Thoát'),
+            child: const Text(
+              'Huỷ',
+              style: AppStyles.textMedium,
+            ),
           ),
           TextButton(
-            onPressed: () {
-              pressConfirm();
-              Get.back(); // Close the dialog after the confirmation action
-            },
-            child: const Text('Ok'),
+            onPressed: pressConfirm,
+            child: const Text('Ok', style: AppStyles.textMedium),
           ),
         ],
       ),

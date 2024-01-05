@@ -5,7 +5,7 @@ import 'package:pbl6_app/src/model/user_model.dart';
 
 class Shipper extends UserModel {
   String? status;
-  double? ratingsAverage;
+  num? ratingsAverage;
   int? ratingsQuantity;
   String? vehicleNumber;
   String? vehicleType;
@@ -37,7 +37,7 @@ class Shipper extends UserModel {
         );
 
   factory Shipper.fromJson(Map<String, dynamic> json) => Shipper(
-        status: json["status"],
+        status: json["status"] == null ? null : json['status'],
         ratingsAverage: json["ratingsAverage"],
         ratingsQuantity: json["ratingsQuantity"],
         photo: json["photo"],

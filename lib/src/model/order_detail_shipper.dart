@@ -1,64 +1,6 @@
+import 'package:pbl6_app/src/model/shipper.dart';
+
 import 'location_model.dart';
-
-// class OrderDetailShipper {
-//     String? id;
-//     Location? storeLocation;
-//     int? shipCost;
-//     int? totalPrice;
-//     String? status;
-//     UserModel? user;
-//     List<CartModel>? cart;
-//     Contact? contact;
-//     DateTime? dateOrdered;
-//     StoreModel? store;
-//     int? depreciationShip;
-//     int? revenue;
-
-//     OrderDetailShipper({
-//         this.id,
-//         this.storeLocation,
-//         this.shipCost,
-//         this.totalPrice,
-//         this.status,
-//         this.user,
-//         this.cart,
-//         this.contact,
-//         this.dateOrdered,
-//         this.store,
-//         this.depreciationShip,
-//         this.revenue,
-//     });
-
-//     factory OrderDetailShipper.fromJson(Map<String, dynamic> json) => OrderDetailShipper(
-//         id: json["_id"],
-//         storeLocation: Location.fromJson(json["storeLocation"]),
-//         shipCost: json["shipCost"],
-//         totalPrice: json["totalPrice"],
-//         status: json["status"],
-//         user: UserModel.fromJson(json["user"]),
-//         cart: List<CartModel>.from(json["cart"].map((x) => CartModel.fromJson(x))),
-//         contact: Contact.fromJson(json["contact"]),
-//         dateOrdered: DateTime.parse(json["dateOrdered"]),
-//         store: StoreModel.fromJson(json['store']),
-//         depreciationShip: json["depreciationShip"],
-//         revenue: json["revenue"],
-//     );
-
-//     Map<String, dynamic> toJson() => {
-//         "_id": id,
-//         "storeLocation": storeLocation?.toJson(),
-//         "shipCost": shipCost,
-//         "totalPrice": totalPrice,
-//         "status": status,
-//         "user": user?.toJson(),
-//         "cart": List<dynamic>.from(cart?? [].map((x) => x.toJson())),
-//         "contact": contact?.toJson(),
-//         "dateOrdered": dateOrdered?.toIso8601String(),
-//         "store": store?.toJson(),
-//         "depreciationShip": depreciationShip,
-//         "revenue": revenue,
-//     };
-// }
 
 class OrderDetailShipper {
   String? id;
@@ -73,6 +15,7 @@ class OrderDetailShipper {
   DateTime? dateOrdered;
   int? depreciationShip;
   int? revenue;
+  Shipper? shipper;
   DateTime? dateCheckout;
   DateTime? datePrepared;
   DateTime? dateDeliveried;
@@ -91,6 +34,7 @@ class OrderDetailShipper {
     this.dateOrdered,
     this.depreciationShip,
     this.revenue,
+    this.shipper,
     this.dateCheckout,
     this.datePrepared,
     this.dateDeliveried,
@@ -111,6 +55,8 @@ class OrderDetailShipper {
         dateOrdered: DateTime.parse(json["dateOrdered"]),
         depreciationShip: json["depreciationShip"],
         revenue: json["revenue"],
+        shipper:
+            json["shipper"] == null ? null : Shipper.fromJson(json["shipper"]),
         dateCheckout: json["dateCheckout"] == null
             ? null
             : DateTime.parse(json["dateCheckout"]),
@@ -132,6 +78,7 @@ class OrderDetailShipper {
         "totalPrice": totalPrice,
         "status": status,
         "user": user?.toJson(),
+        "shipper": shipper?.toJson(),
         "store": store?.toJson(),
         "cart": List<dynamic>.from(cart ?? [].map((x) => x.toJson())),
         "contact": contact?.toJson(),
@@ -139,6 +86,16 @@ class OrderDetailShipper {
         "depreciationShip": depreciationShip,
         "revenue": revenue,
       };
+
+  int totalCart() {
+    int total = 0;
+
+    for (var element in cart!) {
+      total += element.price * element.quantity;
+    }
+
+    return total;
+  }
 }
 
 class Cart {
@@ -252,22 +209,6 @@ class Store {
         "image": image,
       };
 }
-
-// class StoreLocation {
-//     List<double> coordinates;
-
-//     StoreLocation({
-//         this.coordinates,
-//     });
-
-//     factory StoreLocation.fromJson(Map<String, dynamic> json) => StoreLocation(
-//         coordinates: List<double>.from(json["coordinates"].map((x) => x.toDouble())),
-//     );
-
-//     Map<String, dynamic> toJson() => {
-//         "coordinates": List<dynamic>.from(coordinates.map((x) => x)),
-//     };
-// }
 
 class User {
   String? firstName;

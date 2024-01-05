@@ -81,26 +81,6 @@ class ChangeContactScreen extends StatelessWidget {
                         },
                         child: const Text('Thêm'),
                       ),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.mainColor1),
-                        onPressed: () {
-                          if (controller.checkData()) {
-                            controller.addNewContact();
-                          }
-                        },
-                        child: const Text('Sửa'),
-                      ),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.mainColor1),
-                        onPressed: () {
-                          if (controller.checkData()) {
-                            controller.addNewContact();
-                          }
-                        },
-                        child: const Text('Xoá'),
-                      ),
                     ],
                   ),
                 )

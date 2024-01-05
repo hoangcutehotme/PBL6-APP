@@ -9,7 +9,7 @@ String infoCartToJson(List<InfoCart> data) => json.encode(List<dynamic>.from(dat
 class InfoCart {
     Contact? contact;
     int? deliveryTime;
-    String? distance;
+    double? distance;
     int? shipCost;
 
     InfoCart({

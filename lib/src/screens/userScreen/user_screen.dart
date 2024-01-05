@@ -6,7 +6,9 @@ import 'package:pbl6_app/src/values/app_colors.dart';
 import 'package:pbl6_app/src/values/app_styles.dart';
 
 import '../../controller/Authentication/login_controller.dart';
+import '../../utils/custome_dialog.dart';
 import '../../values/app_assets.dart';
+import 'change_password.dart';
 import 'list_contact.dart';
 
 class UserScreen extends StatefulWidget {
@@ -18,17 +20,27 @@ class UserScreen extends StatefulWidget {
 
 class _UserScreenState extends State<UserScreen> {
   final LoginController _controller = Get.put(LoginController());
-  // final UserController _userController = Get.put(UserController());
   final UserController _userController = Get.find();
 
   @override
   void initState() {
     super.initState();
-    // _initializeUser();
+    _checkUserId();
   }
 
-  _initializeUser() async {
-    await _userController.onInit();
+  void _checkUserId() {
+    if (_userController.id.value == "") {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        CustomeDialog.showCustomDialog1(
+          context: context,
+          title: 'Thông báo',
+          message: 'Bạn chưa đăng ký - Đăng ký ngay ',
+          pressConfirm: () {
+            Get.toNamed("/signin");
+          },
+        );
+      });
+    }
   }
 
   @override
@@ -38,76 +50,105 @@ class _UserScreenState extends State<UserScreen> {
       body: Column(
         children: [
           _headerTopBar(),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    Get.to(() => const ChangeUserInfo());
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                        color: AppColors.mainColorBackground,
-                        borderRadius: BorderRadius.circular(5)),
-                    child: const ListTile(
-                      contentPadding: EdgeInsets.only(left: 25),
-                      title: Text("Thay đổi thông tin cá nhân"),
-                      trailing: Icon(
-                        Icons.arrow_forward_ios_rounded,
-                        color: AppColors.colorTextBold,
+          _userController.id.value == ''
+              ? Container()
+              : Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Get.to(() => const ChangeUserInfo());
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: AppColors.mainColorBackground,
+                              borderRadius: BorderRadius.circular(5)),
+                          child: const ListTile(
+                            contentPadding: EdgeInsets.only(left: 25),
+                            title: Text("Thay đổi thông tin cá nhân"),
+                            trailing: Icon(
+                              Icons.arrow_forward_ios_rounded,
+                              color: AppColors.colorTextBold,
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Get.to(() => const ListContactScreen());
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: AppColors.mainColorBackground,
+                              borderRadius: BorderRadius.circular(5)),
+                          child: const ListTile(
+                            contentPadding: EdgeInsets.only(left: 25),
+                            title: Text("Thay đổi địa chỉ giao hàng"),
+                            trailing: Icon(
+                              Icons.arrow_forward_ios_rounded,
+                              color: AppColors.colorTextBold,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Get.to(() => const ChangePasswordUser());
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: AppColors.mainColorBackground,
+                              borderRadius: BorderRadius.circular(5)),
+                          child: const ListTile(
+                            contentPadding: EdgeInsets.only(left: 25),
+                            title: Text("Thay đổi mật khẩu"),
+                            trailing: Icon(
+                              Icons.arrow_forward_ios_rounded,
+                              color: AppColors.colorTextBold,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          CustomeDialog.showCustomDialog1(
+                              context: context,
+                              title: 'Thông báo',
+                              message: 'Bạn có chắc Đăng xuất ??',
+                              pressConfirm: () {
+                                _controller.logout();
+                              });
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: AppColors.mainColorBackground,
+                              borderRadius: BorderRadius.circular(5)),
+                          child: const ListTile(
+                            contentPadding: EdgeInsets.only(left: 25),
+                            title: Text("Đăng xuất"),
+                            trailing: Icon(
+                              Icons.arrow_forward_ios_rounded,
+                              color: AppColors.colorTextBold,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                    ],
                   ),
                 ),
-                const SizedBox(
-                  height: 10,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Get.to(() => const ListContactScreen());
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                        color: AppColors.mainColorBackground,
-                        borderRadius: BorderRadius.circular(5)),
-                    child: const ListTile(
-                      contentPadding: EdgeInsets.only(left: 25),
-                      title: Text("Thay đổi địa chỉ giao hàng"),
-                      trailing: Icon(
-                        Icons.arrow_forward_ios_rounded,
-                        color: AppColors.colorTextBold,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    _controller.logout();
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                        color: AppColors.mainColorBackground,
-                        borderRadius: BorderRadius.circular(5)),
-                    child: const ListTile(
-                      contentPadding: EdgeInsets.only(left: 25),
-                      title: Text("Đăng xuất"),
-                      trailing: Icon(
-                        Icons.arrow_forward_ios_rounded,
-                        color: AppColors.colorTextBold,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-              ],
-            ),
-          ),
         ],
       ),
     );
@@ -139,13 +180,7 @@ class _UserScreenState extends State<UserScreen> {
                   width: 10,
                 ),
                 Obx(
-                  () =>
-                      // _userController.isLoading.value
-                      //     ? const CircularProgressIndicator(
-                      //         color: AppColors.borderGray,
-                      //       )
-                      //     :
-                      Text(
+                  () => Text(
                     _userController.id.value == ''
                         ? 'Người dùng'
                         : "${_userController.user.value.lastName ?? ''} ${_userController.user.value.firstName ?? ''}",
