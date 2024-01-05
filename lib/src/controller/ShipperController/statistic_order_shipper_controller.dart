@@ -21,15 +21,11 @@ class StaticOrderShipperController extends GetxController {
   List<StatisticModel> _listDataDay = [];
   List<StatisticModel> get listDataDay => _listDataDay;
 
-  
-
   List<StatisticModel> _dataWeek = [];
   List<StatisticModel> get dataWeek => _dataWeek;
 
   List<StatisticModel> _dataMonth = [];
   List<StatisticModel> get dataMonthDay => _dataMonth;
-
-  
 
   @override
   onInit() async {
@@ -47,15 +43,15 @@ class StaticOrderShipperController extends GetxController {
   getDataDay() async {
     try {
       if (_listDataDay.isNotEmpty) {
-        var getData = _listDataDay.firstWhere(
-          (value) =>
-              value.date!.day == selectedDate.day &&
+        var getData = _listDataDay.firstWhereOrNull(
+          (value) => (value.date!.day == selectedDate.day &&
               value.date!.month == selectedDate.month &&
-              value.date!.year == selectedDate.year,
+              value.date!.year == selectedDate.year),
           // orElse: () =>
           //     StatisticModel(), // Return default StatisticModel if no match found
         );
-        _dataDay = getData;
+
+        _dataDay = getData ?? StatisticModel();
         update();
       }
     } catch (e) {

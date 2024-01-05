@@ -44,11 +44,11 @@ class StoreController extends GetxController {
       if (response.statusCode == 200) {
         listStore.value = storeModelFromJson(jsonEncode(json['data']));
       } else {
-        CustomeSnackBar.showErrorSnackBar(
+        CustomeSnackBar.showWarningTopBar(
             context: Get.context, title: 'Error', message: json['message']);
       }
     } catch (e) {
-      CustomeSnackBar.showErrorSnackBar(
+      CustomeSnackBar.showWarningTopBar(
           context: Get.context, title: 'Error', message: e.toString());
     } finally {
       isLoading(false);

@@ -152,13 +152,13 @@ class UserController extends GetxController {
       isChange.value = false;
       Get.back();
       LoadingFullScreen.cancelLoading();
-      CustomeSnackBar.showSuccessSnackBar(
+      CustomeSnackBar.showSuccessSnackTopBar(
           context: Get.context,
           title: 'Success',
           message: 'Cập nhật thông tin thành công');
     } else {
       LoadingFullScreen.cancelLoading();
-      CustomeSnackBar.showErrorSnackBar(
+      CustomeSnackBar.showWarningTopBar(
           context: Get.context,
           title: 'Error',
           message: 'Cập nhật không thành công');

@@ -15,7 +15,6 @@ class ChangeUserInfo extends StatefulWidget {
 }
 
 class _ChangeUserInfoState extends State<ChangeUserInfo> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -173,7 +172,7 @@ class _ChangeUserInfoState extends State<ChangeUserInfo> {
                           confirmText: 'Ok',
                         );
                       } else {
-                        CustomeSnackBar.showErrorSnackBar(
+                        CustomeSnackBar.showWarningTopBar(
                             context: Get.context,
                             title: 'Error',
                             message: 'Thông tin nhập không hợp lệ');

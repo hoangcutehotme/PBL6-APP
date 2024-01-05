@@ -50,12 +50,12 @@ class OrderShipperController extends GetxController {
           _listOrder = orderShipperFromJson(jsonEncode(json['data']));
           update();
         } else {
-          CustomeSnackBar.showErrorSnackBar(
+          CustomeSnackBar.showWarningTopBar(
               context: Get.context, title: "Error ", message: 'list order');
         }
       });
     } catch (e) {
-      CustomeSnackBar.showErrorSnackBar(
+      CustomeSnackBar.showWarningTopBar(
           context: Get.context, title: "Error ", message: '$e');
     }
   }
@@ -99,7 +99,6 @@ class OrderShipperController extends GetxController {
             status == AppString.statusOrder.keys.elementAt(1)) {
           await shipperController.updateOrderDetail(_orderShipper);
           print("get direction ");
-          
         } else {
           await shipperController.updateOrderDetail(_orderShipper);
         }
@@ -132,7 +131,7 @@ class OrderShipperController extends GetxController {
         _listOrderShipperInDay = _listOrderShipperInDay.reversed.toList();
         update();
       } else {
-        CustomeSnackBar.showErrorSnackBar(
+        CustomeSnackBar.showWarningTopBar(
             context: Get.context, title: "Error ", message: '');
       }
     } catch (e) {

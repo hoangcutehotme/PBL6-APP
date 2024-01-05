@@ -117,28 +117,28 @@ class LoginController extends GetxController {
           emailController.clear();
           passwordController.clear();
 
-          CustomeSnackBar.showSuccessSnackBar(
+          CustomeSnackBar.showSuccessSnackTopBar(
               context: Get.context,
               title: "Success",
               message: "Đăng nhập thành công");
           Get.offAllNamed("/");
         } else {
           LoadingFullScreen.cancelLoading();
-          CustomeSnackBar.showErrorSnackBar(
+          CustomeSnackBar.showWarningTopBar(
               context: Get.context,
               title: "Error",
               message: 'Sai tài khoản, mật khẩu');
         }
       } else if (response.statusCode == 401) {
         LoadingFullScreen.cancelLoading();
-        CustomeSnackBar.showErrorSnackBar(
+        CustomeSnackBar.showWarningTopBar(
             context: Get.context,
             title: "Error",
             message: 'Sai tài khoản hoặc mật khẩu');
       }
     } catch (e) {
       LoadingFullScreen.cancelLoading();
-      CustomeSnackBar.showErrorSnackBar(
+      CustomeSnackBar.showWarningTopBar(
           context: Get.context,
           title: "Error",
           message: "Sai tài khoản hoặc mật khẩu");
@@ -152,7 +152,7 @@ class LoginController extends GetxController {
     // Get.bot
     final SharedPreferences prefs = await _prefs;
     prefs.clear();
-    
+
     Get.offAllNamed('/signin');
   }
 

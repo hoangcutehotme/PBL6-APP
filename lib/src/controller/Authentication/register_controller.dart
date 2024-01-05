@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-// import 'package:dio/dio.dart';
+import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -91,7 +91,6 @@ class RegisterController extends GetxController {
 
   Future getBehindCCCDImage() async {
     try {
-
       final img = await ImagePicker().pickImage(
         source: ImageSource.gallery,
       );
@@ -126,8 +125,6 @@ class RegisterController extends GetxController {
       );
 
       update();
-
-      
     } catch (e) {
       print("Error $e");
     }
@@ -181,94 +178,7 @@ class RegisterController extends GetxController {
     }
   }
 
-//   Future<http.MultipartFile> compressImageToMultipartFile(File imageFile, String fieldName) async {
-//   final int maxSizeInBytes = 50 * 1024 * 1024; // Maximum size in bytes (50MB)
-//   List<int> imageBytes = await imageFile.readAsBytes();
-//   int fileSize = imageBytes.length;
-
-//   if (fileSize <= maxSizeInBytes) {
-//     return await http.MultipartFile.fromPath(fieldName, imageFile.path);
-//   } else {
-//     int quality = ((maxSizeInBytes / fileSize) * 100).round();
-//     List<int> compressedBytes = await FlutterImageCompress.compressWithList(
-//       imageBytes,
-//       quality: quality,
-//     );
-
-//     final tempDir = await getTemporaryDirectory();
-//     final compressedFile = File('${tempDir.path}/${DateTime.now().millisecondsSinceEpoch}.jpg')
-//       ..writeAsBytesSync(compressedBytes);
-
-//     return await http.MultipartFile.fromPath(fieldName, compressedFile.path);
-//   }
-// }
-
-  Future<bool> registerShipperEmail() async {
-    try {
-      var url = "${ApiEndPoints.baseUrl}/shipper";
-
-      var request = http.MultipartRequest('POST', Uri.parse(url));
-      request.headers['Accept'] = 'application/json';
-
-      request.fields.addAll({
-        "firstName": firstnameController.text.trim(),
-        "lastName": lastnameController.text.trim(),
-        "email": emailController.text.trim(),
-        "password": passwordController.text.trim(),
-        "passwordConfirm": passwordConfirmController.text.trim(),
-        "address": addressController.text.trim(),
-        "phoneNumber": phoneController.text.trim(),
-        "licenseNumber": licenseNumberController.text.trim(),
-        "vehicleType": vehicleTypeController.text.trim(),
-        "vehicleNumber": vehicleNumberController.text.trim(),
-      });
-
-      if (_vehicleImage != null &&
-          _behindCCCDImage != null &&
-          _frontCCCDImage != null &&
-          _licenseImage != null) {
-        request.files.addAll([
-          await http.MultipartFile.fromPath(
-              'vehicleLicense', _vehicleImage!.path,
-              filename: 'vehicle.jpg'),
-          await http.MultipartFile.fromPath('licenseImage', _licenseImage!.path,
-              filename: 'licenseImage.jpg'),
-          await http.MultipartFile.fromPath(
-              'behindImageCCCD', _behindCCCDImage!.path,
-              filename: 'behindCCCDImage.jpg'),
-          await http.MultipartFile.fromPath(
-              'frontImageCCCD', _frontCCCDImage!.path,
-              filename: 'frontCCCDImage.jpg'),
-        ]);
-
-        var response =
-            await request.send().timeout(const Duration(seconds: 20));
-
-        if (response.statusCode == 200) {
-          CustomeSnackBar.showSuccessSnackTopBar(
-              context: Get.context, title: "Success", message: '');
-          return true;
-        } else {
-          CustomeSnackBar.showErrorSnackBar(
-              context: Get.context, title: "Error", message: '');
-          return false;
-        }
-      } else {
-        CustomeSnackBar.showErrorSnackBar(
-            context: Get.context,
-            title: "Error",
-            message: 'Ảnh chưa đúng yêu cầu');
-        return false;
-      }
-    } catch (e) {
-      CustomeSnackBar.showErrorSnackBar(
-          context: Get.context, title: "Error", message: e.toString());
-      print(e);
-      return false;
-    }
-  }
-
-  registerShipperEmail2() async {
+  registerShipperEmail() async {
     try {
       var url = "${ApiEndPoints.baseUrl}/shipper";
       var header = {
@@ -276,13 +186,11 @@ class RegisterController extends GetxController {
         'contentType': 'multipart/form-data',
       };
 
-      final client = http.Client();
-
       if (_vehicleImage != null &&
           _behindCCCDImage != null &&
           _frontCCCDImage != null &&
           _licenseImage != null) {
-        FormData formData = FormData({
+        final formData = dio.FormData.fromMap({
           "firstName": firstnameController.text.trim(),
           "lastName": lastnameController.text.trim(),
           "email": emailController.text.trim(),
@@ -293,31 +201,37 @@ class RegisterController extends GetxController {
           "licenseNumber": licenseNumberController.text.trim(),
           "vehicleType": vehicleTypeController.text.trim(),
           "vehicleNumber": vehicleNumberController.text.trim(),
-          "vehicleLicense":
-              MultipartFile(_vehicleImage!.path, filename: 'vehicle.jpg'),
-          "licenseImage":
-              MultipartFile(_licenseImage!.path, filename: 'licenseImage.jpg'),
-          "behindImageCCCD": MultipartFile(_behindCCCDImage!.path,
+          "vehicleLicense": await dio.MultipartFile.fromFile(
+              _vehicleImage!.path,
+              filename: 'vehicle.jpg'),
+          "licenseImage": await dio.MultipartFile.fromFile(_licenseImage!.path,
+              filename: 'licenseImage.jpg'),
+          "behindImageCCCD": await dio.MultipartFile.fromFile(
+              _behindCCCDImage!.path,
               filename: 'behindCCCDImage.jpg'),
-          "frontImageCCCD": MultipartFile(_frontCCCDImage!.path,
+          "frontImageCCCD": await dio.MultipartFile.fromFile(
+              _frontCCCDImage!.path,
               filename: 'frontCCCDImage.jpg'),
         });
 
-        var response = await client
-            .post(Uri.parse(url), body: formData, headers: header)
-            .timeout(const Duration(seconds: 10));
+        var response = await dio.Dio().post(url,
+            data: formData,
+            options: dio.Options(
+                followRedirects: false,
+                validateStatus: (status) => true,
+                headers: header));
 
         if (response.statusCode == 200) {
           CustomeSnackBar.showSuccessSnackTopBar(
               context: Get.context, title: "Success", message: '');
           return true;
         } else {
-          CustomeSnackBar.showErrorSnackBar(
+          CustomeSnackBar.showWarningTopBar(
               context: Get.context, title: "Error", message: '');
           return false;
         }
       } else {
-        CustomeSnackBar.showErrorSnackBar(
+        CustomeSnackBar.showWarningTopBar(
             context: Get.context,
             title: "Error",
             message: 'Ảnh chưa đúng yêu cầu');
@@ -325,125 +239,9 @@ class RegisterController extends GetxController {
       }
     } catch (e) {
       // Get.back();
-      CustomeSnackBar.showErrorSnackBar(
+      CustomeSnackBar.showWarningTopBar(
           context: Get.context, title: "Error", message: e.toString());
-      print(e);
-      return false;
-    }
-  }
 
-  registerShipperEmail1() async {
-    try {
-      // var headers = {'Content-Type': 'application/json'};
-      var url = "${ApiEndPoints.baseUrl}/shipper";
-
-      if (_vehicleImage != null &&
-          _behindCCCDImage != null &&
-          _frontCCCDImage != null &&
-          _licenseImage != null) {
-        FormData formData = FormData({
-          "firstName": firstnameController.text.trim(),
-          "lastName": lastnameController.text.trim(),
-          "email": emailController.text.trim(),
-          "password": passwordController.text.trim(),
-          "passwordConfirm": passwordConfirmController.text.trim(),
-          "address": addressController.text.trim(),
-          "phoneNumber": phoneController.text.trim(),
-          "licenseNumber": licenseNumberController.text.trim(),
-          "vehicleType": vehicleTypeController.text.trim(),
-          "vehicleNumber": vehicleNumberController.text.trim(),
-          // "vehicleLicense":
-          //     MultipartFile(_vehicleImage!.path, filename: 'vehicle.jpg'),
-          // "licenseImage":
-          //     MultipartFile(_licenseImage!.path, filename: 'licenseImage.jpg'),
-          // "behindImageCCCD": MultipartFile(_behindCCCDImage!.path,
-          //     filename: 'behindCCCDImage.jpg'),
-          // "frontImageCCCD": MultipartFile(_frontCCCDImage!.path,
-          //     filename: 'frontCCCDImage.jpg'),
-        });
-
-        var request = http.MultipartRequest('POST', Uri.parse(url));
-        request.files.add(await http.MultipartFile.fromPath(
-            'vehicle.jpg', _vehicleImage!.path));
-        request.files.add(await http.MultipartFile.fromPath(
-            'licenseImage.jpg', _licenseImage!.path));
-        request.files.add(await http.MultipartFile.fromPath(
-            'behindCCCDImage.jpg', _behindCCCDImage!.path));
-        request.files.add(await http.MultipartFile.fromPath(
-            'frontCCCDImage.jpg', _frontCCCDImage!.path));
-
-        request.fields.addEntries(formData.fields);
-
-        var res = await request.send();
-
-        if (res.statusCode == 200) {
-          print("ok");
-        }
-
-        // var response = await http.post(Uri.parse(url), body: {
-        //   "firstName": firstnameController.text.trim(),
-        //   "lastName": lastnameController.text.trim(),
-        //   "email": emailController.text.trim(),
-        //   "password": passwordController.text.trim(),
-        //   "passwordConfirm": passwordConfirmController.text.trim(),
-        //   "address": addressController.text.trim(),
-        //   "phoneNumber": phoneController.text.trim(),
-        //   "licenseNumber": licenseNumberController.text.trim(),
-        //   "vehicleType": vehicleTypeController.text.trim(),
-        //   "vehicleNumber": vehicleNumberController.text.trim(),
-        //   "vehicleLicense": http.MultipartFile(
-        //     'file',
-        //     _vehicleImage!.readAsBytes().asStream(),
-        //     _vehicleImage!.lengthSync(),
-        //     filename: 'licenseImage.jpg',
-        //   ),
-        //   // http.MultipartFile(_vehicleImage!.path, filename: 'vehicle.jpg'),
-        //   "licenseImage": http.MultipartFile(
-        //     'file',
-        //     _licenseImage!.readAsBytes().asStream(),
-        //     _licenseImage!.lengthSync(),
-        //     filename: 'licenseImage.jpg',
-        //   ),
-        //   "behindImageCCCD": http.MultipartFile(
-        //     'file',
-        //     _behindCCCDImage!.readAsBytes().asStream(),
-        //     _behindCCCDImage!.lengthSync(),
-        //     filename: 'behindCCCDImage.jpg',
-        //   ),
-        //   "frontImageCCCD": http.MultipartFile(
-        //     'file',
-        //     _frontCCCDImage!.readAsBytes().asStream(),
-        //     _frontCCCDImage!.lengthSync(),
-        //     filename: 'frontCCCDImage.jpg',
-        //   ),
-        // }, headers: {
-        //   'Accept': 'application/json',
-        //   'contentType': 'multipart/form-data',
-        // });
-
-        // final json = jsonDecode(response.body);
-
-        if (res.statusCode == 200) {
-          CustomeSnackBar.showSuccessSnackTopBar(
-              context: Get.context, title: "Success", message: '');
-          return true;
-        } else {
-          CustomeSnackBar.showErrorSnackBar(
-              context: Get.context, title: "Error", message: '');
-          return false;
-        }
-      } else {
-        CustomeSnackBar.showErrorSnackBar(
-            context: Get.context,
-            title: "Error",
-            message: 'Ảnh chưa đúng yêu cầu');
-        return false;
-      }
-    } catch (e) {
-      // Get.back();
-      CustomeSnackBar.showErrorSnackBar(
-          context: Get.context, title: "Error", message: e.toString());
-      print(e);
       return false;
     }
   }
@@ -467,22 +265,22 @@ class RegisterController extends GetxController {
       final json = jsonDecode(response.body);
       if (response.statusCode == 200) {
         if (json['message'] == "Mã đã được gửi đến email!") {
-          CustomeSnackBar.showSuccessSnackBar(
+          CustomeSnackBar.showSuccessSnackTopBar(
               context: Get.context, title: "Success", message: json['message']);
           return true;
         } else {
-          CustomeSnackBar.showErrorSnackBar(
+          CustomeSnackBar.showWarningTopBar(
               context: Get.context, title: "Error", message: json['message']);
           return false;
         }
       } else {
-        CustomeSnackBar.showErrorSnackBar(
+        CustomeSnackBar.showWarningTopBar(
             context: Get.context, title: "Error", message: '');
         return false;
       }
     } catch (e) {
       // Get.back();
-      CustomeSnackBar.showErrorSnackBar(
+      CustomeSnackBar.showWarningTopBar(
           context: Get.context, title: "Error", message: e.toString());
       return false;
     }
@@ -502,19 +300,19 @@ class RegisterController extends GetxController {
       var json = jsonDecode(response.body);
 
       if (response.statusCode == 200) {
-        CustomeSnackBar.showSuccessSnackBar(
+        CustomeSnackBar.showSuccessSnackTopBar(
             context: Get.context, title: 'Success', message: json['message']);
 
         onClose();
         return 'Success';
       } else {
-        CustomeSnackBar.showErrorSnackBar(
+        CustomeSnackBar.showWarningTopBar(
             context: Get.context, title: "Error", message: json['message']);
         // return false;
         return 'Error';
       }
     } catch (e) {
-      CustomeSnackBar.showErrorSnackBar(
+      CustomeSnackBar.showWarningTopBar(
           context: Get.context, title: "Error", message: e.toString());
       return 'Fail';
     } finally {

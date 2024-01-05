@@ -182,55 +182,55 @@ class ShipperController extends GetxController {
 
       var dioInstance = dio.Dio();
 
-      final formData = dio.FormData.fromMap({
-        "firstName": firstNameController.text.trim(),
-        "lastName": lastnameController.text.trim(),
-        "address": addressController.text.trim(),
-        "phoneNumber": phoneController.text.trim(),
-        "vehicleType": vehicleType.text.trim(),
-        "vehicleNumber": vehicleNumber.text.trim(),
-        "licenseNumber": licenseNumber.text.trim(),
-      }, dio.ListFormat.multiCompatible);
+      final formData = dio.FormData.fromMap(
+        {
+          "firstName": firstNameController.text.trim(),
+          "lastName": lastnameController.text.trim(),
+          "address": addressController.text.trim(),
+          "phoneNumber": phoneController.text.trim(),
+          "vehicleType": vehicleType.text.trim(),
+          "vehicleNumber": vehicleNumber.text.trim(),
+          "licenseNumber": licenseNumber.text.trim(),
+        },
+      );
 
-      // if (_photo != null) {
-      //   formData.files.add(MapEntry(
-      //     'photo',
-      //     dio.MultipartFile.fromString(_photo!.path, filename: 'photo.jpg'),
-      //   ));
-      // }
+      if (_photo != null) {
+        formData.files.add(MapEntry(
+            "photo",
+            await dio.MultipartFile.fromFile(
+              _photo!.path,
+              filename: 'photo.jpg',
+            )));
+      }
 
       ApiClient apiClient = Get.find();
       var headers = apiClient.header;
 
-      var response = await dioInstance.patch(url,
-          data: formData,
-          // data: {
-          //   "firstName": firstNameController.text.trim(),
-          //   "lastName": lastnameController.text.trim(),
-          //   "address": addressController.text.trim(),
-          //   "phoneNumber": phoneController.text.trim(),
-          //   "vehicleType": vehicleType.text.trim(),
-          //   "vehicleNumber": vehicleNumber.text.trim(),
-          //   "licenseNumber": licenseNumber.text.trim(),
-          //   "photo": await dio.MultipartFile.fromFile(_photo!.path)
-          // },
-          options: dio.Options(headers: headers));
+      var response = await dioInstance.patch(
+        url,
+        data: formData,
+        options: dio.Options(
+          followRedirects: false,
+          validateStatus: (status) => true,
+          headers: headers,
+        ),
+      );
 
       LoadingFullScreen.cancelLoading();
 
       if (response.statusCode == 200) {
         isChange.value = false;
         Get.back();
-        getInfoShipperrById();
-        update();
-        CustomeSnackBar.showSuccessSnackBar(
+        await getInfoShipperrById();
+
+        CustomeSnackBar.showSuccessSnackTopBar(
           context: Get.context,
           title: 'Success',
           message: 'Cập nhật thông tin thành công',
         );
       } else {
         Get.back();
-        CustomeSnackBar.showErrorSnackBar(
+        CustomeSnackBar.showWarningTopBar(
           context: Get.context,
           title: 'Error',
           message: 'Cập nhật không thành công',
@@ -240,7 +240,7 @@ class ShipperController extends GetxController {
       print(e);
       LoadingFullScreen.cancelLoading();
       Get.back();
-      CustomeSnackBar.showErrorSnackBar(
+      CustomeSnackBar.showWarningTopBar(
         context: Get.context,
         title: 'Error',
         message: 'Cập nhật không thành công',
@@ -307,13 +307,13 @@ class ShipperController extends GetxController {
 
         update();
 
-        CustomeSnackBar.showSuccessSnackBar(
+        CustomeSnackBar.showSuccessSnackTopBar(
             context: Get.context,
             title: 'Success',
             message: 'Cập nhật thông tin thành công');
       } else {
         Get.back();
-        CustomeSnackBar.showErrorSnackBar(
+        CustomeSnackBar.showWarningTopBar(
             context: Get.context,
             title: 'Error',
             message: 'Cập nhật không thành công');
@@ -321,7 +321,7 @@ class ShipperController extends GetxController {
     } catch (e) {
       LoadingFullScreen.cancelLoading();
       Get.back();
-      CustomeSnackBar.showErrorSnackBar(
+      CustomeSnackBar.showWarningTopBar(
           context: Get.context,
           title: 'Error',
           message: 'Cập nhật không thành công');
