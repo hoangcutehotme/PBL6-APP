@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:pbl6_app/splash_screen.dart';
 import 'package:pbl6_app/src/helper/dependencies.dart' as dep;
 import 'package:pbl6_app/src/screens/homeScreen/detail_category.dart';
@@ -28,7 +29,7 @@ import 'src/screens/signUpScreens/verify_otp.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dep.init();
-
+  await initializeDateFormatting();
   ErrorWidget.builder = (details) {
     // bool inBug = false;
     return Container(

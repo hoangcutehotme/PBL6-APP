@@ -354,7 +354,9 @@ class ShipperController extends GetxController {
             .firstWhere((element) => element.id == user.value.defaultContact);
         update();
       } else {}
-    } catch (e) {}
+    } catch (e) {
+      print(e);
+    }
   }
 
   void changeEdit() {
