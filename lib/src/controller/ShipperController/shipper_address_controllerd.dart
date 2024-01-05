@@ -15,8 +15,10 @@ import 'package:location/location.dart' as flutterlocation;
 
 class ShipperAddressController extends GetxController {
   Completer<GoogleMapController> controllerMap = Completer();
+  StreamSubscription<flutterlocation.LocationData?>? locationSubscription;
 
-  var marker = <Marker>{}.obs;
+  final Set<Marker> _marker = {};
+  Set<Marker> get marker => _marker;
 
   flutterlocation.LocationData? _currentLocation;
   flutterlocation.LocationData? get currentLocation => _currentLocation;
@@ -45,6 +47,13 @@ class ShipperAddressController extends GetxController {
     // await setMarkerIcon();
     await setMarkerShipper();
     await setLocationShipper();
+    await animateCurrentLocation();
+  }
+
+  @override
+  onClose() {
+    super.onClose();
+    stopListening();
   }
 
   setMarkerIcon() async {
@@ -81,7 +90,6 @@ class ShipperAddressController extends GetxController {
       return Future.error(
           'Location permissions are permanently denied, we cannot request permissions.');
     }
-    // await animateCurrentLocation();
     await getCurrentLocation();
   }
 
@@ -93,8 +101,8 @@ class ShipperAddressController extends GetxController {
   }
 
   clearMarker() {
-    marker.removeWhere(
-        (marker) => marker.markerId != const MarkerId('shipperLocation'));
+    _marker.removeWhere(
+        (value) => value.markerId != const MarkerId(AppString.markerShipper));
 
     update();
   }
@@ -102,22 +110,27 @@ class ShipperAddressController extends GetxController {
   setMarkerShipper() async {
     clearMarker();
 
-    marker.add(Marker(
-        infoWindow: const InfoWindow(title: 'Vị trí của bạn'),
-        markerId: const MarkerId('shipperLocation'),
-        icon: shipperIcon.value,
-        position:
-            LatLng(_currentLocation!.latitude!, _currentLocation!.longitude!)));
-
+    // _marker.add(Marker(
+    //     infoWindow: const InfoWindow(title: 'Vị trí của bạn'),
+    //     markerId: const MarkerId(AppString.markerShipper),
+    //     icon: shipperIcon.value,
+    //     position:
+    //         LatLng(_currentLocation!.latitude!, _currentLocation!.longitude!)));
+    setMarker(
+        AppString.markerShipper,
+        shipperIcon.value,
+        _currentLocation!.latitude!,
+        _currentLocation!.longitude!,
+        'Vị trí của bạn');
     update();
   }
 
   updateShipperLocation() async {
-    marker.removeWhere(
-        (marker) => marker.markerId == const MarkerId('shipperLocation'));
-    marker.add(Marker(
+    _marker.removeWhere(
+        (marker) => marker.markerId == const MarkerId(AppString.markerShipper));
+    _marker.add(Marker(
         infoWindow: const InfoWindow(title: 'Vị trí của bạn'),
-        markerId: const MarkerId('shipperLocation'),
+        markerId: const MarkerId(AppString.markerShipper),
         icon: shipperIcon.value,
         position:
             LatLng(_currentLocation!.latitude!, _currentLocation!.longitude!)));
@@ -125,37 +138,16 @@ class ShipperAddressController extends GetxController {
 
   setMarker(String idMarker, BitmapDescriptor icon, double lat, double long,
       String title) {
-    marker.add(Marker(
-        infoWindow: InfoWindow(snippet: title),
+    _marker.add(Marker(
+        infoWindow: InfoWindow(title: title),
         markerId: MarkerId(idMarker),
         icon: icon,
         position: LatLng(lat, long)));
     update();
   }
 
-  setMarkerCustomerAndStoreLocation() {
-    clearMarker();
-
-    marker.add(Marker(
-        markerId: const MarkerId('addressDeliveryLocation'),
-        icon: userIcon.value,
-        position:
-            LatLng(_currentLocation!.latitude!, _currentLocation!.longitude!)));
-
-    marker.add(Marker(
-        markerId: const MarkerId('currentLocation'),
-        icon: shipperIcon.value,
-        position:
-            LatLng(_currentLocation!.latitude!, _currentLocation!.longitude!)));
-
-    marker.add(Marker(
-        markerId: const MarkerId("storeLocation"),
-        icon: storeIcon.value,
-        position: const LatLng(16.073985612738287, 108.14985671349393)));
-  }
-
   setLocationShipper() async {
-    await animateCurrentLocation();
+    getCurrentLocation();
 
     var url =
         "${ApiEndPoints.baseUrl}/shipper/654fadcef9dbb10008002b48/lat/${currentLocation!.latitude!}/lng/${currentLocation!.longitude}";
@@ -208,10 +200,10 @@ class ShipperAddressController extends GetxController {
 
       await setMarkerShipper();
 
-      setMarker("storeLocation", storeIcon.value, storeLocation[0],
+      setMarker(AppString.markerStore, storeIcon.value, storeLocation[0],
           storeLocation[1], 'Cửa hàng');
 
-      setMarker("customerLocation", userIcon.value, userLocation![0],
+      setMarker(AppString.markerCustomer, userIcon.value, userLocation![0],
           userLocation[1], 'Điểm giao');
 
       PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
@@ -268,17 +260,16 @@ class ShipperAddressController extends GetxController {
     });
   }
 
-  updateMarkerShipper() {}
-
   animateCurrentLocation() async {
     GoogleMapController googleMapController = await controllerMap.future;
 
-    location.onLocationChanged.listen((location) {
+    locationSubscription = location.onLocationChanged.listen((location) {
       if (_currentLocation == location) {
-        print('not change');
-        return;
+        locationSubscription?.pause();
       } else {
-        print('change');
+        if (locationSubscription!.isPaused) {
+          locationSubscription?.resume();
+        }
         _currentLocation = location;
         updateShipperLocation();
 
@@ -290,6 +281,10 @@ class ShipperAddressController extends GetxController {
         update();
       }
     });
+  }
+
+  void stopListening() {
+    locationSubscription?.cancel();
   }
 
   animateToLocation(double lat, double long) async {
@@ -310,10 +305,5 @@ class ShipperAddressController extends GetxController {
     );
     _polylines[id] = polyline;
     update();
-  }
-
-  setAnimationCurrentMap() async {
-    // await getCurrentLocation();
-    await animateCurrentLocation();
   }
 }

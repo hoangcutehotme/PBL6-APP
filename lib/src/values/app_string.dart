@@ -28,4 +28,10 @@ class AppString {
 
   // api key AIzaSyB1HeHIghTdPtji7wT84i_FOAupZRwVBlY AIzaSyDxvSKzQyy-I3D5Lhr44rVJh2VXm1FXwYY
   static const String API_KEY = "AIzaSyC6j6rRG_746mqp91Bjovr8yyD5GXhrXec";
+
+  // marker
+
+  static const String markerShipper = "markerShipper";
+  static const String markerCustomer = "markerCustomer";
+  static const String markerStore = "markerStore";
 }

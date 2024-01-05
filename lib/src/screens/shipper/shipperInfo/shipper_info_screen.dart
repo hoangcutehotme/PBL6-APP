@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pbl6_app/src/controller/ShipperController/shipper_controller.dart';
@@ -91,43 +93,55 @@ class ShipperInfoScreen extends StatelessWidget {
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               colors: [AppColors.mainColor1, AppColors.colorButton1])),
-      child: Stack(
-        children: [
-          Positioned(
-            bottom: 10,
-            left: 20,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+      child: GetBuilder<ShipperController>(
+          initState: (state) => shipperController.getInfoShipperrById(),
+          builder: (_) {
+            return Stack(
               children: [
-                shipperController.user.value.photo == null
-                    ? Image.asset(
-                        AppAssets.getImg("user_avartar2.png", "images"),
-                        width: 80,
-                        height: 80,
-                      )
-                    : CircleAvatar(
-                        radius: 40,
-                        child: ImageLoadingNetwork(
-                            image: shipperController.user.value.photo!,
-                            size: const Size(180, 180)),
+                Positioned(
+                  bottom: 10,
+                  left: 20,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      shipperController.user.value.photo == null
+                          ? Image.asset(
+                              AppAssets.getImg("user_avartar2.png", "images"),
+                              width: 80,
+                              height: 80,
+                            )
+                          : shipperController.photo != null
+                              ? Image.file(
+                                  File(shipperController.photo!.path),
+                                  width: 100,
+                                  height: 100,
+                                )
+                              : CircleAvatar(
+                                  radius: 40,
+                                  child: ImageLoadingNetwork(
+                                      image:
+                                          shipperController.user.value.photo!,
+                                      size: const Size(180, 180)),
+                                ),
+                      const SizedBox(
+                        width: 10,
                       ),
-                const SizedBox(
-                  width: 10,
-                ),
-                Obx(
-                  () => Text(
-                    shipperController.id.value == ''
-                        ? 'Người dùng'
-                        : "${shipperController.user.value.lastName ?? ''} ${shipperController.user.value.firstName ?? ''}",
-                    style: AppStyles.textBold.copyWith(
-                        color: AppColors.mainColorBackground, fontSize: 20),
+                      Obx(
+                        () => Text(
+                          shipperController.id.value == ''
+                              ? 'Người dùng'
+                              : "${shipperController.user.value.lastName ?? ''} ${shipperController.user.value.firstName ?? ''}",
+                          style: AppStyles.textBold.copyWith(
+                              color: AppColors.mainColorBackground,
+                              fontSize: 20),
+                        ),
+                      )
+                    ],
                   ),
-                )
+                ),
               ],
-            ),
-          ),
-        ],
-      ),
+            );
+          }),
     );
   }
 }

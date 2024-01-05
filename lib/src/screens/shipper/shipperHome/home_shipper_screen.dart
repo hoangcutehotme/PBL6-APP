@@ -90,8 +90,8 @@ class _ScreenDetailOrderAndShipperState extends State<ShipperHomePage> {
             panelBuilder: (controller) {
               // Panel content based on conditions
               return GetBuilder<ShipperController>(
-                initState: (state) =>
-                    shipperController.getListOrderNearShipper(),
+                // initState: (state) =>
+                //     shipperController.getListOrderNearShipper(),
                 builder: (_) {
                   return shipperController.currentOrder.id == null ||
                           shipperController.currentOrder.status == "Refused"
@@ -397,8 +397,9 @@ class _ScreenDetailOrderAndShipperState extends State<ShipperHomePage> {
               Positioned(
                   right: 10,
                   child: IconButton(
-                    onPressed: () {
-                      shipperController.getListOrderNearShipper();
+                    onPressed: () async {
+                      await shipperController.getListOrderNearShipper();
+                      await _addressShipperController.setMarkerShipper();
                     },
                     icon: const Icon(Icons.refresh),
                   )),
@@ -498,6 +499,7 @@ class _ScreenDetailOrderAndShipperState extends State<ShipperHomePage> {
                   height: 10,
                 ),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     GestureDetector(
                       onTap: () {
@@ -526,9 +528,6 @@ class _ScreenDetailOrderAndShipperState extends State<ShipperHomePage> {
                         ],
                       ),
                     ),
-                    const SizedBox(
-                      width: 10,
-                    ),
                     GestureDetector(
                       onTap: () async {
                         await _addressShipperController.setMarkerShipper();
@@ -537,7 +536,7 @@ class _ScreenDetailOrderAndShipperState extends State<ShipperHomePage> {
                             order.storeLocation!.coordinates![0],
                             order.storeLocation!.coordinates![1]);
                         await _addressShipperController.setMarker(
-                            "locationStore",
+                            AppString.markerStore,
                             _addressShipperController.storeIcon.value,
                             order.storeLocation!.coordinates![0],
                             order.storeLocation!.coordinates![1],
@@ -551,7 +550,36 @@ class _ScreenDetailOrderAndShipperState extends State<ShipperHomePage> {
                             size: 30,
                           ),
                           Text(
-                            'Địa chỉ quán',
+                            'Vị trí quán',
+                            style: AppStyles.textMedium
+                                .copyWith(fontWeight: FontWeight.w500),
+                          ),
+                        ],
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () async {
+                        // await _addressShipperController.setMarkerShipper();
+
+                        await _addressShipperController.animateToLocation(
+                            order.userLocation!.coordinates![0],
+                            order.userLocation!.coordinates![1]);
+                        await _addressShipperController.setMarker(
+                            AppString.markerStore,
+                            _addressShipperController.userIcon.value,
+                            order.userLocation!.coordinates![0],
+                            order.userLocation!.coordinates![1],
+                            "Vị trí giao hàng");
+                      },
+                      child: Column(
+                        children: [
+                          const Icon(
+                            Icons.location_on_outlined,
+                            color: AppColors.colorDirectionToCustomer,
+                            size: 30,
+                          ),
+                          Text(
+                            'Vị trí giao',
                             style: AppStyles.textMedium
                                 .copyWith(fontWeight: FontWeight.w500),
                           ),

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 import 'package:pbl6_app/src/data/api/api_client.dart';
 import 'package:pbl6_app/src/model/contact_model.dart' as ContactModel;
 import 'package:pbl6_app/src/model/order_detail_shipper.dart';
@@ -49,6 +50,10 @@ class ShipperController extends GetxController {
   File? get behindCCCDImage => _behindCCCDImage;
   File? get frontCCCDImage => _frontCCCDImage;
   File? get licenseImage => _licenseImage;
+
+  XFile? _photo;
+  XFile? get photo => _photo;
+
   late TextEditingController emailController,
       firstNameController,
       lastnameController,
@@ -75,6 +80,7 @@ class ShipperController extends GetxController {
     await getInfoShipperrById();
     await getListOrderNearShipper();
     await setInitInfo();
+
     super.onInit();
   }
 
@@ -87,7 +93,8 @@ class ShipperController extends GetxController {
     vehicleType.text = user.value.vehicleType.toString();
     vehicleNumber.text = user.value.vehicleNumber.toString();
     licenseNumber.text = user.value.licenseNumber.toString();
-
+    _photo = null;
+    isChange.value = false;
     update();
   }
 
@@ -102,6 +109,13 @@ class ShipperController extends GetxController {
   }
 
   String? validateName(String value) {
+    if (value.isEmpty) {
+      return "Không được để trống";
+    }
+    return null;
+  }
+
+  String? validate(String value) {
     if (value.isEmpty) {
       return "Không được để trống";
     }
@@ -140,13 +154,103 @@ class ShipperController extends GetxController {
         firstNameController.text != user.value.firstName ||
         lastnameController.text != user.value.lastName.toString() ||
         addressController.text != user.value.contact![0].address.toString() ||
-        phoneController.text != user.value.contact![0].phoneNumber.toString()) {
+        phoneController.text != user.value.contact![0].phoneNumber.toString() ||
+        _photo != null) {
       return true;
     }
     return false;
   }
 
+  Future<void> getImage() async {
+    ImagePicker picker = ImagePicker();
+    _photo =
+        await picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
+
+    if (_photo != null) {
+      print('choosen');
+      isChange.value = true;
+      update();
+    } else {
+      print('not choose');
+    }
+  }
+
   updateUser(String idUser) async {
+    LoadingFullScreen.showLoading();
+    try {
+      var url = "${ApiEndPoints.baseUrl}/shipper/$idUser";
+
+      var dioInstance = dio.Dio();
+
+      final formData = dio.FormData.fromMap({
+        "firstName": firstNameController.text.trim(),
+        "lastName": lastnameController.text.trim(),
+        "address": addressController.text.trim(),
+        "phoneNumber": phoneController.text.trim(),
+        "vehicleType": vehicleType.text.trim(),
+        "vehicleNumber": vehicleNumber.text.trim(),
+        "licenseNumber": licenseNumber.text.trim(),
+      }, dio.ListFormat.multiCompatible);
+
+      // if (_photo != null) {
+      //   formData.files.add(MapEntry(
+      //     'photo',
+      //     dio.MultipartFile.fromString(_photo!.path, filename: 'photo.jpg'),
+      //   ));
+      // }
+
+      ApiClient apiClient = Get.find();
+      var headers = apiClient.header;
+
+      var response = await dioInstance.patch(url,
+          data: formData,
+          // data: {
+          //   "firstName": firstNameController.text.trim(),
+          //   "lastName": lastnameController.text.trim(),
+          //   "address": addressController.text.trim(),
+          //   "phoneNumber": phoneController.text.trim(),
+          //   "vehicleType": vehicleType.text.trim(),
+          //   "vehicleNumber": vehicleNumber.text.trim(),
+          //   "licenseNumber": licenseNumber.text.trim(),
+          //   "photo": await dio.MultipartFile.fromFile(_photo!.path)
+          // },
+          options: dio.Options(headers: headers));
+
+      LoadingFullScreen.cancelLoading();
+
+      if (response.statusCode == 200) {
+        isChange.value = false;
+        Get.back();
+        getInfoShipperrById();
+        update();
+        CustomeSnackBar.showSuccessSnackBar(
+          context: Get.context,
+          title: 'Success',
+          message: 'Cập nhật thông tin thành công',
+        );
+      } else {
+        Get.back();
+        CustomeSnackBar.showErrorSnackBar(
+          context: Get.context,
+          title: 'Error',
+          message: 'Cập nhật không thành công',
+        );
+      }
+    } catch (e) {
+      print(e);
+      LoadingFullScreen.cancelLoading();
+      Get.back();
+      CustomeSnackBar.showErrorSnackBar(
+        context: Get.context,
+        title: 'Error',
+        message: 'Cập nhật không thành công',
+      );
+    } finally {
+      LoadingFullScreen.cancelLoading();
+    }
+  }
+
+  updateUser1(String idUser) async {
     LoadingFullScreen.showLoading();
     try {
       var url = "${ApiEndPoints.baseUrl}/shipper/$idUser";
@@ -161,34 +265,66 @@ class ShipperController extends GetxController {
         "licenseNumber": licenseNumber.text.trim(),
       });
 
+      if (_photo != null) {
+        formData.files.add(MapEntry(
+          'photo',
+          MultipartFile(
+            _photo!.path,
+            filename: 'photo.jpg',
+          ),
+        ));
+      }
+
+      // Map<String, dynamic> dataMap = Map.fromEntries(formData.fields);
+      // Map<String, dynamic> dataFile = Map.fromEntries(formData.files);
+      // Map<String, dynamic> dataMap1 = Map.from(formData.);
+
       ApiClient apiClient = Get.find();
 
       var headers = apiClient.header;
-      // var cookies = token.value;
 
-      // var headers = {
-      //   'Content-Type': 'application/json',
-      //   'Authorization': 'Bearer $cookies',
-      // };
-      dio.Dio().options.headers = headers;
-      var response = await dio.Dio().patch(url, data: formData);
+      var dioInstance = dio.Dio();
+
+      var response = await dioInstance.patch(
+        url,
+        data: formData.files,
+        options: dio.Options(headers: headers),
+      );
+
+      // var response = await dioInstance.patch(
+      //   url,
+      //   data: dataMap,
+      //   options: dio.Options(headers: headers),
+      // );
 
       LoadingFullScreen.cancelLoading();
+
       if (response.statusCode == 200) {
         isChange.value = false;
         Get.back();
-        await getInfoShipperrById();
+
+        getInfoShipperrById();
+
+        update();
+
         CustomeSnackBar.showSuccessSnackBar(
             context: Get.context,
             title: 'Success',
             message: 'Cập nhật thông tin thành công');
       } else {
+        Get.back();
         CustomeSnackBar.showErrorSnackBar(
             context: Get.context,
             title: 'Error',
             message: 'Cập nhật không thành công');
       }
     } catch (e) {
+      LoadingFullScreen.cancelLoading();
+      Get.back();
+      CustomeSnackBar.showErrorSnackBar(
+          context: Get.context,
+          title: 'Error',
+          message: 'Cập nhật không thành công');
       print(e);
     } finally {
       LoadingFullScreen.cancelLoading();
@@ -213,7 +349,7 @@ class ShipperController extends GetxController {
 
       if (response.statusCode == 200) {
         user.value = Shipper.fromJson(json);
-
+        _photo = null;
         _contactChoose = user.value.contact!
             .firstWhere((element) => element.id == user.value.defaultContact);
         update();
@@ -235,18 +371,39 @@ class ShipperController extends GetxController {
     update();
   }
 
+  Future<bool> checkShipper() async {
+    await getInfoShipperrById();
+    if (user.value.status == "Tạm Ngừng") {
+      return false;
+    }
+    return true;
+  }
+
   getListOrderNearShipper() async {
     try {
-      ApiClient apiClient = Get.find();
+      checkShipper().then((value) async {
+        if (!value) {
+          _listOrder = [];
+          update();
+          CustomeSnackBar.showWarningTopBar(
+              context: Get.context,
+              title: "Thông báo",
+              message: "Tài khoản của bạn bị khoá");
+          return;
+        } else {
+          ApiClient apiClient = Get.find();
 
-      var url = "${ApiEndPoints.baseUrl}/shipper/${id.value}/find-orders";
+          var url = "${ApiEndPoints.baseUrl}/shipper/${id.value}/find-orders";
 
-      var response = await http.get(Uri.parse(url), headers: apiClient.header);
-      if (response.statusCode == 200) {
-        var json = jsonDecode(response.body);
-        _listOrder = orderShipperFromJson(jsonEncode(json['data']));
-        update();
-      } else {}
+          var response =
+              await http.get(Uri.parse(url), headers: apiClient.header);
+          if (response.statusCode == 200) {
+            var json = jsonDecode(response.body);
+            _listOrder = orderShipperFromJson(jsonEncode(json['data']));
+            update();
+          } else {}
+        }
+      });
     } catch (e) {}
   }
 
