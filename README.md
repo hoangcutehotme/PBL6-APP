@@ -3,8 +3,7 @@
 A new Flutter project.
 
 ## Getting Started
-
-![Screenshot_1704769722](https://github.com/hoangcutehotme/PBL6-APP/assets/85145944/650f23b5-99cb-4e85-ae38-1d8911446b99)
+<img src="https://github.com/hoangcutehotme/PBL6-APP/assets/85145944/650f23b5-99cb-4e85-ae38-1d8911446b99" width="200" height="400" />
 
 
 ## Development Environment
