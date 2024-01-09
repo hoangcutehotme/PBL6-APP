@@ -35,7 +35,34 @@
   <img src="https://github.com/hoangcutehotme/PBL6-APP/assets/85145944/c010f243-4925-453f-a947-e6aa1cf91be4" width="200" height="400" />
 </div>
 
+### View List History Order and Info Order 
 
+<div>
+  <img src="https://github.com/hoangcutehotme/PBL6-APP/assets/85145944/64bc97bd-0aaf-4003-a162-e3abfba38144" width="200" height="400" />
+  <img src="https://github.com/hoangcutehotme/PBL6-APP/assets/85145944/35eca014-d437-4983-9e19-b7c8d1a6c9de" width="200" height="400" />
+</div>
+
+
+
+### User Info 
+<img src="https://github.com/hoangcutehotme/PBL6-APP/assets/85145944/95d2ff4a-74e0-4e98-8c62-1b4bdb7ab217" width="200" height="400" />
+
+
+## Shipper 
+
+### Shipper Home Page 
+<div>
+  <img src="https://github.com/hoangcutehotme/PBL6-APP/assets/85145944/d90e3be2-11bb-4e8b-a5b6-482517e12a05" width="200" height="400" />
+  
+  <img src="https://github.com/hoangcutehotme/PBL6-APP/assets/85145944/89ae2780-9315-42a0-ada4-5073caee6582" width="200" height="400" />
+
+  
+  
+</div>
+
+### Order Detail - Shipper
+
+<img src="https://github.com/hoangcutehotme/PBL6-APP/assets/85145944/e32cdbb0-f385-4965-92be-6e917c40f656" width="200" height="400" />
 
 
 ## Development Environment
