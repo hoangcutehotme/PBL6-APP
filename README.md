@@ -2,6 +2,10 @@
 
 ## Getting Started
 
+### UI Design 
+
+UI coding follow that [Figma design](https://www.figma.com/file/SkKSfiZqWK33lDqOBuQKjx/PBL6-Design-UI?type=design&node-id=0%3A1&mode=design&t=ydBZS5xJZb6Qoce3-1)
+
 ## User - Customer 
 
 ### Sign In
