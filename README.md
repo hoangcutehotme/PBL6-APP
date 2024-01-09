@@ -4,13 +4,16 @@ A new Flutter project.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+![Screenshot_1704769722](https://github.com/hoangcutehotme/PBL6-APP/assets/85145944/650f23b5-99cb-4e85-ae38-1d8911446b99)
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Development Environment
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+
+
+Before run project, execute commands:
+
+flutter clean
+flutter pub get
+flutter pub run build_runner build or flutter pub run build_runner build --delete-conflicting-outputs
+flutter run
